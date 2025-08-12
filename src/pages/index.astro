@@ -51,7 +51,7 @@ import Layout from "../layouts/Layout.astro";
           <p class="card__body">Capture high-intent customers at the exact moment they're searching for your products or services.</p>
         </article>
         <article class="card hover-lift reveal">
-          <h3 class="card__title">Facebook Ads</h3>
+          <h3 class="card__title">Meta Ads</h3>
           <p class="card__body">Reach and engage a massive audience on the world's largest social media platform.</p>
         </article>
         <article class="card hover-lift reveal">
@@ -68,7 +68,7 @@ import Layout from "../layouts/Layout.astro";
         <h2 class="h2">Why Work With Me?</h2>
         <p>My name is Mike Nicholas, and I'm a Paid Media Specialist with a passion for helping businesses succeed. I believe in a data-driven approach and I'm committed to delivering measurable results.</p>
         <ul class="checklist">
-          <li>Over 10 years of experience in the industry</li>
+          <li>10 years of experience in the industry</li>
           <li>Proven track record with a diverse range of clients</li>
           <li>Certified across Google Ads and Facebook Ads</li>
           <li>Transparent reporting and communication</li>
@@ -79,18 +79,133 @@ import Layout from "../layouts/Layout.astro";
 
   <section id="contact" class="section">
     <div class="container center">
-      <h2 class="h2 reveal">Get in Touch</h2>
-      <p class="lead reveal">Ready to take your paid media to the next level? Let's talk.</p>
-      <div class="grid contact-cards">
-        <a class="card link reveal" href="mailto:mike@velocitymarketing.com.au">
-          <span class="card__title">Email</span>
-          <span class="card__body">mike@velocitymarketing.com.au</span>
-        </a>
-        <a class="card link reveal" href="tel:0427733566">
-          <span class="card__title">Phone</span>
-          <span class="card__body">0427 733 566</span>
-        </a>
+      <div class="center">
+        <h2 class="h2 reveal">Get in Touch</h2>
+      </div>
+      <div class="contact-stack">
+        <p class="lead reveal contact-lead">Ready to grow your paid media? Let's talk.</p>
+        <div class="chips reveal">
+          <a class="chip" href="mailto:mike@velocitymarketing.com.au" aria-label="Email Mike">mike@velocitymarketing.com.au</a>
+          <a class="chip" href="tel:0427733566" aria-label="Call Mike">0427 733 566</a>
+        </div>
+
+        <form id="contact-form" class="form form-hero reveal" method="post" action="/api/contact" data-mode="email" novalidate>
+        <div class="tabs" role="tablist" aria-label="Contact method">
+          <button class="tab active" type="button" data-mode="email" role="tab" aria-selected="true">Email</button>
+          <button class="tab" type="button" data-mode="callback" role="tab" aria-selected="false">Callback</button>
+        </div>
+
+        <input type="hidden" name="type" id="contact-type" value="email" />
+
+        <div class="form__row">
+          <label class="label" for="name">Name</label>
+          <input id="name" name="name" class="input" type="text" required />
+        </div>
+
+        <div class="form__group mode-email" id="group-email">
+          <div class="form__row">
+            <label class="label" for="email">Email</label>
+            <input id="email" name="email" class="input" type="email" aria-describedby="error-email" />
+            <span id="error-email" class="form__error" hidden>Email is required</span>
+          </div>
+        </div>
+
+        <div class="form__group mode-callback" id="group-callback" hidden>
+          <div class="form__row">
+            <label class="label" for="phone_cb">Phone</label>
+            <input id="phone_cb" name="phone" class="input" type="tel" aria-describedby="error-phone" />
+            <span id="error-phone" class="form__error" hidden>Phone is required</span>
+          </div>
+          <div class="form__row two-up">
+            <div>
+              <label class="label" for="best_time">Best time to call</label>
+              <select id="best_time" name="bestTime" class="input" aria-label="Best time to call">
+                <option value="Morning">Morning</option>
+                <option value="Afternoon">Afternoon</option>
+                <option value="Evening">Evening</option>
+              </select>
+            </div>
+            <div>
+              <label class="label" for="email_cb">Email (optional)</label>
+              <input id="email_cb" name="email" class="input" type="email" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <label class="label" for="message">Message</label>
+          <textarea id="message" name="message" class="textarea" rows="5" required></textarea>
+        </div>
+          <div class="form__actions">
+            <button class="btn primary" type="submit">Send Message</button>
+            <span id="contact-status" role="status" aria-live="polite" class="form__status"></span>
+          </div>
+        </form>
       </div>
     </div>
   </section>
+
+  <script is:inline>
+    const contactForm = document.getElementById('contact-form');
+    const statusEl = document.getElementById('contact-status');
+    const tabs = document.querySelectorAll('.tab');
+    const emailGroup = document.getElementById('group-email');
+    const callbackGroup = document.getElementById('group-callback');
+    const typeInput = document.getElementById('contact-type');
+    const emailInput = document.getElementById('email');
+    const emailInputCb = document.getElementById('email_cb');
+    const phoneInput = document.getElementById('phone');
+    const phoneInputCb = document.getElementById('phone_cb');
+
+    function setMode(mode) {
+      contactForm.dataset.mode = mode;
+      typeInput.value = mode;
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+      if (mode === 'email') {
+        emailGroup.hidden = false; callbackGroup.hidden = true;
+        emailInput.required = true;
+        if (phoneInput) phoneInput.required = false;
+        emailInputCb.required = false; phoneInputCb.required = false;
+      } else {
+        emailGroup.hidden = true; callbackGroup.hidden = false;
+        phoneInputCb.required = true; emailInputCb.required = false;
+        emailInput.required = false;
+      }
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => setMode(tab.dataset.mode));
+    });
+
+    if (contactForm) {
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // Basic front-end validation with accessible errors
+        const mode = contactForm.dataset.mode;
+        let hasError = false;
+        if (mode === 'email') {
+          if (!emailInput.value) { document.getElementById('error-email').hidden = false; emailInput.setAttribute('aria-invalid', 'true'); hasError = true; } else { document.getElementById('error-email').hidden = true; emailInput.removeAttribute('aria-invalid'); }
+        } else {
+          if (!phoneInputCb.value) { document.getElementById('error-phone').hidden = false; phoneInputCb.setAttribute('aria-invalid', 'true'); hasError = true; } else { document.getElementById('error-phone').hidden = true; phoneInputCb.removeAttribute('aria-invalid'); }
+        }
+        if (hasError) { statusEl.textContent = 'Please fix the highlighted fields.'; return; }
+        statusEl.textContent = 'Sending...';
+        try {
+          const formData = new FormData(contactForm);
+          const res = await fetch('/api/contact', { method: 'POST', body: formData });
+          const json = await res.json();
+          if (res.ok) {
+            statusEl.textContent = 'Thanks! I\'ll be in touch shortly.';
+            contactForm.reset();
+            setMode('email');
+          } else {
+            statusEl.textContent = json?.error || 'Something went wrong. Please email me directly.';
+          }
+        } catch (err) {
+          statusEl.textContent = 'Network error. Please try again.';
+        }
+      });
+    }
+    setMode('email');
+  </script>
 </Layout>

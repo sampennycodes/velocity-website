@@ -152,8 +152,45 @@ body {
 .card.link:hover { background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); }
 
 /* Contact cards side-by-side on desktop */
-.contact-cards { grid-template-columns: repeat(2, minmax(300px, 1fr)); max-width: 1040px; margin: 16px auto 0; }
+  .contact-cards { grid-template-columns: 1fr; max-width: 520px; margin: 0; }
+  .contact-cards .card { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.06); }
+  .contact-cards .card .card__title { font-size: 1rem; color: var(--muted); }
+  .contact-cards .card .card__body { font-size: 1rem; color: var(--heading); }
 @media (max-width: 680px) { .contact-cards { grid-template-columns: 1fr; } }
+
+  /* Chips for lightweight contact details */
+  .chips { display: inline-flex; gap: 10px; flex-wrap: wrap; margin: 12px 0 16px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+  .chip:hover { background: rgba(255,255,255,0.08); }
+
+  /* Central stack to align chips, tabs, form, and button to same edges */
+  .contact-stack { width: 100%; max-width: 680px; margin: 0 auto; text-align: left; }
+  .contact-lead { margin: 0 0 8px; text-align: left; }
+  .contact-stack .tabs { margin: 0 0 12px; }
+  .contact-stack .form { margin: 0; }
+
+  /* Forms */
+  .form { width: 100%; max-width: 760px; margin: 0 auto; display: grid; gap: 24px; }
+  .form-hero { max-width: 640px; padding: 24px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 10px 30px rgba(0,0,0,0.20); }
+  .form__row { display: grid; gap: 8px; }
+  .form__row.two-up { grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .form__row.two-up { grid-template-columns: 1fr; } }
+  .label { font-weight: 600; color: var(--heading); font-size: 0.95rem; }
+  .input, .textarea, select.input { width: 100%; min-height: 48px; padding: 12px 14px; border-radius: 12px; color: var(--heading); background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.18); outline: none; }
+  .textarea { min-height: 120px; }
+  .input:hover, .textarea:hover, select.input:hover { border-color: rgba(255,255,255,0.28); }
+  .input:focus, .textarea:focus, select.input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(52,235,244,0.35); }
+  .form__actions { display: flex; align-items: center; gap: 16px; margin-top: 24px; }
+  .form__status { color: var(--muted); font-size: 0.95rem; }
+  .form__error { color: #ff6b6b; font-size: 0.9rem; }
+
+  /* Tabs */
+  .tabs { display: inline-flex; border: 1px solid var(--border); border-radius: 12px; background: rgba(255,255,255,0.04); padding: 4px; width: max-content; }
+  .tab { appearance: none; background: transparent; border: 0; color: var(--muted); font-weight: 700; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+  .tab.active { background: rgba(255,255,255,0.12); color: var(--heading); }
+
+  /* Button sizing */
+  .form .btn.primary { width: 100%; margin-top: 8px; box-shadow: none; }
 
 /* About */
 .about-photo img { width: 100%; max-width: 420px; height: auto; border-radius: 50%; box-shadow: none; }
