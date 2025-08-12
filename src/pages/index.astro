@@ -28,8 +28,16 @@ import Layout from "../layouts/Layout.astro";
           </div>
         </div>
       </div>
-      <div class="hero-art reveal" aria-hidden="true">
-        <div class="orb"></div>
+      <div class="hero-art reveal" aria-hidden="false">
+        <img
+          src="/mike.png"
+          alt="Mike Nicholas"
+          width="520"
+          height="520"
+          loading="eager"
+          decoding="async"
+          class="hero-photo"
+        />
       </div>
     </div>
   </section>
@@ -55,10 +63,7 @@ import Layout from "../layouts/Layout.astro";
   </section>
 
   <section id="about" class="section alt">
-    <div class="container grid two-col align-center">
-      <div class="about-photo reveal">
-        <img src="/mike.png" alt="Mike Nicholas" width="420" height="420" loading="lazy" />
-      </div>
+    <div class="container grid align-center">
       <div class="reveal">
         <h2 class="h2">Why Work With Me?</h2>
         <p>My name is Mike Nicholas, and I'm a Paid Media Specialist with a passion for helping businesses succeed. I believe in a data-driven approach and I'm committed to delivering measurable results.</p>
