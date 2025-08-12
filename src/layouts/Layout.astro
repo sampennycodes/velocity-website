@@ -1,22 +1,121 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = "Velocity Marketing — Paid Media Specialist", description = "Data-driven paid media for measurable growth." } = Astro.props as Props;
+---
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <title>{title}</title>
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/logo.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <div class="bg fx-layer-1" aria-hidden="true"></div>
+    <div class="bg fx-layer-2" aria-hidden="true"></div>
+    <div class="site">
+      <Header />
+      <main id="main-content">
+        <slot />
+      </main>
+      <Footer />
+    </div>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+    <script is:inline>
+      // Reveal on scroll
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              revealObserver.unobserve(entry.target);
+            }
+          }
+        },
+        { threshold: 0.15 }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+
+      // Magnetic orb effect
+      const orb = document.querySelector('.orb');
+      if (orb) {
+        let bounds;
+        let mouseX = 0;
+        let mouseY = 0;
+        let orbX = 0;
+        let orbY = 0;
+        let isAnimating = false;
+
+        function updateOrb() {
+          if (!bounds || isAnimating) return;
+          
+          // Calculate distance from cursor to orb center
+          const centerX = bounds.left + bounds.width / 2;
+          const centerY = bounds.top + bounds.height / 2;
+          const deltaX = mouseX - centerX;
+          const deltaY = mouseY - centerY;
+          const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+          
+          // Magnetic pull effect (stronger when closer)
+          const maxPull = 20; // Reduced for subtler effect
+          const pullStrength = Math.max(0, (150 - distance) / 150);
+          const pullX = (deltaX / distance) * maxPull * pullStrength;
+          const pullY = (deltaY / distance) * maxPull * pullStrength;
+          
+          // Apply magnetic pull with smooth easing
+          orbX += (pullX - orbX) * 0.08;
+          orbY += (pullY - orbY) * 0.08;
+          
+          // Add magnetic class when close enough
+          if (distance < 120) {
+            orb.classList.add('magnetic');
+          } else {
+            orb.classList.remove('magnetic');
+          }
+          
+          // Apply transform (only if we have meaningful movement)
+          if (Math.abs(orbX) > 0.5 || Math.abs(orbY) > 0.5) {
+            orb.style.transform = `translate(${orbX}px, ${orbY}px)`;
+          }
+        }
+
+        function onMouseMove(e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          updateOrb();
+        }
+
+        function onResize() {
+          bounds = orb.getBoundingClientRect();
+        }
+
+        // Initialize
+        onResize();
+        window.addEventListener('resize', onResize);
+        document.addEventListener('mousemove', onMouseMove);
+        
+        // Update bounds periodically for smooth animation
+        setInterval(onResize, 100);
+      }
+    </script>
+  </body>
+</html>

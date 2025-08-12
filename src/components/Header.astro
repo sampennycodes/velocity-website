@@ -1,0 +1,38 @@
+---
+const links = [
+  { href: "#services", label: "Services" },
+  { href: "#about", label: "About" },
+  { href: "#contact", label: "Contact" },
+];
+---
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="/" class="header__brand" aria-label="Velocity Marketing home">
+      <img src="/logo.png" alt="Velocity Marketing" width="140" height="40" />
+    </a>
+    <nav class="nav" id="site-nav">
+      {links.map((l) => (
+        <a class="nav__link" href={l.href}>{l.label}</a>
+      ))}
+    </nav>
+    <button class="nav__toggle" aria-controls="site-nav" aria-expanded="false" aria-label="Toggle menu">
+      <span class="nav__bar"></span>
+      <span class="nav__bar"></span>
+      <span class="nav__bar"></span>
+    </button>
+  </div>
+</header>
+
+<script is:inline>
+  const toggle = document.querySelector('.nav__toggle');
+  const nav = document.getElementById('site-nav');
+  if (toggle && nav) {
+    toggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+  }
+</script>
+
+

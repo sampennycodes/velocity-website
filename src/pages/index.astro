@@ -1,11 +1,91 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Velocity Marketing — Paid Media Specialist" description="I help businesses achieve measurable growth with strategic, data-driven paid media.">
+  <section id="hero" class="section hero">
+    <div class="container grid two-col align-center">
+      <div class="reveal">
+        <div class="badge glass">Paid Media Specialist</div>
+        <h1 class="display text-gradient">Data-Driven Paid Media for Measurable Growth</h1>
+        <p class="lead">I help businesses like yours achieve their goals with strategic, results-oriented paid media campaigns.</p>
+        <div class="actions">
+          <a href="#contact" class="btn primary">Get a Free Consultation</a>
+          <a href="#services" class="btn ghost">Explore Services</a>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <span class="stat__num">10+</span>
+            <span class="stat__label">Years Experience</span>
+          </div>
+          <div class="stat">
+            <span class="stat__num">AU</span>
+            <span class="stat__label">Locally Based</span>
+          </div>
+          <div class="stat">
+            <span class="stat__num">ROI</span>
+            <span class="stat__label">Performance Focus</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-art reveal" aria-hidden="true">
+        <div class="orb"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="section">
+    <div class="container">
+      <h2 class="h2 center reveal">Services</h2>
+      <div class="grid cards">
+        <article class="card hover-lift reveal">
+          <h3 class="card__title">Google Ads</h3>
+          <p class="card__body">Capture high-intent customers at the exact moment they're searching for your products or services.</p>
+        </article>
+        <article class="card hover-lift reveal">
+          <h3 class="card__title">Facebook Ads</h3>
+          <p class="card__body">Reach and engage a massive audience on the world's largest social media platform.</p>
+        </article>
+        <article class="card hover-lift reveal">
+          <h3 class="card__title">LinkedIn Ads</h3>
+          <p class="card__body">Target a professional audience, generate high-quality B2B leads, and build your brand.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section alt">
+    <div class="container grid two-col align-center">
+      <div class="about-photo reveal">
+        <img src="/mike.png" alt="Mike Nicholas" width="420" height="420" loading="lazy" />
+      </div>
+      <div class="reveal">
+        <h2 class="h2">Why Work With Me?</h2>
+        <p>My name is Mike Nicholas, and I'm a Paid Media Specialist with a passion for helping businesses succeed. I believe in a data-driven approach and I'm committed to delivering measurable results.</p>
+        <ul class="checklist">
+          <li>Over 10 years of experience in the industry</li>
+          <li>Proven track record with a diverse range of clients</li>
+          <li>Certified across Google Ads and Facebook Ads</li>
+          <li>Transparent reporting and communication</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section">
+    <div class="container center">
+      <h2 class="h2 reveal">Get in Touch</h2>
+      <p class="lead reveal">Ready to take your paid media to the next level? Let's talk.</p>
+      <div class="grid contact-cards">
+        <a class="card link reveal" href="mailto:mike@velocitymarketing.com.au">
+          <span class="card__title">Email</span>
+          <span class="card__body">mike@velocitymarketing.com.au</span>
+        </a>
+        <a class="card link reveal" href="tel:0427733566">
+          <span class="card__title">Phone</span>
+          <span class="card__body">0427 733 566</span>
+        </a>
+      </div>
+    </div>
+  </section>
 </Layout>
