@@ -1,11 +1,20 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
+import vercel from '@astrojs/vercel';
+
 // https://astro.build/config
 export default defineConfig({
-  output: 'static',
+  output: 'server',
+
   server: {
     port: 4321,
     host: true
-  }
+  },
+
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
+    },
+  })
 });
