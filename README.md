@@ -1,10 +1,32 @@
-# Astro Starter Kit: Basics
+# Velocity Marketing Website
 
-```sh
-npm create astro@latest -- --template basics
-```
+A marketing website for Velocity Marketing built with Astro.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Contact Form with Resend
+
+This project uses [Resend](https://resend.com) to handle contact form submissions. Follow these steps to set it up:
+
+1. **Create a Resend Account**
+   - Sign up at [resend.com](https://resend.com)
+   - Verify your domain in the Resend dashboard
+   - Create an API key
+
+2. **Configure Environment Variables**
+   - The project includes a `.env` file template
+   - Update the following variables in the `.env` file:
+     ```
+     RESEND_API_KEY=your_api_key_here
+     SEND_EMAIL_FROM=noreply@yourdomain.com
+     ```
+   - Make sure to use your verified domain for the `SEND_EMAIL_FROM` variable
+
+3. **Install Dependencies**
+   - Run `npm install` to install the Resend SDK
+
+4. **Test the Contact Form**
+   - Start the development server with `npm run dev`
+   - Fill out and submit the contact form
+   - Check that emails are being sent successfully
 
 ## 🚀 Project Structure
 
