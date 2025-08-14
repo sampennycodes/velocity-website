@@ -9,8 +9,6 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/node": "^9.4.0",
-    "@astrojs/vercel": "^8.2.5",
     "astro": "^5.12.9",
     "resend": "^6.0.1"
   }
