@@ -1,0 +1,252 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Velocity Marketing — Paid Media Specialist" description="I help businesses achieve measurable growth with strategic, data-driven paid media.">
+  <section id="hero" class="section hero">
+    <div class="container grid two-col align-center">
+      <div class="reveal">
+        <div class="badge glass">Paid Media Specialist</div>
+        <h1 class="display text-gradient">Data-Driven Paid Media for Measurable Growth</h1>
+        <p class="lead">I help businesses like yours achieve their goals with strategic, results-oriented paid media campaigns.</p>
+        <div class="actions">
+          <a href="#contact" class="btn primary">Get a Free Consultation</a>
+          <a href="#services" class="btn ghost">Explore Services</a>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <span class="stat__num">10+</span>
+            <span class="stat__label">Years Experience</span>
+          </div>
+          <div class="stat">
+            <span class="stat__num">AU</span>
+            <span class="stat__label">Locally Based</span>
+          </div>
+          <div class="stat">
+            <span class="stat__num">ROI</span>
+            <span class="stat__label">Performance Focus</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-art reveal" aria-hidden="false">
+        <img
+          src="/mike coloured.png"
+          alt="Mike Nicholas"
+          width="520"
+          height="520"
+          loading="eager"
+          decoding="async"
+          class="hero-photo"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="section">
+    <div class="container">
+      <h2 class="h2 center reveal">Services</h2>
+      <div class="grid cards">
+        <article class="card hover-lift reveal">
+          <h3 class="card__title">Google Ads</h3>
+          <p class="card__body">Capture high-intent customers at the exact moment they're searching for your products or services.</p>
+        </article>
+        <article class="card hover-lift reveal">
+          <h3 class="card__title">Meta Ads</h3>
+          <p class="card__body">Reach and engage a massive audience on the world's largest social media platform.</p>
+        </article>
+        <article class="card hover-lift reveal">
+          <h3 class="card__title">LinkedIn Ads</h3>
+          <p class="card__body">Target a professional audience, generate high-quality B2B leads, and build your brand.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section alt">
+    <div class="container grid align-center">
+      <div class="reveal">
+        <h2 class="h2">Why Work With Me?</h2>
+        <p>My name is Mike Nicholas, and I'm a Paid Media Specialist with a passion for helping businesses succeed. I believe in a data-driven approach and I'm committed to delivering measurable results.</p>
+        <ul class="checklist">
+          <li>10 years of experience in the industry</li>
+          <li>Proven track record with a diverse range of clients</li>
+          <li>Certified across Google Ads and Facebook Ads</li>
+          <li>Transparent reporting and communication</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section">
+    <div class="container center">
+      <div class="center">
+        <h2 class="h2 reveal">Get in Touch</h2>
+      </div>
+      <div class="contact-stack">
+        <p class="lead reveal contact-lead">Ready to grow your paid media? Let's talk.</p>
+        <div class="chips reveal">
+          <div id="contact-email" class="chip" style="display: none;" aria-label="Email Mike"></div>
+          <div id="contact-phone" class="chip" style="display: none;" aria-label="Call Mike"></div>
+        </div>
+
+        <form id="contact-form" class="form form-hero reveal" method="post" action="/api/contact" novalidate>
+
+        <!-- Honeypot field to catch bots -->
+        <div class="honeypot-field" style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;">
+          <label for="website" style="display: none;">Website</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="form__row">
+          <label class="label" for="name">Name <span class="required" style="color: #ff6b6b;">*</span></label>
+          <input id="name" name="name" class="input" type="text" required aria-describedby="error-name" />
+          <span id="error-name" class="form__error" hidden>Name is required</span>
+        </div>
+
+        <div class="form__row">
+          <label class="label" for="email">Email <span class="required" style="color: #ff6b6b;">*</span></label>
+          <input id="email" name="email" class="input" type="email" required aria-describedby="error-email" />
+          <span id="error-email" class="form__error" hidden>Email is required</span>
+        </div>
+
+        <div class="form__row">
+          <label class="label" for="phone">Phone Number <span class="optional" style="color: var(--muted); font-size: 0.9em;">(optional)</span></label>
+          <input id="phone" name="phone" class="input" type="tel" aria-describedby="error-phone" />
+          <span id="error-phone" class="form__error" hidden>Please enter a valid phone number</span>
+        </div>
+
+        <div class="form__row">
+          <label class="label" for="message">Message <span class="required" style="color: #ff6b6b;">*</span></label>
+          <textarea id="message" name="message" class="textarea" rows="5" required aria-describedby="error-message"></textarea>
+          <span id="error-message" class="form__error" hidden>Message is required</span>
+        </div>
+          <div class="form__actions">
+            <button class="btn primary" type="submit">Send Message</button>
+            <span id="contact-status" role="status" aria-live="polite" class="form__status"></span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    // Contact information decryption
+    function decryptContactInfo() {
+      // Simple base64-like encoding with a custom character set
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+      const email = 'bWlrZUB2ZWxvY2l0eW1hcmtldGluZy5jb20uYXU='; // base64 encoded
+      const phone = 'MDQyNyA3MzMgNTY2'; // base64 encoded
+      
+      function decode(str) {
+        try {
+          return atob(str);
+        } catch (e) {
+          return str;
+        }
+      }
+      
+      // Decrypt and display email
+      const emailEl = document.getElementById('contact-email');
+      if (emailEl) {
+        const decryptedEmail = decode(email);
+        emailEl.innerHTML = `<a href="mailto:${decryptedEmail}" aria-label="Email Mike" style="color: inherit; text-decoration: none;">${decryptedEmail}</a>`;
+        emailEl.style.display = 'block';
+      }
+      
+      // Decrypt and display phone
+      const phoneEl = document.getElementById('contact-phone');
+      if (phoneEl) {
+        const decryptedPhone = decode(phone);
+        phoneEl.innerHTML = `<a href="tel:${decryptedPhone.replace(/\s/g, '')}" aria-label="Call Mike" style="color: inherit; text-decoration: none;">${decryptedPhone}</a>`;
+        phoneEl.style.display = 'block';
+      }
+    }
+
+    // Run decryption when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', decryptContactInfo);
+    } else {
+      decryptContactInfo();
+    }
+    
+    // Fallback: also try after a short delay to ensure DOM is fully ready
+    setTimeout(decryptContactInfo, 100);
+    
+    // Debug: log to console to verify function is running
+    console.log('Contact decryption script loaded');
+
+    const contactForm = document.getElementById('contact-form');
+    const statusEl = document.getElementById('contact-status');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+
+    if (contactForm) {
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Honeypot check - if this field is filled, it's likely a bot
+        const honeypotField = document.getElementById('website');
+        if (honeypotField && honeypotField.value.trim() !== '') {
+          console.log('Bot detected via honeypot field');
+          statusEl.textContent = 'Submission blocked.';
+          return;
+        }
+        
+        // Basic front-end validation with accessible errors
+        let hasError = false;
+        
+        // Check name field
+        const nameInput = document.getElementById('name');
+        if (!nameInput.value.trim()) { 
+          document.getElementById('error-name').hidden = false; 
+          nameInput.setAttribute('aria-invalid', 'true'); 
+          hasError = true; 
+        } else { 
+          document.getElementById('error-name').hidden = true; 
+          nameInput.removeAttribute('aria-invalid'); 
+        }
+        
+        // Check email field
+        if (!emailInput.value.trim()) { 
+          document.getElementById('error-email').hidden = false; 
+          emailInput.setAttribute('aria-invalid', 'true'); 
+          hasError = true; 
+        } else { 
+          document.getElementById('error-email').hidden = true; 
+          emailInput.removeAttribute('aria-invalid'); 
+        }
+        
+        // Check message field
+        const messageInput = document.getElementById('message');
+        if (!messageInput.value.trim()) { 
+          document.getElementById('error-message').hidden = false; 
+          messageInput.setAttribute('aria-invalid', 'true'); 
+          hasError = true; 
+        } else { 
+          document.getElementById('error-message').hidden = true; 
+          messageInput.removeAttribute('aria-invalid'); 
+        }
+        
+        if (hasError) { 
+          statusEl.textContent = 'Please fill in all required fields.'; 
+          return; 
+        }
+        
+        statusEl.textContent = 'Sending...';
+        try {
+          const formData = new FormData(contactForm);
+          const res = await fetch('/api/contact', { method: 'POST', body: formData });
+          const json = await res.json();
+          if (res.ok) {
+            statusEl.textContent = 'Thanks! I\'ll be in touch shortly.';
+            contactForm.reset();
+          } else {
+            statusEl.textContent = json?.error || 'Something went wrong. Please email me directly.';
+          }
+        } catch (err) {
+          statusEl.textContent = 'Network error. Please try again.';
+        }
+      });
+    }
+  </script>
+</Layout>
