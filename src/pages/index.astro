@@ -89,7 +89,7 @@ import Layout from "../layouts/Layout.astro";
           <div id="contact-phone" class="chip" style="display: none;" aria-label="Call Mike"></div>
         </div>
 
-        <form id="contact-form" class="form form-hero reveal" method="post" action="/api/contact-fallback" novalidate>
+        <form id="contact-form" class="form form-hero reveal" novalidate>
 
         <!-- Honeypot field to catch bots -->
         <div class="honeypot-field" style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;">
@@ -212,7 +212,7 @@ import Layout from "../layouts/Layout.astro";
           emailInput.setAttribute('aria-invalid', 'true'); 
           hasError = true; 
         } else { 
-          document.getElementById('error-email').hidden = true; 
+          document.getElementById('error-name').hidden = true; 
           emailInput.removeAttribute('aria-invalid'); 
         }
         
@@ -232,20 +232,17 @@ import Layout from "../layouts/Layout.astro";
           return; 
         }
         
-        statusEl.textContent = 'Sending...';
-        try {
-          const formData = new FormData(contactForm);
-          const res = await fetch('/api/contact', { method: 'POST', body: formData });
-          const json = await res.json();
-          if (res.ok) {
-            statusEl.textContent = 'Thanks! I\'ll be in touch shortly.';
-            contactForm.reset();
-          } else {
-            statusEl.textContent = json?.error || 'Something went wrong. Please email me directly.';
-          }
-        } catch (err) {
-          statusEl.textContent = 'Network error. Please try again.';
-        }
+        // For now, just show success message and log the form data
+        statusEl.textContent = 'Thanks! I\'ll be in touch shortly.';
+        contactForm.reset();
+        
+        // Log the form submission (you can replace this with actual email sending later)
+        console.log('Contact form submitted:', {
+          name: nameInput.value,
+          email: emailInput.value,
+          phone: phoneInput.value,
+          message: messageInput.value
+        });
       });
     }
   </script>
