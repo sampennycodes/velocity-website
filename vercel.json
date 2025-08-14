@@ -1,7 +1,19 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "functions": {
-    "src/pages/api/contact.ts": {
-      "maxDuration": 30
+    "dist/server/entry.mjs": {
+      "runtime": "nodejs22.x"
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/dist/server/entry.mjs"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/dist/server/entry.mjs"
+    }
+  ]
 }
