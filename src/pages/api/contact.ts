@@ -8,6 +8,17 @@ export const prerender = false;
 // Reads fields from a FormData POST and returns JSON.
 export const POST: APIRoute = async ({ request }) => {
   try {
+    // Check if required environment variables are set
+    const resendApiKey = import.meta.env.RESEND_API_KEY;
+    const sendEmailFrom = import.meta.env.SEND_EMAIL_FROM;
+    
+    if (!resendApiKey) {
+      console.error('Missing RESEND_API_KEY environment variable');
+      return new Response(JSON.stringify({ 
+        error: 'Contact form is not configured. Please try again later or contact us directly.' 
+      }), { status: 500 });
+    }
+
     const contentType = request.headers.get('content-type') || '';
     let name = '';
     let email = '';
@@ -47,11 +58,11 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Initialize Resend with API key from environment variables
-    const resend = new Resend(import.meta.env.RESEND_API_KEY);
+    const resend = new Resend(resendApiKey);
     
     try {
       const { data, error } = await resend.emails.send({
-        from: `Velocity Website <${import.meta.env.SEND_EMAIL_FROM || 'noreply@yourdomain.com'}>`,
+        from: `Velocity Website <${sendEmailFrom || 'noreply@velocitymarketing.com.au'}>`,
         to: 'sam@sampenny.io',
         subject: `New enquiry from ${name}`,
         replyTo: email,
@@ -78,6 +89,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     return new Response(JSON.stringify({ ok: true }), { status: 200 });
   } catch (err) {
+    console.error('Unexpected error in contact API:', err);
     return new Response(JSON.stringify({ error: 'Unexpected error.' }), { status: 500 });
   }
 };
