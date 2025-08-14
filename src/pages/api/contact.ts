@@ -1,10 +1,28 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
 
-const resend = new Resend(import.meta.env.RESEND_API_KEY);
-
 export const POST: APIRoute = async ({ request }) => {
   try {
+    // Check if environment variables are set
+    if (!import.meta.env.RESEND_API_KEY) {
+      console.error('RESEND_API_KEY is not set');
+      return new Response(JSON.stringify({ 
+        success: false, 
+        message: 'Email service not configured' 
+      }), { status: 500 });
+    }
+
+    if (!import.meta.env.SEND_EMAIL_FROM) {
+      console.error('SEND_EMAIL_FROM is not set');
+      return new Response(JSON.stringify({ 
+        success: false, 
+        message: 'Email service not configured' 
+      }), { status: 500 });
+    }
+
+    // Initialize Resend with API key
+    const resend = new Resend(import.meta.env.RESEND_API_KEY);
+
     const body = await request.json();
     const { name, email, phone, message, website } = body;
 
@@ -35,8 +53,8 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Send email using Resend
     const { data, error } = await resend.emails.send({
-      from: import.meta.env.SEND_EMAIL_FROM || 'noreply@velocitymarketing.com.au',
-      to: [import.meta.env.SEND_EMAIL_FROM || 'noreply@velocitymarketing.com.au'], // Send to the same email as FROM
+      from: import.meta.env.SEND_EMAIL_FROM,
+      to: [import.meta.env.SEND_EMAIL_FROM], // Send to the same email as FROM
       subject: `New Contact Form Submission from ${name}`,
       html: `
         <h2>New Contact Form Submission</h2>

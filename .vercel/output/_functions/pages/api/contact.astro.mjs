@@ -1,9 +1,11 @@
 import { Resend } from 'resend';
 export { renderers } from '../../renderers.mjs';
 
-const resend = new Resend("re_YGV6K5Ku_Q6kiTpYzt47XoykjSurjTfat");
 const POST = async ({ request }) => {
   try {
+    if (false) ;
+    if (false) ;
+    const resend = new Resend("re_YGV6K5Ku_Q6kiTpYzt47XoykjSurjTfat");
     const body = await request.json();
     const { name, email, phone, message, website } = body;
     if (website && website.trim() !== "") {
