@@ -15,6 +15,9 @@ const links = [
       {links.map((l) => (
         <a class="nav__link" href={l.href}>{l.label}</a>
       ))}
+      <button id="mobile-phone-btn" class="nav__phone-btn" style="display: none; background: white; color: #000; border-radius: 50%; padding: 0.5em 0.7em; border: none; margin-left: 1em; align-items: center; justify-content: center;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="#000" d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z"/></svg>
+      </button>
     </nav>
     <button class="nav__toggle" aria-controls="site-nav" aria-expanded="false" aria-label="Toggle menu">
       <div class="hamburger-icon">
@@ -29,6 +32,31 @@ const links = [
 <script is:inline>
   const toggle = document.querySelector('.nav__toggle');
   const nav = document.getElementById('site-nav');
+  const phoneBtn = document.getElementById('mobile-phone-btn');
+  // Use the same base64 phone as index.astro
+  const phone = 'MDQyNyA3MzMgNTY2';
+  function decode(str) {
+    try {
+      return atob(str);
+    } catch (e) {
+      return str;
+    }
+  }
+  function showPhoneBtn() {
+    if (window.innerWidth <= 768 && phoneBtn) {
+      phoneBtn.style.display = 'flex';
+      const phoneNum = decode(phone).replace(/\s/g, '');
+      phoneBtn.onclick = () => {
+        window.location.href = `tel:${phoneNum}`;
+      };
+      phoneBtn.setAttribute('aria-label', 'Call Mike');
+      phoneBtn.title = decode(phone);
+    } else if (phoneBtn) {
+      phoneBtn.style.display = 'none';
+    }
+  }
+  window.addEventListener('resize', showPhoneBtn);
+  document.addEventListener('DOMContentLoaded', showPhoneBtn);
   if (toggle && nav) {
     toggle.addEventListener('click', () => {
       const open = nav.classList.toggle('open');

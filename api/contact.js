@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     // Send email using Resend
     const { data, error } = await resend.emails.send({
       from: process.env.SEND_EMAIL_FROM || 'noreply@yourdomain.com',
-      to: ['sam@sampenny.io'], // Testing email - change back to mike@velocitymarketing.com.au for production
+      to: ['mike@velocitymarketing.com.au'],
       subject: `New Contact Form Submission from ${name}`,
       html: `
         <h2>New Contact Form Submission</h2>
