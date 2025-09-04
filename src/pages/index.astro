@@ -7,7 +7,7 @@ import Layout from "../layouts/Layout.astro";
     <div class="container grid two-col align-center">
       <div class="reveal">
         <div class="badge glass">Paid Media Specialist</div>
-        <h1 class="display text-gradient">Data-Driven Paid Media for Measurable Growth</h1>
+        <h1 class="display text-gradient">Paid Advertising That Drives Real Growth</h1>
         <p class="lead">I help businesses like yours achieve their goals with strategic, results-oriented paid media campaigns.</p>
         <div class="actions">
           <a href="#contact" class="btn primary">Get a Free Consultation</a>
@@ -15,7 +15,7 @@ import Layout from "../layouts/Layout.astro";
         </div>
         <div class="stats">
           <div class="stat">
-            <span class="stat__num">10+</span>
+            <span class="stat__num">10</span>
             <span class="stat__label">Years Experience</span>
           </div>
           <div class="stat">
@@ -48,15 +48,15 @@ import Layout from "../layouts/Layout.astro";
       <div class="grid cards">
         <article class="card hover-lift reveal">
           <h3 class="card__title">Google Ads</h3>
-          <p class="card__body">Capture high-intent customers at the exact moment they're searching for your products or services.</p>
+          <p class="card__body">Put your business at the top of search results and connect with customers the moment they're ready to buy or enquire.</p>
         </article>
         <article class="card hover-lift reveal">
-          <h3 class="card__title">Meta Ads (Facebook & Instagram)</h3>
-          <p class="card__body">Reach and engage a massive audience on the world's largest social media platform.</p>
+          <h3 class="card__title">Meta Ads</h3>
+          <p class="card__body">Reach more people, spark engagement, and grow your business with precision-targeted advertising on the world's largest social media platform.</p>
         </article>
         <article class="card hover-lift reveal">
           <h3 class="card__title">LinkedIn Ads</h3>
-          <p class="card__body">Target a professional audience, generate high-quality B2B leads, and build your brand.</p>
+          <p class="card__body">Reach decision-makers, generate qualified B2B leads, and strengthen your brand presence on the world's leading professional network.</p>
         </article>
       </div>
     </div>
@@ -70,7 +70,7 @@ import Layout from "../layouts/Layout.astro";
         <ul class="checklist">
           <li>10 years of experience in the industry</li>
           <li>Proven track record with a diverse range of clients</li>
-          <li>Certified across Google Ads and Facebook Ads</li>
+          <li>Certified across Google, Meta, and LinkedIn ad platforms</li>
           <li>Transparent reporting and communication</li>
         </ul>
       </div>
@@ -83,8 +83,8 @@ import Layout from "../layouts/Layout.astro";
         <h2 class="h2 reveal">Get in Touch</h2>
       </div>
       <div class="contact-stack">
-        <p class="lead reveal contact-lead">Ready to grow your paid media? Let's talk.</p>
-        <div class="chips reveal">
+        <p class="lead reveal contact-lead" style="text-align: center;">Ready to grow your paid media? Let's talk.</p>
+        <div class="chips reveal" style="text-align: center !important; display: flex !important; justify-content: center !important;">
           <div id="contact-email" class="chip" style="display: none;" aria-label="Email Mike"></div>
           <div id="contact-phone" class="chip" style="display: none;" aria-label="Call Mike"></div>
         </div>
@@ -122,7 +122,7 @@ import Layout from "../layouts/Layout.astro";
           <textarea id="message" name="message" class="textarea" rows="5" required aria-describedby="error-message"></textarea>
           <span id="error-message" class="form__error" hidden>Message is required</span>
         </div>
-          <div class="form__actions">
+          <div class="form__actions" style="justify-content: center !important; display: flex !important;">
             <button class="btn primary" type="submit">Send Message</button>
             <span id="contact-status" role="status" aria-live="polite" class="form__status"></span>
           </div>
@@ -152,7 +152,7 @@ import Layout from "../layouts/Layout.astro";
       if (emailEl) {
         const decryptedEmail = decode(email);
         emailEl.innerHTML = `<a href="mailto:${decryptedEmail}" aria-label="Email Mike" style="color: inherit; text-decoration: none;">${decryptedEmail}</a>`;
-        emailEl.style.display = 'block';
+        emailEl.style.display = 'inline-flex';
       }
       
       // Decrypt and display phone
@@ -160,7 +160,7 @@ import Layout from "../layouts/Layout.astro";
       if (phoneEl) {
         const decryptedPhone = decode(phone);
         phoneEl.innerHTML = `<a href="tel:${decryptedPhone.replace(/\s/g, '')}" aria-label="Call Mike" style="color: inherit; text-decoration: none;">${decryptedPhone}</a>`;
-        phoneEl.style.display = 'block';
+        phoneEl.style.display = 'inline-flex';
       }
     }
 
