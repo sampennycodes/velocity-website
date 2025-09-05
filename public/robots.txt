@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://velocitymarketing.com.au/sitemap.xml
