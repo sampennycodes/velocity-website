@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://velocitymarketing.com.au/sitemap.xml
+Sitemap: https://velocitymarketing.com.au/sitemap-index.xml
