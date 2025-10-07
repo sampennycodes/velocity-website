@@ -1,0 +1,51 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const pageTitle = "Page Not Found | Velocity Marketing";
+const pageDescription = "Looks like you might be lost. Let Velocity Marketing guide you back home.";
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <section id="not-found" class="section hero not-found">
+    <div class="container">
+      <div class="badge glass">404 Error</div>
+      <h1 class="display text-gradient">Looks like you might be lost?</h1>
+      <div class="not-found__media">
+        <img
+          src="/baby-y.webp"
+          alt="Baby Yoda looking curious"
+          loading="lazy"
+        />
+      </div>
+      <p class="lead">We couldn't find the page you're after, but the growth insights you need are just a click away.</p>
+      <div class="actions not-found__actions">
+        <a href="/" class="btn primary">Return home</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  #not-found .container {
+    text-align: center;
+    max-width: 640px;
+  }
+
+  .not-found__actions {
+    justify-content: center;
+  }
+
+  .not-found__media {
+    margin: 32px auto 28px;
+    display: grid;
+    place-items: center;
+    max-width: clamp(320px, 60vw, 540px);
+  }
+
+  .not-found__media img {
+    width: 100%;
+    height: auto;
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  }
+</style>
