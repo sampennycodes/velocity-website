@@ -11,41 +11,43 @@ const links = [
     <a href="/" class="header__brand" aria-label="Velocity Marketing home">
       <img src="/logo.png" alt="Velocity Marketing" width="140" height="40" />
     </a>
-    <nav class="nav" id="site-nav">
-      {links.map((l) => (
-        <a class="nav__link" href={l.href}>{l.label}</a>
-      ))}
-      <a
-        class="nav__phone-link"
-        id="desktop-phone-link"
-        href="#"
-        aria-label="Call Mike"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          role="img"
-          aria-hidden="true"
+    <div class="header__actions">
+      <nav class="nav" id="site-nav">
+        {links.map((l) => (
+          <a class="nav__link" href={l.href}>{l.label}</a>
+        ))}
+        <a
+          class="nav__phone-link"
+          id="desktop-phone-link"
+          href="#"
+          aria-label="Call Mike"
         >
-          <path
-            fill="currentColor"
-            d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z"
-          />
-        </svg>
-      </a>
-      <button id="mobile-phone-btn" class="nav__phone-btn" style="display: none; background: white; color: #000; border-radius: 50%; padding: 0.5em 0.7em; border: none; margin-left: 1em; align-items: center; justify-content: center;">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            role="img"
+            aria-hidden="true"
+          >
+            <path
+              fill="currentColor"
+              d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z"
+            />
+          </svg>
+        </a>
+      </nav>
+      <button id="mobile-phone-btn" class="nav__phone-btn" aria-label="Call Mike">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="#000" d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z"/></svg>
       </button>
-    </nav>
-    <button class="nav__toggle" aria-controls="site-nav" aria-expanded="false" aria-label="Toggle menu">
-      <div class="hamburger-icon">
-        <div class="hamburger-line"></div>
-        <div class="hamburger-line"></div>
-        <div class="hamburger-line"></div>
-      </div>
-    </button>
+      <button class="nav__toggle" aria-controls="site-nav" aria-expanded="false" aria-label="Toggle menu">
+        <div class="hamburger-icon">
+          <div class="hamburger-line"></div>
+          <div class="hamburger-line"></div>
+          <div class="hamburger-line"></div>
+        </div>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -72,7 +74,7 @@ const links = [
   }
   function showPhoneBtn() {
     if (window.innerWidth <= 768 && phoneBtn) {
-      phoneBtn.style.display = 'flex';
+      phoneBtn.style.display = 'inline-flex';
       phoneBtn.onclick = () => {
         window.location.href = `tel:${phoneNum}`;
       };
