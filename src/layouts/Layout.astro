@@ -6,9 +6,16 @@ import "../styles/global.css";
 export interface Props {
   title?: string;
   description?: string;
+  canonical?: string;
+  noIndex?: boolean;
 }
 
-const { title = "Velocity Marketing — Paid Media Specialist", description = "Data-driven paid media for measurable growth." } = Astro.props as Props;
+const {
+  title = "Velocity Marketing — Paid Media Specialist",
+  description = "Data-driven paid media for measurable growth.",
+  canonical = "https://velocitymarketing.com.au/",
+  noIndex = false
+} = Astro.props as Props;
 ---
 
 <!doctype html>
@@ -62,7 +69,8 @@ const { title = "Velocity Marketing — Paid Media Specialist", description = "D
     <!-- Additional meta tags for better sharing -->
     <meta name="theme-color" content="#0a58ff" />
     <meta name="msapplication-TileColor" content="#0a58ff" />
-    <link rel="canonical" href="https://velocitymarketing.com.au/" />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
