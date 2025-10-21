@@ -1,0 +1,253 @@
+---
+interface Review {
+  name: string;
+  business: string;
+  quote: string;
+  image?: string;
+}
+
+const reviews: Review[] = [
+  {
+    name: "Tom Galland",
+    business: "MD, SEO Growth",
+    quote: "Working with Mike has been a real game-changer for us. We'd spent years trying to find an agency that actually understood what we were aiming to achieve and knew how to put the right strategies in place.",
+  },
+  {
+    name: "Hanlon Clarke",
+    business: "Head of Strategy, Happy Travels AU",
+    quote: "We've worked with a bunch of digital marketers over the years and honestly Mike is in a different league. He just gets it.",
+  },
+  {
+    name: "Laura Sayer",
+    business: "Founder & Director, The Wristband Co.",
+    quote: "Mike has been looking after the paid advertising for us for a few years now, and I cannot fault our experience with him – he has been invaluable to our company's success.",
+  }
+];
+
+const getInitials = (name: string) =>
+  name
+    .split(" ")
+    .map((part) => part.trim()[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+---
+
+<section class="section reviews-section" aria-labelledby="perfect-rating-heading">
+  <div class="reviews-container">
+    <div class="reviews-header reveal">
+      <span class="reviews-eyebrow">Perfect 5* Rating</span>
+      <h2 class="h2" id="perfect-rating-heading">What clients say</h2>
+      <p class="reviews-subtext">Backed by measurable performance and transparent communication, our partners consistently rate us five stars.</p>
+    </div>
+    <div class="reviews-wrapper">
+      <div class="reviews-grid">
+      {reviews.map((review) => (
+        <article class="review-card reveal" aria-label={`Testimonial from ${review.name}`}>
+          <div class="review-stars" aria-label="Rated five out of five stars">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <svg
+                class="star"
+                viewBox="0 0 20 20"
+                role="presentation"
+                aria-hidden="true"
+              >
+                <path
+                  d="M10 1.6l2.36 4.78 5.28.77-3.82 3.73.9 5.24L10 13.88l-4.72 2.24.9-5.24L2.36 7.15l5.28-.77L10 1.6z"
+                  fill="currentColor"
+                />
+              </svg>
+            ))}
+          </div>
+          <p class="review-quote">&ldquo;{review.quote}&rdquo;</p>
+          <div class="review-author">
+            {review.image ? (
+              <img
+                src={review.image}
+                alt={`Portrait of ${review.name}`}
+                loading="lazy"
+                decoding="async"
+                width="48"
+                height="48"
+                class="review-avatar"
+              />
+            ) : (
+              <div
+                class="review-avatar fallback"
+                role="img"
+                aria-label={`Initials for ${review.name}`}
+              >
+                {getInitials(review.name)}
+              </div>
+            )}
+            <div class="review-meta">
+              <p class="review-name">{review.name}</p>
+              <p class="review-business">{review.business}</p>
+            </div>
+          </div>
+        </article>
+      ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .reviews-section {
+    position: relative;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.0));
+    overflow: hidden;
+  }
+
+  .reviews-container {
+    width: 100%;
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .reviews-header {
+    max-width: 620px;
+    margin: 0 auto 42px;
+    text-align: center;
+  }
+
+  .reviews-eyebrow {
+    display: inline-flex;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--heading);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+
+  .reviews-subtext {
+    margin: 12px auto 0;
+    max-width: 56ch;
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  .reviews-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .review-card {
+    display: grid;
+    gap: 18px;
+    padding: 28px 24px;
+    background: rgba(12, 12, 32, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius);
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  .review-stars {
+    display: inline-flex;
+    gap: 6px;
+    color: #ffbf47;
+  }
+
+  .star {
+    width: 18px;
+    height: 18px;
+  }
+
+  .review-quote {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--heading);
+  }
+
+  .review-author {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .review-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+  }
+
+  .review-avatar.fallback {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, rgba(52, 235, 244, 0.25), rgba(188, 82, 238, 0.25));
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--heading);
+  }
+
+  .review-meta {
+    display: grid;
+    gap: 4px;
+  }
+
+  .review-name {
+    margin: 0;
+    font-weight: 600;
+    color: var(--heading);
+  }
+
+  .review-business {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 640px) {
+    .reviews-container {
+      padding: 0;
+      max-width: 100vw;
+    }
+
+    .reviews-header {
+      margin-bottom: 32px;
+      padding: 0 24px;
+    }
+
+    .reviews-wrapper {
+      overflow: hidden;
+      width: 100%;
+      max-width: 100vw;
+    }
+
+    .reviews-grid {
+      display: flex;
+      gap: 16px;
+      padding: 4px 24px 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      width: 100%;
+    }
+
+    .reviews-grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .review-card {
+      flex: 0 0 calc(100% - 48px);
+      min-width: calc(100% - 48px);
+      max-width: calc(100% - 48px);
+      padding: 24px 20px;
+      scroll-snap-align: start;
+    }
+  }
+</style>

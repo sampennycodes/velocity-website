@@ -14,7 +14,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   margin: 0;
@@ -24,6 +24,7 @@ body {
               radial-gradient(1200px 800px at 100% 0%, #0b0d2a, transparent 50%),
               var(--bg);
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 /* Background FX layers */
