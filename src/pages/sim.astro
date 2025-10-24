@@ -1,0 +1,38 @@
+---
+// Flight Simulator Page
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/sim/stylesheet.css" />
+    <title>F-16C Flight Simulator | Velocity Marketing</title>
+    <script is:inline>
+      // Set the base URL for assets before loading the main script
+      window.ASSET_BASE = '/sim/';
+    </script>
+  </head>
+  <body>
+    <canvas id="canvas" width="100vw" height="100vh"></canvas>
+    <div id="loading-screen" class="gui" style="left: 50vw; top: 50vh">
+      <div class="loading-screen" style="position: relative; left: -50%">
+        <h1>Loading...</h1>
+      </div>
+    </div>
+    <div id="splash-screen" class="gui" style="left: 50vw; top: 70vh; display: none">
+      <div class="splash-screen" style="position: relative; left: -50%">
+        <button id="play">PLAY</button>
+      </div>
+    </div>
+    <div id="game-screen" class="gui" style="left: 50vw; top: 10vh; display: none">
+      <span>Game</span>
+    </div>
+    <div id="pause-screen" class="gui" style="left: 50vw; top: 10vh; display: none">
+      <span>paused</span>
+    </div>
+    <script is:inline src="/sim/main.js"></script>
+  </body>
+</html>
