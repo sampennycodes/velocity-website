@@ -57,3 +57,9 @@ See [Resend domain verification](https://resend.com/docs/dashboard/domains/intro
 - `.env.example`: configuration names only; never add live credentials to Git.
 
 The Google Ads and Traralgon pages retain their URLs and local content, with the shared navigation, form and visual theme. Existing social images and the simulator remain in place.
+
+## Font loading
+
+Manrope and Space Grotesk are bundled as Latin variable WOFF2 files, covering all weights used by the site (about 46 KB combined). Vite fingerprints their URLs; the shared layout preloads the exact same assets referenced by the stylesheet. There is no Google Fonts stylesheet or font request at runtime.
+
+Keep `font-display: optional`: the browser uses the custom font if it is ready for the initial render, otherwise it keeps the fallback for that page view instead of swapping fonts later and rewrapping the text. Preloading makes the bundled fonts available early on normal connections. Source URLs are recorded in `src/assets/fonts/SOURCES.json`, and the SIL Open Font Licenses are included in `public/fonts`.

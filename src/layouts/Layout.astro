@@ -2,6 +2,8 @@
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
+import manropeFont from "../assets/fonts/manrope-latin-variable.woff2?url";
+import spaceGroteskFont from "../assets/fonts/space-grotesk-latin-variable.woff2?url";
 
 export interface Props {
   title?: string;
@@ -22,6 +24,10 @@ const isPreview = import.meta.env.DEV || import.meta.env.VERCEL_ENV === 'preview
 <!doctype html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href={manropeFont} as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href={spaceGroteskFont} as="font" type="font/woff2" crossorigin="anonymous" />
     <!-- Google Tag Manager -->
     {!isPreview && <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -37,8 +43,6 @@ const isPreview = import.meta.env.DEV || import.meta.env.VERCEL_ENV === 'preview
        | |_||_    /__|_||V||_ 
        | | ||__   \_|| || ||__
     -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <!-- Favicon set -->
@@ -47,9 +51,6 @@ const isPreview = import.meta.env.DEV || import.meta.env.VERCEL_ENV === 'preview
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=3" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
     <link rel="manifest" href="/site.webmanifest?v=3" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <title>{title}</title>
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content={title} />

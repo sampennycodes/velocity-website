@@ -1,3 +1,20 @@
+/* Local, preloaded variable fonts avoid the external stylesheet waterfall.
+   Optional prevents a late font swap if a slow connection misses first paint. */
+@font-face {
+  font-family:'Manrope';
+  font-style:normal;
+  font-weight:400 800;
+  font-display:optional;
+  src:url('../assets/fonts/manrope-latin-variable.woff2') format('woff2');
+}
+@font-face {
+  font-family:'Space Grotesk';
+  font-style:normal;
+  font-weight:400 700;
+  font-display:optional;
+  src:url('../assets/fonts/space-grotesk-latin-variable.woff2') format('woff2');
+}
+
 :root {
   --bg:#111111;
   --surface:#1b1b1b;

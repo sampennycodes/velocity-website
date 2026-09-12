@@ -1,0 +1,18 @@
+[
+  {
+    "family": "Manrope",
+    "weight": "400 800",
+    "path": "src/assets/fonts/manrope-latin-variable.woff2",
+    "source": "https://fonts.gstatic.com/s/manrope/v20/xn7gYHE41ni1AdIRggexSvfedN4.woff2",
+    "bytes": 24576,
+    "license": "https://raw.githubusercontent.com/google/fonts/main/ofl/manrope/OFL.txt"
+  },
+  {
+    "family": "Space Grotesk",
+    "weight": "400 700",
+    "path": "src/assets/fonts/space-grotesk-latin-variable.woff2",
+    "source": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4C_k3HqU.woff2",
+    "bytes": 22320,
+    "license": "https://raw.githubusercontent.com/google/fonts/main/ofl/spacegrotesk/OFL.txt"
+  }
+]
