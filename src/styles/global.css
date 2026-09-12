@@ -582,6 +582,23 @@ a.hover-lift:hover {
   letter-spacing:-.05em;
   margin:0 0 10px;
 }
+.service-title {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-width:0;
+}
+.service-logo {
+  flex-shrink:0;
+  width:32px;
+  height:32px;
+  object-fit:contain;
+}
+.service-logo--google {
+  padding:4px;
+  border-radius:50%;
+  background:#ffffff;
+}
 .service-tags {
   color:var(--muted);
   font-size:.8125rem;
@@ -744,11 +761,11 @@ a.service-row:hover .service-arrow {
   pointer-events:none;
 }
 .contact-section {
-  background:#f6f6f6;
+  background:#d8d8d8;
   --text:#252525;
   --heading:#111111;
-  --muted:#606060;
-  --border:#d2d2d2;
+  --muted:#555555;
+  --border:#bcbcbc;
   --accent:var(--brand-purple);
   color:var(--text);
 }
@@ -772,15 +789,15 @@ a.service-row:hover .service-arrow {
   font-size:1rem;
 }
 .contact-section .form-hero {
-  background:#ffffff;
+  background:#e4e4e4;
   padding:36px;
 }
 .contact-section .input,.contact-section .textarea {
-  background:transparent;
-  border-color:#bdbdbd;
+  background:#ededed;
+  border-color:#7f7f7f;
 }
 .contact-section .input::placeholder,.contact-section .textarea::placeholder {
-  color:#737373;
+  color:#666666;
 }
 .contact-section .btn.primary {
   background:var(--brand-purple);
@@ -1137,6 +1154,13 @@ a.service-row:hover .service-arrow {
   }
   .service-row {
     padding-block:28px;
+  }
+  .service-title {
+    gap:10px;
+  }
+  .service-logo {
+    width:28px;
+    height:28px;
   }
   .form-hero,.contact-section .form-hero {
     padding:22px;
