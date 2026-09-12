@@ -2,7 +2,7 @@
   <span class="rating-marks" aria-hidden="true">
     <img src="/google-g.png" alt="" width="28" height="28" />
     <span class="rating-stars">
-      {Array.from({ length: 5 }, () => <svg viewBox="0 0 20 20" width="16" height="16" focusable="false"><path d="m10 1.5 2.6 5.3 5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.9Z" /></svg>)}
+      {Array.from({ length: 5 }, () => <svg viewBox="0 0 20 20" width="16" height="16" focusable="false"><path fill="#fbbc04" d="m10 1.5 2.6 5.3 5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.9Z" /></svg>)}
     </span>
   </span>
   <span class="rating-label" aria-hidden="true">Rated <strong>5*</strong> on Google</span>
@@ -12,7 +12,7 @@
   .rating-marks { display: inline-flex; align-items: center; gap: 8px; }
   img { width: 28px; height: 28px; padding: 4px; background: #fff; border-radius: 50%; object-fit: contain; }
   .rating-stars { display: inline-flex; gap: 2px; color: #fbbc04; }
-  .rating-stars svg { display: block; fill: currentColor; flex-shrink: 0; }
+  .rating-stars svg { display: block; flex-shrink: 0; }
   .rating-label { white-space: nowrap; }
   .rating-label strong { font-weight: 800; }
 </style>

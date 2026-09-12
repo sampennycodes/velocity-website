@@ -6,7 +6,7 @@
 <div class="stats hero-stats" data-proof-points aria-label="Experience and approach">
   <div class="stat">
     <div class="proof-heading">
-      <span class="stat__num experience-number">10</span>
+      <span class="stat__num experience-number"><span data-experience-count aria-hidden="true">10</span><span class="experience-accessible">10</span></span>
     </div>
     <span class="stat__label">Years Experience</span>
   </div>
@@ -37,11 +37,37 @@
 <script is:inline>
   (() => {
     const points = document.querySelector('[data-proof-points]');
-    if (!points || !('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (!points || !('IntersectionObserver' in window) || motion.matches) return;
+
+    const counter = points.querySelector('[data-experience-count]');
+    const target = Number(counter?.textContent || '10');
+    let played = false;
+
+    const countUp = () => {
+      if (!counter || motion.matches) return;
+      let start;
+      counter.textContent = '0';
+
+      const tick = (now) => {
+        if (motion.matches) {
+          counter.textContent = String(target);
+          return;
+        }
+        start ??= now;
+        const progress = Math.min((now - start) / 1200, 1);
+        const eased = 1 - (1 - progress) ** 2;
+        counter.textContent = String(Math.round(target * eased));
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
 
     const observer = new IntersectionObserver((entries) => {
-      if (entries.some(entry => entry.isIntersecting)) {
+      if (!played && entries.some(entry => entry.isIntersecting)) {
+        played = true;
         points.classList.add('is-animated');
+        countUp();
         observer.disconnect();
       }
     }, { threshold: 0.35 });
@@ -61,10 +87,26 @@
     min-height:44px;
   }
   .experience-number {
+    position:relative;
     font-size:2.25rem;
     font-weight:600;
     line-height:1;
     letter-spacing:-.06em;
+    font-variant-numeric:tabular-nums;
+  }
+  [data-experience-count] {
+    display:inline-block;
+    min-width:2ch;
+  }
+  .experience-accessible {
+    position:absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    overflow:hidden;
+    clip-path:inset(50%);
+    white-space:nowrap;
   }
   .proof-art {
     display:inline-flex;
