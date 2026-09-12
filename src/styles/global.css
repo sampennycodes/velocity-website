@@ -7,8 +7,13 @@
   --text:#e7e7e7;
   --muted:#b5b5b5;
   --heading:#ffffff;
-  --accent:#75aaff;
-  --accent-2:#75aaff;
+  /* Deep violet sampled from the existing Velocity favicon. */
+  --brand-purple:#3e16c5;
+  --brand-purple-hover:#31119e;
+  --brand-purple-light:#b9a4ff;
+  --brand-purple-ink:#eee8ff;
+  --accent:var(--brand-purple-light);
+  --accent-2:var(--brand-purple);
   --radius:12px;
   --container:1328px;
   --font-heading:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
@@ -46,7 +51,7 @@ figure,blockquote {
   margin:0;
 }
 ::selection {
-  background:#245de5;
+  background:var(--brand-purple);
   color:#ffffff;
 }
 :focus-visible {
@@ -153,7 +158,7 @@ figure,blockquote {
   border-radius:50%;
   background:var(--accent);
   flex:0 0 auto;
-  box-shadow:0 0 0 5px #75aaff18;
+  box-shadow:0 0 0 5px #b9a4ff18;
 }
 .header {
   position:sticky;
@@ -284,11 +289,11 @@ figure,blockquote {
   transition:background .2s,transform .2s;
 }
 .btn.primary {
-  background:#245de5;
+  background:var(--brand-purple);
   color:#ffffff;
 }
 .btn.primary:hover {
-  background:#1c4fc6;
+  background:var(--brand-purple-hover);
   transform:translateY(-2px);
 }
 .btn.ghost {
@@ -685,7 +690,7 @@ a.service-row:hover .service-arrow {
   --heading:#111111;
   --muted:#606060;
   --border:#d2d2d2;
-  --accent:#225bd6;
+  --accent:var(--brand-purple);
   color:var(--text);
 }
 .contact-layout {
@@ -719,11 +724,11 @@ a.service-row:hover .service-arrow {
   color:#737373;
 }
 .contact-section .btn.primary {
-  background:#245de5;
+  background:var(--brand-purple);
   color:#ffffff;
 }
 .contact-section .btn.primary:hover {
-  background:#1c4fc6;
+  background:var(--brand-purple-hover);
 }
 .contact-section .form__error {
   color:#a72e27;

@@ -48,11 +48,11 @@ const reviews: Review[] = [
   figcaption strong { display: block; font-weight: 700; }
   .review-business { color: var(--muted); display: block; font-size: .8125rem; }
   .review-initials { width: 40px; height: 40px; border: 1px solid #737373; border-radius: 50%; display: grid; place-items: center; font-size: .75rem; }
-  .review-card:nth-child(2) { background: #245de5; color: #ffffff; border-color: #245de5; }
+  .review-card:nth-child(2) { background: var(--brand-purple); color: #ffffff; border-color: var(--brand-purple); }
   .review-card:nth-child(2) blockquote { color: #ffffff; font: 500 clamp(1.4rem, 2vw, 1.9rem)/1.45 var(--font-heading); letter-spacing: -.035em; }
   .review-card:nth-child(2) .review-stars { color: #ffffff; }
-  .review-card:nth-child(2) .review-initials { border-color: #adc7ff; }
-  .review-card:nth-child(2) .review-business { color: #e2ebff; }
+  .review-card:nth-child(2) .review-initials { border-color: var(--brand-purple-light); }
+  .review-card:nth-child(2) .review-business { color: var(--brand-purple-ink); }
   @media (max-width: 1000px) { .reviews-grid { gap: 14px; } .review-card { padding: 24px; } }
   @media (max-width: 820px) { .reviews-grid { grid-template-columns: 1fr; } .review-card { padding: 28px; } .review-card:nth-child(2) blockquote { font-size: 1.65rem; } }
 </style>
