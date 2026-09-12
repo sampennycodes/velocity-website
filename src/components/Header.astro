@@ -7,9 +7,13 @@ const links = [{ href: '#services', label: 'Services' }, { href: '#about', label
     <a href="/" class="header__brand" aria-label="Velocity Marketing home"><img src="/logo.png" alt="Velocity Marketing" width="3509" height="983" /></a>
     <div class="header__actions">
       <nav class="nav" id="site-nav" aria-label="Main navigation">
-        {links.map(link => <a class="nav__link" href={`${sectionPrefix}${link.href}`}>{link.label}</a>)}
-        <a class="nav__link nav__cta" href={`${sectionPrefix}#contact`}>Contact <span aria-hidden="true">↗</span></a>
-        <a class="nav__phone-link" href="tel:0427733566" aria-label="Call Mike on 0427 733 566"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z" /></svg></a>
+        <div class="nav__links">
+          {links.map(link => <a class="nav__link" href={`${sectionPrefix}${link.href}`}>{link.label}</a>)}
+        </div>
+        <div class="nav__buttons">
+          <a class="nav__link nav__cta" href={`${sectionPrefix}#contact`}>Contact <span aria-hidden="true">↗</span></a>
+          <a class="nav__phone-link" href="tel:0427733566" aria-label="Call Mike on 0427 733 566"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z" /></svg></a>
+        </div>
       </nav>
       <a class="nav__phone-btn" href="tel:0427733566" aria-label="Call Mike on 0427 733 566"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z" /></svg></a>
       <button class="nav__toggle" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu"><span class="hamburger-icon" aria-hidden="true"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></span></button>
