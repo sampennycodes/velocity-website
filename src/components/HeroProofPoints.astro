@@ -1,12 +1,20 @@
 ---
 // Australian flag: https://github.com/lipis/flag-icons/blob/main/flags/4x3/au.svg
 // License retained at /flag-icons-LICENSE.txt.
+const experienceBars = [7, 10, 13, 17, 21, 25, 29];
 ---
 
 <div class="stats hero-stats" data-proof-points aria-label="Experience and approach">
   <div class="stat">
     <div class="proof-heading">
-      <span class="stat__num experience-number"><span data-experience-count aria-hidden="true">10</span><span class="experience-accessible">10</span></span>
+      <span class="stat__num">10</span>
+      <span class="proof-art" aria-hidden="true">
+        <svg viewBox="0 0 80 36" width="80" height="36" fill="none" focusable="false">
+          {experienceBars.map((height, index) => (
+            <path class="experience-bar" d={`M${8 + index * 10} 32V${32 - height}`} pathLength="1" stroke="#b9a4ff" stroke-width="2.5" stroke-linecap="round" stroke-opacity={0.55 + index * 0.075} style={`--bar-delay:${index * 90}ms`} />
+          ))}
+        </svg>
+      </span>
     </div>
     <span class="stat__label">Years Experience</span>
   </div>
@@ -40,34 +48,12 @@
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (!points || !('IntersectionObserver' in window) || motion.matches) return;
 
-    const counter = points.querySelector('[data-experience-count]');
-    const target = Number(counter?.textContent || '10');
     let played = false;
-
-    const countUp = () => {
-      if (!counter || motion.matches) return;
-      let start;
-      counter.textContent = '0';
-
-      const tick = (now) => {
-        if (motion.matches) {
-          counter.textContent = String(target);
-          return;
-        }
-        start ??= now;
-        const progress = Math.min((now - start) / 1200, 1);
-        const eased = 1 - (1 - progress) ** 2;
-        counter.textContent = String(Math.round(target * eased));
-        if (progress < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    };
 
     const observer = new IntersectionObserver((entries) => {
       if (!played && entries.some(entry => entry.isIntersecting)) {
         played = true;
         points.classList.add('is-animated');
-        countUp();
         observer.disconnect();
       }
     }, { threshold: 0.35 });
@@ -85,28 +71,6 @@
     align-items:center;
     gap:20px;
     min-height:44px;
-  }
-  .experience-number {
-    position:relative;
-    font-size:2.25rem;
-    font-weight:600;
-    line-height:1;
-    letter-spacing:-.06em;
-    font-variant-numeric:tabular-nums;
-  }
-  [data-experience-count] {
-    display:inline-block;
-    min-width:2ch;
-  }
-  .experience-accessible {
-    position:absolute;
-    width:1px;
-    height:1px;
-    padding:0;
-    margin:-1px;
-    overflow:hidden;
-    clip-path:inset(50%);
-    white-space:nowrap;
   }
   .proof-art {
     display:inline-flex;
@@ -139,12 +103,15 @@
     stroke-linejoin:round;
   }
   @media (prefers-reduced-motion:no-preference) {
-    .motion-ready .roi-line {
+    .motion-ready .experience-bar,.motion-ready .roi-line {
       stroke-dasharray:1;
       stroke-dashoffset:1;
     }
     .motion-ready .roi-tip {
       opacity:0;
+    }
+    .is-animated .experience-bar {
+      animation:proof-draw .8s var(--bar-delay) cubic-bezier(.22,1,.36,1) forwards;
     }
     .is-animated .roi-line {
       animation:proof-draw 1.4s .15s cubic-bezier(.25,.1,.25,1) forwards;
@@ -165,9 +132,6 @@
       align-items:flex-start;
       gap:6px;
       min-height:58px;
-    }
-    .experience-number {
-      font-size:2.5rem;
     }
     .proof-art {
       width:64px;
