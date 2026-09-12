@@ -3,8 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import ReviewSlider from "../components/ReviewSlider.astro";
 import ContactForm from "../components/ContactForm.astro";
 import GoogleRating from "../components/GoogleRating.astro";
-
-// LinkedIn's white [in] asset: https://brand.linkedin.com/downloads
+import MikeProfile from "../components/MikeProfile.astro";
 ---
 
 <Layout title="Velocity Marketing — Paid Media Specialist" description="I help businesses achieve measurable growth with strategic, data-driven paid media.">
@@ -20,21 +19,7 @@ import GoogleRating from "../components/GoogleRating.astro";
           </div>
           <div class="hero-proof"><GoogleRating /></div>
         </div>
-        <figure class="hero-art hero-profile">
-          <div class="portrait-panel">
-            <img src="/img_8071.png" alt="Mike Nicholas" width="1295" height="1367" fetchpriority="high" loading="eager" decoding="async" class="hero-photo" />
-          </div>
-          <figcaption class="portrait-caption">
-            <span class="portrait-identity">
-              <strong>Mike Nicholas</strong>
-              <span>Paid Media Specialist</span>
-            </span>
-            <a class="linkedin-link" href="https://au.linkedin.com/in/mikenicholas91" target="_blank" rel="noopener noreferrer" aria-label="Connect with Mike Nicholas on LinkedIn (opens in a new tab)">
-              <img src="/linkedin-in-white.png" alt="" width="840" height="779" />
-              <span>Connect on LinkedIn</span>
-            </a>
-          </figcaption>
-        </figure>
+        <MikeProfile placement="hero" />
       </div>
       <div class="stats hero-stats" aria-label="Experience and approach">
         <div class="stat"><span class="stat__num">10</span><span class="stat__label">Years Experience</span></div>
@@ -69,7 +54,10 @@ import GoogleRating from "../components/GoogleRating.astro";
 
   <section id="about" class="section">
     <div class="container about-layout">
-      <div class="reveal"><h2 class="h2">Why Work With Me?</h2></div>
+      <div class="reveal">
+        <h2 class="h2">Why Work With Me?</h2>
+        <MikeProfile placement="about" />
+      </div>
       <div class="reveal">
         <p class="lead">My name is Mike Nicholas, and I'm a Paid Media Specialist with a passion for helping businesses succeed. I believe in a data-driven approach and I'm committed to delivering measurable results.</p>
         <ul class="checklist">

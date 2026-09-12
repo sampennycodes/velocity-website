@@ -1,0 +1,24 @@
+---
+interface Props {
+  placement: "hero" | "about";
+}
+
+const { placement } = Astro.props;
+// LinkedIn's white [in] asset: https://brand.linkedin.com/downloads
+---
+
+<figure class:list={["mike-profile", `${placement}-profile`]}>
+  <div class="portrait-panel">
+    <img src="/img_8071.png" alt="Mike Nicholas" width="1295" height="1367" fetchpriority={placement === "hero" ? "high" : "auto"} loading={placement === "hero" ? "eager" : "lazy"} decoding="async" class="hero-photo" />
+  </div>
+  <figcaption class="portrait-caption">
+    <span class="portrait-identity">
+      <strong>Mike Nicholas</strong>
+      <span>Paid Media Specialist</span>
+    </span>
+    <a class="linkedin-link" href="https://au.linkedin.com/in/mikenicholas91" target="_blank" rel="noopener noreferrer" aria-label="Connect with Mike Nicholas on LinkedIn (opens in a new tab)">
+      <img src="/linkedin-in-white.png" alt="" width="840" height="779" />
+      <span>Connect on LinkedIn</span>
+    </a>
+  </figcaption>
+</figure>
