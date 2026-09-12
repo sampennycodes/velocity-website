@@ -193,17 +193,15 @@ figure,blockquote {
   gap:30px;
 }
 .nav {
-  gap:44px;
+  --nav-gap:36px;
+  gap:var(--nav-gap);
 }
 .nav__links,.nav__buttons {
   display:flex;
   align-items:center;
 }
-.nav__links {
-  gap:36px;
-}
-.nav__buttons {
-  gap:12px;
+.nav__links,.nav__buttons {
+  gap:var(--nav-gap);
 }
 .nav__link {
   display:inline-flex;
@@ -219,10 +217,10 @@ figure,blockquote {
   color:var(--accent);
 }
 .nav__cta {
-  gap:20px;
+  gap:24px;
   height:48px;
   border:1px solid #b9a4ff40;
-  padding:0 18px;
+  padding:0 22px;
   border-radius:5px;
   color:var(--heading);
   background:var(--brand-purple);
@@ -303,6 +301,19 @@ figure,blockquote {
   gap:26px;
   margin-block:30px;
 }
+.home-hero .actions {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));
+  align-items:stretch;
+  gap:20px;
+  max-width:548px;
+}
+.home-hero .actions .btn {
+  justify-content:space-between;
+  gap:16px;
+  min-height:58px;
+  padding:15px 20px;
+}
 .btn {
   display:inline-flex;
   align-items:center;
@@ -326,11 +337,22 @@ figure,blockquote {
   transform:translateY(-2px);
 }
 .home-hero .btn.primary {
-  box-shadow:0 0 0 1px #b9a4ff22,0 6px 24px #3e16c547,0 0 36px #3e16c52e;
-  transition:background .2s,transform .2s,box-shadow .25s;
+  border-color:#b9a4ff99;
+  box-shadow:0 0 0 1px #b9a4ff26,0 0 10px 1px #865bff66,inset 0 0 8px #b9a4ff1a;
+  transition:background .2s,border-color .2s,transform .2s,box-shadow .25s;
 }
 .home-hero .btn.primary:hover,.home-hero .btn.primary:focus-visible {
-  box-shadow:0 0 0 1px #b9a4ff55,0 8px 28px #3e16c566,0 0 48px #3e16c533;
+  border-color:#d4c6ff;
+  box-shadow:0 0 0 1px #b9a4ff40,0 0 14px 2px #865bff80,inset 0 0 10px #b9a4ff26;
+}
+.home-hero .btn.ghost {
+  border-color:#5b5b5b;
+  background:var(--surface);
+  font-weight:700;
+}
+.home-hero .btn.ghost:hover,.home-hero .btn.ghost:focus-visible {
+  border-color:var(--accent);
+  background:var(--surface-2);
 }
 .btn.ghost {
   color:var(--heading);
@@ -846,10 +868,7 @@ a.service-row:hover .service-arrow {
     gap:48px;
   }
   .nav {
-    gap:32px;
-  }
-  .nav__links {
-    gap:28px;
+    --nav-gap:28px;
   }
   .service-row {
     gap:24px;
