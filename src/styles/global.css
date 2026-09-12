@@ -281,6 +281,12 @@ figure,blockquote {
   padding-top:76px;
   padding-bottom:80px;
 }
+.hero.home-hero {
+  padding-bottom:40px;
+}
+.section.home-services {
+  padding-top:48px;
+}
 .hero-layout {
   grid-template-columns:minmax(0,1fr) minmax(0,400px);
   gap:clamp(40px,6vw,88px);
@@ -828,6 +834,69 @@ a.service-row:hover .service-arrow {
   to {
     opacity:1;
     transform:none;
+  }
+}
+@media(min-width:1400px) {
+  html {
+    font-size:110%;
+  }
+  :root {
+    --container:1456px;
+  }
+  .header__inner {
+    min-height:104px;
+  }
+  .header__brand img {
+    width:202px;
+  }
+  .nav {
+    --nav-gap:40px;
+  }
+  .nav__link {
+    min-height:52px;
+  }
+  .nav__cta {
+    height:52px;
+    gap:26px;
+    padding-inline:24px;
+  }
+  .nav__phone-link {
+    width:52px;
+    height:52px;
+  }
+  .nav__phone-link svg {
+    width:20px;
+    height:20px;
+  }
+  .home-hero {
+    padding-top:60px;
+  }
+  .hero-layout {
+    grid-template-columns:minmax(0,1fr) minmax(0,440px);
+    gap:96px;
+  }
+  .home-hero .display {
+    font-size:clamp(2.75rem,5.17vw,4.5rem);
+  }
+  .hero-profile {
+    max-width:440px;
+    margin-top:14px;
+  }
+  .home-hero .actions {
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,275px),1fr));
+    max-width:604px;
+    gap:22px;
+  }
+  .home-hero .actions .btn {
+    min-height:64px;
+    padding:16px 22px;
+    gap:18px;
+  }
+  .h2 {
+    font-size:clamp(2rem,4.125vw,3.7rem);
+  }
+  .service-row h3 {
+    font-size:clamp(1.6rem,2.64vw,2.4rem);
   }
 }
 @media(min-width:1500px) {
