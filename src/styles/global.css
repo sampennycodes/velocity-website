@@ -1,14 +1,14 @@
 :root {
-  --bg:#10191a;
-  --surface:#182426;
-  --surface-2:#1f3032;
-  --card:#182426;
-  --border:#334344;
-  --text:#e3e9e8;
-  --muted:#acbcbd;
-  --heading:#f6f9f7;
-  --accent:#5df4e4;
-  --accent-2:#5df4e4;
+  --bg:#111111;
+  --surface:#1b1b1b;
+  --surface-2:#242424;
+  --card:#1b1b1b;
+  --border:#373737;
+  --text:#e7e7e7;
+  --muted:#b5b5b5;
+  --heading:#ffffff;
+  --accent:#75aaff;
+  --accent-2:#75aaff;
   --radius:12px;
   --container:1328px;
   --font-heading:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
@@ -46,8 +46,8 @@ figure,blockquote {
   margin:0;
 }
 ::selection {
-  background:var(--accent);
-  color:var(--bg);
+  background:#245de5;
+  color:#ffffff;
 }
 :focus-visible {
   outline:3px solid var(--accent);
@@ -153,14 +153,13 @@ figure,blockquote {
   border-radius:50%;
   background:var(--accent);
   flex:0 0 auto;
-  box-shadow:0 0 0 5px #5df4e411;
+  box-shadow:0 0 0 5px #75aaff18;
 }
 .header {
   position:sticky;
   top:0;
   z-index:50;
-  background:#10191af5;
-  backdrop-filter:blur(16px);
+  background:#111111;
   border-bottom:1px solid var(--border);
 }
 .header__inner {
@@ -196,7 +195,7 @@ figure,blockquote {
   display:inline-flex;
   gap:22px;
   align-items:center;
-  border:1px solid #63716f;
+  border:1px solid #737373;
   padding:10px 18px;
   border-radius:5px;
   color:var(--heading);
@@ -285,11 +284,11 @@ figure,blockquote {
   transition:background .2s,transform .2s;
 }
 .btn.primary {
-  background:var(--accent);
-  color:#10191a;
+  background:#245de5;
+  color:#ffffff;
 }
 .btn.primary:hover {
-  background:#92fff2;
+  background:#1c4fc6;
   transform:translateY(-2px);
 }
 .btn.ghost {
@@ -311,7 +310,7 @@ figure,blockquote {
   font-size:.875rem;
   font-weight:600;
   text-decoration:none;
-  border-bottom:1px solid #647574;
+  border-bottom:1px solid #737373;
   padding-block:6px;
 }
 .text-link:hover {
@@ -341,7 +340,7 @@ figure,blockquote {
   border-radius:var(--radius);
 }
 .portrait-panel {
-  background:#c7e8df;
+  background:#ffffff;
   color:var(--bg);
   aspect-ratio:.93;
   border-radius:12px;
@@ -384,14 +383,12 @@ figure,blockquote {
   left:-2.5%;
   object-fit:cover;
   object-position:center top;
-  mix-blend-mode:multiply;
-  filter:grayscale(1);
   border-radius:0;
 }
 .portrait-caption {
   position:absolute;
   inset:auto 18px 18px;
-  background:#10191aef;
+  background:#111111;
   color:var(--heading);
   padding:15px 20px;
   border:1px solid #ffffff1a;
@@ -635,8 +632,8 @@ a.service-row:hover .service-arrow {
   min-height:50px;
   padding:12px 14px;
   color:var(--heading);
-  border:1px solid #4b6060;
-  background:#122022;
+  border:1px solid #626262;
+  background:#181818;
   border-radius:5px;
 }
 .textarea {
@@ -649,7 +646,7 @@ a.service-row:hover .service-arrow {
   outline-offset:2px;
 }
 .input::placeholder,.textarea::placeholder {
-  color:#8da4a5;
+  color:#a6a6a6;
 }
 .form__actions {
   display:flex;
@@ -683,12 +680,12 @@ a.service-row:hover .service-arrow {
   pointer-events:none;
 }
 .contact-section {
-  background:#e9f1ee;
-  --text:#213432;
-  --heading:#101e1d;
-  --muted:#4d6560;
-  --border:#bbcec7;
-  --accent:#165e51;
+  background:#f6f6f6;
+  --text:#252525;
+  --heading:#111111;
+  --muted:#606060;
+  --border:#d2d2d2;
+  --accent:#225bd6;
   color:var(--text);
 }
 .contact-layout {
@@ -706,27 +703,27 @@ a.service-row:hover .service-arrow {
   max-width:100%;
   overflow-wrap:anywhere;
   text-decoration:none;
-  border-bottom:1px solid #96b6aa;
+  border-bottom:1px solid #bdbdbd;
   padding-block:5px;
   font-size:1rem;
 }
 .contact-section .form-hero {
-  background:#f8fbf9;
+  background:#ffffff;
   padding:36px;
 }
 .contact-section .input,.contact-section .textarea {
   background:transparent;
-  border-color:#acbfb7;
+  border-color:#bdbdbd;
 }
 .contact-section .input::placeholder,.contact-section .textarea::placeholder {
-  color:#657e73;
+  color:#737373;
 }
 .contact-section .btn.primary {
-  background:#142824;
-  color:#f7fffc;
+  background:#245de5;
+  color:#ffffff;
 }
 .contact-section .btn.primary:hover {
-  background:#225347;
+  background:#1c4fc6;
 }
 .contact-section .form__error {
   color:#a72e27;
@@ -820,7 +817,7 @@ a.service-row:hover .service-arrow {
   .nav {
     position:absolute;
     inset:79px 20px auto;
-    background:#182426;
+    background:#1b1b1b;
     padding:18px;
     border:1px solid var(--border);
     border-radius:8px;
