@@ -1,118 +1,59 @@
-# Velocity Marketing Website
+# Velocity Marketing
 
-A marketing website for Velocity Marketing built with Astro.
+Astro marketing site for Mike Nicholas. The existing site is deployed on Vercel; the `main` branch is the production source. The visual refresh is on `codex/visual-refresh` for review before merging.
 
-## Contact Form with Resend ✅
+## Local preview
 
-The contact form is now **FULLY INTEGRATED with Resend** and will actually send emails! This uses Astro's built-in API routes with the Vercel adapter for both local development and production deployment.
-
-### Setup Instructions:
-
-1. **Get Your Resend API Key**
-   - Sign up at [resend.com](https://resend.com)
-   - Verify your domain in the Resend dashboard
-   - Create an API key
-
-2. **Configure Environment Variables**
-   - Add the following variables to your existing `.env` file:
-     ```
-     RESEND_API_KEY=your_actual_api_key_here
-     SEND_EMAIL_FROM=noreply@yourdomain.com
-     ```
-   - Use your verified domain for `SEND_EMAIL_FROM`
-
-3. **Local Development**
-   - Run `npm run dev` to start the development server
-   - The contact form will work locally with your Resend API key
-
-4. **Vercel Deployment**
-   - The project is configured with `@astrojs/vercel` adapter
-   - Add your environment variables in Vercel dashboard:
-     - Go to your project settings → Environment Variables
-     - Add `RESEND_API_KEY` and `SEND_EMAIL_FROM`
-   - Deploy with `vercel --prod` or push to your connected Git repository
-
-5. **Test the Contact Form**
-   - Fill out and submit the contact form
-   - Check that emails are being sent to mike@velocitymarketing.com.au
-
-### Features:
-- ✅ **Fully functional contact form** with Resend integration
-- ✅ **Server-side validation** and error handling
-- ✅ **Honeypot protection** against spam bots
-- ✅ **Professional email templates** (HTML + text)
-- ✅ **Proper error handling** and user feedback
-- ✅ **Accessibility features** with ARIA labels and error descriptions
-- ✅ **Works locally and in production** with Vercel adapter
-- ✅ **Proper Vercel serverless function configuration**
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```sh
+npm ci
+npm run dev
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+Open http://localhost:4321. Local previews disable analytics and search indexing. The form validates inputs and displays a preview-only message without sending email. The local API also blocks delivery.
 
-**Key Files:**
-- `src/pages/index.astro` - Main page with contact form
-- `src/pages/api/contact.ts` - API endpoint for Resend integration
-- `astro.config.mjs` - Astro configuration with Vercel adapter
-- `vercel.json` - Vercel deployment configuration
-- `.env` - Environment variables for Resend API key
+```sh
+npm run build
+node --test tests/contact.test.js
+```
 
-## 🧞 Commands
+The Astro build produces static pages in `dist`. Production mail is handled separately by the Vercel function `api/contact.js`; there is no Astro Vercel adapter. A small development-only Astro integration mounts `src/endpoints/contact.ts` locally; it is excluded from the static production build.
 
-All commands are run from the root of the project, from a terminal:
+## Review link
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Push the review branch to the existing GitHub repository. Its Vercel Git integration can create a preview deployment. Confirm the resulting deployment belongs to `codex/visual-refresh` and is a **preview**, then share that deployment's URL. Do not merge or promote it until the design is approved.
 
-## 🚨 Troubleshooting
+`VERCEL_ENV=preview` disables mail on the server and disables indexing, analytics and form delivery in the built pages. If building a static review outside Vercel, set `PUBLIC_SITE_PREVIEW=true`; that build still needs a separately hosted API to support real mail, and is intended for visual review only. Never use the preview build as production output.
 
-### Common Issues:
+## Move email sending to Mike's Resend account
 
-1. **"Cannot find module" errors in Vercel**
-   - Ensure you're using `output: 'server'` in `astro.config.mjs`
-   - Verify the `@astrojs/vercel` adapter is properly configured
-   - Check that your environment variables are set in Vercel dashboard
+The switch is prepared, not activated. Existing production settings have not been changed.
 
-2. **Contact form not sending emails**
-   - Verify your `RESEND_API_KEY` is correct
-   - Ensure `SEND_EMAIL_FROM` uses a verified domain in Resend
-   - Check Vercel function logs for any API errors
+1. In Mike's Resend account, verify `velocitymarketing.com.au` using the DNS records Resend provides. If it is already attached to a different Resend account, complete Resend's domain transfer/claim process first. Keep existing mailbox/MX settings unless Resend's instructions for the selected sending subdomain explicitly require a record change.
+2. Create a sending API key in Mike's account, scoped to that verified domain where available.
+3. Set these **production** variables in the existing Velocity Marketing Vercel project:
 
-3. **Build errors**
-   - Run `npm run build` locally to catch issues before deployment
-   - Ensure all dependencies are installed with `npm install`
+   | Variable | Value |
+   | --- | --- |
+   | `RESEND_API_KEY` | Key from Mike's account |
+   | `SEND_EMAIL_FROM` | `Velocity Marketing <mike@velocitymarketing.com.au>` |
+   | `SEND_EMAIL_TO` | `mike@velocitymarketing.com.au` (also the default) |
+   | `CONTACT_FORM_DISABLED` | `false` or unset |
 
-### Environment Variables in Vercel:
-- Go to your Vercel project dashboard
-- Navigate to Settings → Environment Variables
-- Add:
-  - `RESEND_API_KEY` = your actual Resend API key
-  - `SEND_EMAIL_FROM` = your verified domain (e.g., noreply@yourdomain.com)
+4. Redeploy the approved production source for the new settings to take effect. The environment-variable switch can also be deployed separately from the visual refresh.
+5. With permission to send a real test enquiry, verify delivery in Mike's inbox and Resend logs, and verify that Reply addresses the visitor. Only then retire the old key if nothing else uses it.
 
-## 👀 Want to learn more?
+The sender must belong to a domain verified in the account owning the API key. The visitor's email is `replyTo`, not `from`. Missing keys or sender settings return an explicit error. The code does not use a fabricated fallback sender.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+See [Resend domain verification](https://resend.com/docs/dashboard/domains/introduction) and the [sending API](https://resend.com/docs/api-reference/emails/send-email).
+
+## Files
+
+- `src/pages/index.astro`: refreshed homepage.
+- `src/styles/global.css`: shared responsive visual theme.
+- `src/components/ContactForm.astro`: shared accessible form and preview behavior.
+- `lib/contact.js`: shared validation, email content, configuration and sending logic.
+- `api/contact.js`: live Vercel function.
+- `src/endpoints/contact.ts`: local development API.
+- `.env.example`: configuration names only; never add live credentials to Git.
+
+The Google Ads and Traralgon pages retain their URLs and local content, with the shared navigation, form and visual theme. Existing social images and the simulator remain in place.

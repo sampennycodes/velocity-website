@@ -16,17 +16,18 @@ const {
   canonical = "https://velocitymarketing.com.au/",
   noIndex = false
 } = Astro.props as Props;
+const isPreview = import.meta.env.DEV || import.meta.env.VERCEL_ENV === 'preview' || import.meta.env.PUBLIC_SITE_PREVIEW === 'true';
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <!-- Google Tag Manager -->
-    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    {!isPreview && <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-5T5JZMW');</script>
+    })(window,document,'script','dataLayer','GTM-5T5JZMW');</script>}
     <!-- End Google Tag Manager -->
     <!--
       \ / _           _  _____
@@ -48,7 +49,7 @@ const {
     <link rel="manifest" href="/site.webmanifest?v=3" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <title>{title}</title>
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content={title} />
@@ -67,18 +68,17 @@ const {
     <meta name="twitter:image" content="/ogimage.png" />
     
     <!-- Additional meta tags for better sharing -->
-    <meta name="theme-color" content="#0a58ff" />
-    <meta name="msapplication-TileColor" content="#0a58ff" />
-    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#10191a" />
+    <meta name="msapplication-TileColor" content="#10191a" />
+    {(noIndex || isPreview) && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5T5JZMW"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    {!isPreview && <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5T5JZMW"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>}
     <!-- End Google Tag Manager (noscript) -->
-    <div class="bg fx-layer-1" aria-hidden="true"></div>
-    <div class="bg fx-layer-2" aria-hidden="true"></div>
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <div class="site">
       <Header />
       <main id="main-content">
@@ -88,80 +88,16 @@ const {
     </div>
 
     <script is:inline>
-      // Reveal on scroll
-      const revealObserver = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
+      if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
             if (entry.isIntersecting) {
               entry.target.classList.add('in-view');
-              revealObserver.unobserve(entry.target);
+              observer.unobserve(entry.target);
             }
-          }
-        },
-        { threshold: 0.15 }
-      );
-      document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
-
-      // Magnetic orb effect
-      const orb = document.querySelector('.orb');
-      if (orb) {
-        let bounds;
-        let mouseX = 0;
-        let mouseY = 0;
-        let orbX = 0;
-        let orbY = 0;
-        let isAnimating = false;
-
-        function updateOrb() {
-          if (!bounds || isAnimating) return;
-          
-          // Calculate distance from cursor to orb center
-          const centerX = bounds.left + bounds.width / 2;
-          const centerY = bounds.top + bounds.height / 2;
-          const deltaX = mouseX - centerX;
-          const deltaY = mouseY - centerY;
-          const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-          
-          // Magnetic pull effect (stronger when closer)
-          const maxPull = 20; // Reduced for subtler effect
-          const pullStrength = Math.max(0, (150 - distance) / 150);
-          const pullX = (deltaX / distance) * maxPull * pullStrength;
-          const pullY = (deltaY / distance) * maxPull * pullStrength;
-          
-          // Apply magnetic pull with smooth easing
-          orbX += (pullX - orbX) * 0.08;
-          orbY += (pullY - orbY) * 0.08;
-          
-          // Add magnetic class when close enough
-          if (distance < 120) {
-            orb.classList.add('magnetic');
-          } else {
-            orb.classList.remove('magnetic');
-          }
-          
-          // Apply transform (only if we have meaningful movement)
-          if (Math.abs(orbX) > 0.5 || Math.abs(orbY) > 0.5) {
-            orb.style.transform = `translate(${orbX}px, ${orbY}px)`;
-          }
-        }
-
-        function onMouseMove(e) {
-          mouseX = e.clientX;
-          mouseY = e.clientY;
-          updateOrb();
-        }
-
-        function onResize() {
-          bounds = orb.getBoundingClientRect();
-        }
-
-        // Initialize
-        onResize();
-        window.addEventListener('resize', onResize);
-        document.addEventListener('mousemove', onMouseMove);
-        
-        // Update bounds periodically for smooth animation
-        setInterval(onResize, 100);
+          });
+        }, { threshold: 0.08 });
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
       }
     </script>
   </body>

@@ -7,6 +7,16 @@ export default defineConfig({
   site: 'https://velocitymarketing.com.au',
   output: 'static',
   integrations: [
+    {
+      name: 'velocity-local-contact',
+      hooks: {
+        'astro:config:setup': ({ command, injectRoute }) => {
+          if (command === 'dev') {
+            injectRoute({ pattern: '/api/contact', entrypoint: './src/endpoints/contact.ts', prerender: false });
+          }
+        }
+      }
+    },
     sitemap({
       filter: (page) => !page.includes('/traralgon')
     })

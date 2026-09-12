@@ -1,31 +1,9 @@
 <footer class="footer">
-  <div class="container footer__inner" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 0.5em;">
-    <p style="font-size: 1.1em; display: flex; align-items: center; justify-content: center; gap: 0.4em; margin: 0;">
-      Made with love in Traralgon, VIC
-      <span class="wave-emoji" style="display: inline-block; cursor: pointer; font-size: 1.3em;">👋🏻</span>
-    </p>
-    <p style="margin: 0;">&copy; {new Date().getFullYear()} Velocity Marketing. All rights reserved.</p>
+  <div class="container">
+    <div class="footer-top">
+      <a href="/" aria-label="Velocity Marketing home"><img src="/logo.png" alt="Velocity Marketing" width="3509" height="983" class="footer-logo" loading="lazy" /></a>
+      <p>Made with love in Traralgon, VIC <span aria-hidden="true">↗</span></p>
+    </div>
+    <div class="footer-bottom"><p>&copy; {new Date().getFullYear()} Velocity Marketing. All rights reserved.</p><a href="#main-content">Back to top ↑</a></div>
   </div>
 </footer>
-
-<style>
-  .wave-emoji {
-    transition: transform 0.2s;
-  }
-  .wave-emoji:hover {
-    animation: wave-hand 1s infinite;
-  }
-  @keyframes wave-hand {
-    0% { transform: rotate(0deg); }
-    10% { transform: rotate(20deg); }
-    20% { transform: rotate(-10deg); }
-    30% { transform: rotate(20deg); }
-    40% { transform: rotate(-10deg); }
-    50% { transform: rotate(10deg); }
-    60% { transform: rotate(0deg); }
-    100% { transform: rotate(0deg); }
-  }
-</style>
-</footer>
-
-

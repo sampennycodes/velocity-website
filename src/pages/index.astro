@@ -1,275 +1,60 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ReviewSlider from "../components/ReviewSlider.astro";
+import ContactForm from "../components/ContactForm.astro";
 ---
 
 <Layout title="Velocity Marketing — Paid Media Specialist" description="I help businesses achieve measurable growth with strategic, data-driven paid media.">
-  <section id="hero" class="section hero">
-    <div class="container grid two-col align-center">
-      <div class="reveal">
-        <div class="badge glass">Paid Media Specialist</div>
-        <h1 class="display text-gradient">Paid Advertising That Drives Real Growth</h1>
-        <p class="lead">I help businesses like yours achieve their goals with strategic, results-oriented paid media campaigns.</p>
-        <div class="actions">
-          <a href="#contact" class="btn primary">Get a Free Consultation</a>
-          <a href="#services" class="btn ghost">Explore Services</a>
+  <section id="hero" class="section hero home-hero">
+    <div class="container">
+      <div class="hero-heading-line"><span class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Independent paid media specialist</span><span class="hero-location">Based in Traralgon, VIC</span></div>
+      <div class="grid two-col align-center">
+        <div class="hero-copy">
+          <h1 class="display">Paid media.<br />Real <span class="accent-word">momentum.</span></h1>
+          <p class="lead">Turn the right clicks into your next customers. I’m Mike — your hands-on partner for Google, Meta and LinkedIn advertising.</p>
+          <div class="actions">
+            <a href="#contact" class="btn primary">Get a free consultation <span aria-hidden="true">↗</span></a>
+            <a href="#services" class="text-link">Explore services <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="hero-proof"><span class="stars" aria-label="5 out of 5 stars">★★★★★</span><span>Good people. Great partnerships.</span></div>
         </div>
-        <div class="stats">
-          <div class="stat">
-            <span class="stat__num">10</span>
-            <span class="stat__label">Years Experience</span>
-          </div>
-          <div class="stat">
-            <span class="stat__num">AU</span>
-            <span class="stat__label">Locally Based</span>
-          </div>
-          <div class="stat">
-            <span class="stat__num">ROI</span>
-            <span class="stat__label">Performance Focus</span>
-          </div>
-        </div>
+        <figure class="hero-art portrait-panel">
+          <div class="portrait-topline"><span>A personal approach.<br />A performance mindset.</span><span class="portrait-arrow" aria-hidden="true">↗</span></div>
+          <span class="portrait-word" aria-hidden="true">velocity</span>
+          <img src="/img_8071.png" alt="Mike Nicholas, your paid media specialist" width="1295" height="1367" fetchpriority="high" loading="eager" decoding="async" class="hero-photo" />
+          <figcaption class="portrait-caption"><span><strong>Mike Nicholas</strong><span>Paid media specialist</span></span><a href="#about" aria-label="More about Mike Nicholas">↗</a></figcaption>
+        </figure>
       </div>
-      <div class="hero-art reveal" aria-hidden="false">
-        <img
-          src="/img_8071.png"
-          alt="Mike Nicholas"
-          width="520"
-          height="520"
-          loading="eager"
-          decoding="async"
-          class="hero-photo"
-        />
+      <div class="stats hero-stats" aria-label="Experience and approach">
+        <div class="stat"><span class="stat__num">10<span class="accent-word"> years</span></span><span class="stat__label">Paid media experience</span></div>
+        <div class="stat"><span class="stat__num">One specialist.</span><span class="stat__label">Google, Meta & LinkedIn</span></div>
+        <div class="stat"><span class="stat__num">Your growth.</span><span class="stat__label">Always the focus</span></div>
       </div>
     </div>
   </section>
 
   <section id="services" class="section">
     <div class="container">
-      <h2 class="h2 center reveal">Services</h2>
-      <div class="grid cards">
-        <a href="/google-ads-traralgon" class="card hover-lift reveal" style="text-decoration: none; color: inherit;">
-          <h3 class="card__title">Google Ads</h3>
-          <p class="card__body">Put your business at the top of search results and connect with customers the moment they're ready to buy or enquire. Explore our local Traralgon campaigns.</p>
-        </a>
-        <article class="card hover-lift reveal">
-          <h3 class="card__title">Meta Ads</h3>
-          <p class="card__body">Reach more people, spark engagement, and grow your business with precision-targeted advertising on the world's largest social media platform.</p>
-        </article>
-        <article class="card hover-lift reveal">
-          <h3 class="card__title">LinkedIn Ads</h3>
-          <p class="card__body">Reach decision-makers, generate qualified B2B leads, and strengthen your brand presence on the world's leading professional network.</p>
-        </article>
+      <span class="eyebrow section-kicker">01 / What I do</span>
+      <div class="section-heading reveal"><h2 class="h2">The right channels.<br />The right customers.</h2><p class="lead">Thoughtful strategy. Hands-on management. Paid media built around what your business needs next.</p></div>
+      <div class="services-list">
+        <a href="/google-ads-traralgon" class="service-row reveal"><span class="service-number">01</span><div><h3>Google Ads</h3><span class="service-tags">Search · Shopping · Display</span></div><p>Be there when it matters. Connect with people actively searching for what you offer, right when they’re ready to act.</p><span class="service-arrow" aria-hidden="true">↗</span></a>
+        <article class="service-row reveal"><span class="service-number">02</span><div><h3>Meta Ads</h3><span class="service-tags">Facebook · Instagram</span></div><p>Turn a moment of attention into a lasting connection. Reach the right people with campaigns that get your business noticed.</p></article>
+        <article class="service-row reveal"><span class="service-number">03</span><div><h3>LinkedIn Ads</h3><span class="service-tags">B2B · Lead generation</span></div><p>Start conversations with the people who make decisions. Reach your ideal business audience and build a stronger pipeline.</p></article>
       </div>
     </div>
   </section>
-
   <ReviewSlider />
-
-  <section id="about" class="section alt">
-    <div class="container grid align-center">
-      <div class="reveal">
-        <h2 class="h2">Why Work With Me?</h2>
-        <p>My name is Mike Nicholas, and I'm a Paid Media Specialist with a passion for helping businesses succeed. I believe in a data-driven approach and I'm committed to delivering measurable results.</p>
-        <ul class="checklist">
-          <li>10 years of experience in the industry</li>
-          <li>Proven track record with a diverse range of clients</li>
-          <li>Certified across Google, Meta, and LinkedIn ad platforms</li>
-          <li>Transparent reporting and communication</li>
-        </ul>
-      </div>
+  <section id="about" class="section">
+    <div class="container about-layout">
+      <div class="reveal"><span class="eyebrow section-kicker">03 / Meet Mike</span><h2 class="h2">A specialist.<br /><span class="accent-word">In your corner.</span></h2><p class="about-signature">Mike Nicholas<span>Velocity Marketing</span></p></div>
+      <div class="reveal"><p class="lead">Great campaigns start with understanding your business. I’m Mike, a paid media specialist with 10 years of experience helping businesses turn advertising into measurable growth.</p><p>I bring a hands-on, data-driven approach to every campaign, with clear communication along the way. You’ll know what we’re doing, why we’re doing it, and how it’s performing.</p><ul class="checklist"><li>10 years of experience across a diverse range of clients</li><li>Certified across Google, Meta and LinkedIn ad platforms</li><li>Clear reporting, honest conversations and a focus on results</li></ul></div>
     </div>
   </section>
-
-  <section id="contact" class="section">
-    <div class="container center">
-      <div class="center">
-        <h2 class="h2 reveal">Get in Touch</h2>
-      </div>
-      <div class="contact-stack">
-        <p class="lead reveal contact-lead" style="text-align: center;">Ready to grow your paid media? Let's talk.</p>
-        <div class="chips reveal" style="text-align: center !important; display: flex !important; justify-content: center !important;">
-          <div id="contact-email" class="chip" style="display: none;" aria-label="Email Mike"></div>
-          <div id="contact-phone" class="chip" style="display: none;" aria-label="Call Mike"></div>
-        </div>
-
-        <form id="contact-form" class="form form-hero reveal" novalidate>
-
-        <!-- Honeypot field to catch bots -->
-        <div class="honeypot-field" style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;">
-          <label for="website" style="display: none;">Website</label>
-          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
-        </div>
-
-
-
-        <div class="form__row">
-          <label class="label" for="name">Name <span class="required" style="color: #ff6b6b;">*</span></label>
-          <input id="name" name="name" class="input" type="text" required aria-describedby="error-name" />
-          <span id="error-name" class="form__error" hidden>Name is required</span>
-        </div>
-
-        <div class="form__row">
-          <label class="label" for="email">Email <span class="required" style="color: #ff6b6b;">*</span></label>
-          <input id="email" name="email" class="input" type="email" required aria-describedby="error-email" />
-          <span id="error-email" class="form__error" hidden>Email is required</span>
-        </div>
-
-        <div class="form__row">
-          <label class="label" for="phone">Phone Number <span class="optional" style="color: var(--muted); font-size: 0.9em;">(optional)</span></label>
-          <input id="phone" name="phone" class="input" type="tel" aria-describedby="error-phone" />
-          <span id="error-phone" class="form__error" hidden>Please enter a valid phone number</span>
-        </div>
-
-        <div class="form__row">
-          <label class="label" for="message">Message <span class="required" style="color: #ff6b6b;">*</span></label>
-          <textarea id="message" name="message" class="textarea" rows="5" required aria-describedby="error-message"></textarea>
-          <span id="error-message" class="form__error" hidden>Message is required</span>
-        </div>
-          <div class="form__actions" style="justify-content: center !important; display: flex !important;">
-            <button class="btn primary" type="submit">Send Message</button>
-            <span id="contact-status" role="status" aria-live="polite" class="form__status"></span>
-          </div>
-        </form>
-      </div>
+  <section id="contact" class="section contact-section">
+    <div class="container contact-layout">
+      <div><span class="eyebrow section-kicker">04 / Let’s talk</span><h2 class="h2">Your next chapter<br />starts with a<br />conversation.</h2><p class="lead">Tell me a little about your business and where you’d like to take it. Let’s find out what the right paid media strategy could do for you.</p><div class="contact-details"><a href="mailto:mike@velocitymarketing.com.au">mike@velocitymarketing.com.au ↗</a><a href="tel:0427733566">0427 733 566 ↗</a></div></div>
+      <ContactForm />
     </div>
   </section>
-
-  <script is:inline>
-    // Contact information decryption
-    function decryptContactInfo() {
-      // Simple base64-like encoding with a custom character set
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-      const email = 'bWlrZUB2ZWxvY2l0eW1hcmtldGluZy5jb20uYXU='; // base64 encoded
-      const phone = 'MDQyNyA3MzMgNTY2'; // base64 encoded
-      
-      function decode(str) {
-        try {
-          return atob(str);
-        } catch (e) {
-          return str;
-        }
-      }
-      
-      // Decrypt and display email
-      const emailEl = document.getElementById('contact-email');
-      if (emailEl) {
-        const decryptedEmail = decode(email);
-        emailEl.innerHTML = `<a href="mailto:${decryptedEmail}" aria-label="Email Mike" style="color: inherit; text-decoration: none;">${decryptedEmail}</a>`;
-        emailEl.style.display = 'inline-flex';
-      }
-      
-      // Decrypt and display phone
-      const phoneEl = document.getElementById('contact-phone');
-      if (phoneEl) {
-        const decryptedPhone = decode(phone);
-        phoneEl.innerHTML = `<a href="tel:${decryptedPhone.replace(/\s/g, '')}" aria-label="Call Mike" style="color: inherit; text-decoration: none;">${decryptedPhone}</a>`;
-        phoneEl.style.display = 'inline-flex';
-      }
-    }
-
-    // Run decryption when DOM is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', decryptContactInfo);
-    } else {
-      decryptContactInfo();
-    }
-    
-    // Fallback: also try after a short delay to ensure DOM is fully ready
-    setTimeout(decryptContactInfo, 100);
-    
-    // Debug: log to console to verify function is running
-    console.log('Contact decryption script loaded');
-
-    const contactForm = document.getElementById('contact-form');
-    const statusEl = document.getElementById('contact-status');
-    const emailInput = document.getElementById('email');
-    const phoneInput = document.getElementById('phone');
-
-    if (contactForm) {
-      contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        // Honeypot check - if this field is filled, it's likely a bot
-        const honeypotField = document.getElementById('website');
-        if (honeypotField && honeypotField.value.trim() !== '') {
-          console.log('Bot detected via honeypot field');
-          statusEl.textContent = 'Submission blocked.';
-          return;
-        }
-        
-        // Basic front-end validation with accessible errors
-        let hasError = false;
-        
-        // Check name field
-        const nameInput = document.getElementById('name');
-        if (!nameInput.value.trim()) { 
-          document.getElementById('error-name').hidden = false; 
-          nameInput.setAttribute('aria-invalid', 'true'); 
-          hasError = true; 
-        } else { 
-          document.getElementById('error-name').hidden = true; 
-          nameInput.removeAttribute('aria-invalid'); 
-        }
-        
-        // Check email field
-        if (!emailInput.value.trim()) { 
-          document.getElementById('error-email').hidden = false; 
-          emailInput.setAttribute('aria-invalid', 'true'); 
-          hasError = true; 
-        } else { 
-          document.getElementById('error-name').hidden = true; 
-          emailInput.removeAttribute('aria-invalid'); 
-        }
-        
-        // Check message field
-        const messageInput = document.getElementById('message');
-        if (!messageInput.value.trim()) { 
-          document.getElementById('error-message').hidden = false; 
-          messageInput.setAttribute('aria-invalid', 'true'); 
-          hasError = true; 
-        } else { 
-          document.getElementById('error-message').hidden = true; 
-          messageInput.removeAttribute('aria-invalid'); 
-        }
-        
-        if (hasError) { 
-          statusEl.textContent = 'Please fill in all required fields.'; 
-          return; 
-        }
-        
-        // Submit form to our API
-        try {
-          statusEl.textContent = 'Sending message...';
-          
-          const formData = {
-            name: nameInput.value.trim(),
-            email: emailInput.value.trim(),
-            phone: phoneInput.value.trim(),
-            message: messageInput.value.trim(),
-            website: honeypotField ? honeypotField.value : ''
-          };
-
-          const response = await fetch('/api/contact', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
-          });
-
-          const result = await response.json();
-
-          if (result.success) {
-            statusEl.textContent = 'Thanks! I\'ll be in touch shortly.';
-            contactForm.reset();
-          } else {
-            statusEl.textContent = result.message || 'Something went wrong. Please try again.';
-          }
-        } catch (error) {
-          console.error('Form submission error:', error);
-          statusEl.textContent = 'Something went wrong. Please try again.';
-        }
-      });
-    }
-  </script>
 </Layout>
