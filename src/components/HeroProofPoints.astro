@@ -11,7 +11,7 @@ const experienceBars = [7, 10, 13, 17, 21, 25, 29];
       <span class="proof-art" aria-hidden="true">
         <svg viewBox="0 0 80 36" width="80" height="36" fill="none" focusable="false">
           {experienceBars.map((height, index) => (
-            <path class="experience-bar" d={`M${8 + index * 10} 32V${32 - height}`} pathLength="1" stroke="#b9a4ff" stroke-width="2.5" stroke-linecap="round" stroke-opacity={0.55 + index * 0.075} style={`--bar-delay:${index * 90}ms`} />
+            <path class="experience-bar" d={`M${8 + index * 10} 32V${32 - height}`} pathLength="1" stroke="#b9a4ff" stroke-width="2.5" stroke-linecap="round" stroke-opacity={0.55 + index * 0.075} style={`--bar-delay:${index * 260}ms`} />
           ))}
         </svg>
       </span>
@@ -110,8 +110,11 @@ const experienceBars = [7, 10, 13, 17, 21, 25, 29];
     .motion-ready .roi-tip {
       opacity:0;
     }
+    .motion-ready .experience-bar {
+      visibility:hidden;
+    }
     .is-animated .experience-bar {
-      animation:proof-draw .8s var(--bar-delay) cubic-bezier(.22,1,.36,1) forwards;
+      animation:proof-bar-in .22s var(--bar-delay) ease-out forwards;
     }
     .is-animated .roi-line {
       animation:proof-draw 1.4s .15s cubic-bezier(.25,.1,.25,1) forwards;
@@ -119,6 +122,10 @@ const experienceBars = [7, 10, 13, 17, 21, 25, 29];
     .is-animated .roi-tip {
       animation:proof-finish .25s 1.4s ease-out forwards;
     }
+  }
+  @keyframes proof-bar-in {
+    from { visibility:visible; stroke-dashoffset:1; }
+    to { visibility:visible; stroke-dashoffset:0; }
   }
   @keyframes proof-draw {
     to { stroke-dashoffset:0; }
