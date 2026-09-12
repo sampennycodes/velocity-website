@@ -262,6 +262,7 @@ figure,blockquote {
 .hero-layout {
   grid-template-columns:minmax(0,1fr) minmax(0,400px);
   gap:clamp(40px,6vw,88px);
+  align-items:start;
 }
 .home-hero .display {
   margin-top:0;
@@ -269,7 +270,7 @@ figure,blockquote {
   line-height:1.08;
 }
 .hero-copy {
-  padding-block:24px;
+  padding:0;
 }
 .actions {
   display:flex;
@@ -352,18 +353,15 @@ figure,blockquote {
   width:100%;
   max-width:400px;
   justify-self:end;
-}
-.portrait-frame {
-  padding:8px;
-  border:1px solid #4b425f;
-  border-radius:16px;
-  background:var(--surface);
+  /* Align with the visible capital letters, below the heading's line-box edge. */
+  margin-top:clamp(8px,.85vw,13px);
 }
 .portrait-panel {
   position:relative;
   background:#ffffff;
   aspect-ratio:1295 / 1367;
-  border-radius:8px;
+  border:1px solid #4b425f;
+  border-radius:12px;
   overflow:hidden;
 }
 .portrait-panel .hero-photo {
@@ -401,14 +399,13 @@ figure,blockquote {
   justify-content:center;
   gap:8px;
   min-height:44px;
-  padding:8px 10px;
-  border:1px solid var(--border);
-  border-radius:6px;
+  padding-block:8px;
   color:var(--text);
   font-size:.75rem;
   font-weight:500;
   text-decoration:none;
-  transition:border-color .2s,background .2s;
+  text-underline-offset:4px;
+  transition:color .2s;
 }
 .linkedin-link img {
   width:20px;
@@ -416,10 +413,9 @@ figure,blockquote {
   object-fit:contain;
   flex-shrink:0;
 }
-.linkedin-link:hover {
-  color:var(--heading);
-  border-color:var(--accent);
-  background:var(--surface);
+.linkedin-link:hover,.linkedin-link:focus-visible {
+  color:var(--accent);
+  text-decoration:underline;
 }
 .stats {
   display:flex;
@@ -861,9 +857,6 @@ a.service-row:hover .service-arrow {
   .home-hero .display {
     font-size:clamp(2.5rem,5.2vw,3.25rem);
   }
-  .hero-copy {
-    padding:0;
-  }
   .hero-copy .lead {
     font-size:1rem;
   }
@@ -922,6 +915,7 @@ a.service-row:hover .service-arrow {
   .hero-profile {
     max-width:360px;
     justify-self:center;
+    margin-top:0;
   }
 }
 @media(max-width:600px) {
