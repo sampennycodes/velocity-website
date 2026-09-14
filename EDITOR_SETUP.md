@@ -56,8 +56,8 @@ The allowed editor rows are `sam@sampenny.io` (enabled owner) and `mike@velocity
 
 ## Completing the phase 1 checks
 
-1. Dedicated staging SMTP is now configured with `smtp.resend.com:465`, Sam’s existing Resend sending credential and `sam@sampenny.io` as sender. Neon confirmed dispatch of a test message to Sam; inbox receipt still needs confirmation. Mike’s preferred sender can be configured during onboarding. Keep authentication mail independent from the preview enquiry form, which intentionally does not send.
-2. Sign in as Sam using a real emailed code. Confirm refresh retains the session and sign-out removes access. The browser receives an HttpOnly, Secure-on-HTTPS, SameSite Strict cookie; it never receives a bearer token in JSON.
+1. Dedicated staging SMTP is now configured with `smtp.resend.com:465`, Sam’s existing Resend sending credential and `sam@sampenny.io` as sender. Neon confirmed dispatch of a test message to Sam; Sam’s subsequent real OTP verification confirmed delivery. Mike’s preferred sender can be configured during onboarding. Keep authentication mail independent from the preview enquiry form, which intentionally does not send.
+2. Sign in as Sam using a real emailed code. Confirm refresh retains the session and sign-out removes access. The browser receives an HttpOnly, Secure-on-HTTPS, SameSite Strict cookie containing Neon’s signed session cookie; it never receives a credential in JSON. The server forwards that signed cookie to Neon for each session check. Login also checks the session before returning success.
 3. Upload a JPEG, PNG or WebP through `/admin` with an image description. Maximum input is 3 MiB and 16 megapixels. Confirm the preview loads while signed in and the image endpoint denies anonymous requests. Images are resized within 2048×2048, retain aspect ratio and use new private object names.
 4. Create a project-scoped Vercel token, store it only as `EDITOR_VERCEL_TOKEN` in staging configuration, and record its expiry outside source control. Set the team/project IDs above and `EDITOR_APPROVED_SOURCE_SHA` to the full tested commit on this branch. Then enable staging publishing.
 5. Start the staging build from `/admin`. Check status until Vercel confirms READY. Confirm the deployment source SHA and `velocity-integration-revision` HTML meta tag match the recorded immutable revision.
@@ -67,7 +67,7 @@ A `preparing`, `building` or `unknown` job blocks a second job. For an ambiguous
 
 ## Verification completed
 
-- Production build succeeds and all 14 automated tests pass, covering the existing contact handler plus editor configuration, authentication boundaries, session validity, email delivery gating, image validation and deployment matching.
+- Production build succeeds and all 16 automated tests pass, covering the existing contact handler plus editor configuration, authentication boundaries, session validity, email delivery gating, image validation and deployment matching.
 - All five existing public pages retain their baseline visible text and link destinations after the Astro upgrade.
 - Runtime dependency audit reports no vulnerabilities. Four moderate findings remain in the development-only Drizzle tooling dependency chain.
 - Built static artifacts contain none of the configured server credentials.
@@ -76,10 +76,14 @@ A `preparing`, `building` or `unknown` job blocks a second job. For an ambiguous
 - Preview deployment `dpl_Df7CF5cq2T6Hbek8F45Y4aYjFs6h` reached READY with a preview target. Its live API denies all six tested anonymous read/write actions with 401 and rejects a cross-origin login-code request with 403. Responses use private, no-store caching.
 - Neon confirmed dispatch of the dedicated SMTP test to Sam. No email was sent to Mike.
 
-Real authenticated login, private upload, SMTP inbox receipt and the server-triggered pinned deployment require the remaining setup checks above. Do not report them as passed based on unit tests or an ordinary preview deployment.
+The corrected browser session flow, private upload and the server-triggered pinned deployment require the remaining setup checks above. Do not report them as passed based on unit tests or an ordinary preview deployment.
 
 Staging review: [Open editor setup](https://velocity-website-git-codex-visual-refresh-sam-pennys-projects.vercel.app/admin). Publishing remains disabled pending approval and installation of the project-scoped token. The Mac was locked during the final browser checks, so a fresh desktop/mobile browser review is also pending.
 
 ## Release boundary
 
 Do not merge or promote this staging setup to production. The complete editor still needs the content schema, verbatim migration, preview bindings, optimistic draft saves, image crop controls and public promotion, revision history, restoration, full field coverage and end-to-end acceptance checks in the plan. An approved production release must rebuild with production configuration rather than promote a preview artifact.
+
+## Immediate session-expiry fix
+
+Sam’s first real OTP sign-in created a verified seven-day Neon session, but the editor incorrectly reused the unsigned token from the JSON response as a bearer credential. Neon returned `null` to that session check. The corrected implementation preserves the `__Secure-neon-auth.session_token` response cookie and forwards it to Neon, matching the official server SDK. It verifies the resulting session before setting the local HttpOnly cookie. Regression tests cover login followed by session validation, missing upstream cookies, invalid sessions and sign-out. Existing browser credentials require one fresh sign-in; the code form now includes a resend button.
