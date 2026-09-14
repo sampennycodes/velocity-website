@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
 import { editorConfig, checkOrigin, publishConfig } from '../lib/editor/config.js';
-import { requireEditor, sendCode, readSessionCookie, sessionCookie, callAuth } from '../lib/editor/auth.js';
+import { requireEditor, sendCode, verifyCode, readSessionCookie, sessionCookie, callAuth } from '../lib/editor/auth.js';
 import { EditorError } from '../lib/editor/errors.js';
 import { normalizeImage, readBytes, MAX_UPLOAD_BYTES } from '../lib/editor/media.js';
 import { handleEditor } from '../lib/editor/handler.js';
@@ -10,6 +10,8 @@ import { deploymentPayload, verifyDeployment } from '../lib/editor/publish.js';
 const env = { EDITOR_ENABLED: 'true', EDITOR_ENVIRONMENT: 'staging', EDITOR_ORIGINS: 'http://localhost:4321,https://staging.example.com', NEON_AUTH_BASE_URL: 'https://example.neon.tech/db/auth', DATABASE_URL: 'postgresql://example.invalid/db', EDITOR_OTP_EMAILS: 'sam@sampenny.io' };
 const request = (method = 'GET', cookie = '', origin = 'http://localhost:4321') => new Request('http://localhost:4321/api/editor', { method, headers: { ...(origin ? { origin } : {}), ...(cookie ? { cookie } : {}) } });
 const session = () => ({ session: { expiresAt: new Date(Date.now() + 60000).toISOString() }, user: { id: 'neon-user-1', email: 'sam@sampenny.io', emailVerified: true } });
+const signedCookie = '__Secure-neon-auth.session_token=opaque.signature%2Bvalue%3D';
+const browserCookie = `velocity_staging_session=${encodeURIComponent(signedCookie)}`;
 
 test('editor is disabled by default and rejects production and unsafe origins', () => {
   assert.throws(() => editorConfig({}), { status: 503 });
@@ -31,9 +33,9 @@ test('anonymous requests cannot reach status, media, uploads or publishing', asy
 });
 
 test('only a current verified Neon session plus current editor permission authorizes access', async () => {
-  const req = request('GET', 'velocity_staging_session=opaque-token');
+  const req = request('GET', browserCookie);
   let checks = 0;
-  const deps = { fetcher: async (url, init) => { assert.match(url, /get-session\?disableCookieCache=true$/); assert.equal(init.headers.Authorization, 'Bearer opaque-token'); return Response.json(session()); }, approvedEditor: async (email, id) => { checks++; assert.equal(email, 'sam@sampenny.io'); assert.equal(id, 'neon-user-1'); return { email, role: 'owner' }; } };
+  const deps = { fetcher: async (url, init) => { assert.match(url, /get-session\?disableCookieCache=true$/); assert.equal(init.headers.Cookie, signedCookie); assert.equal(init.headers.Authorization, undefined); return Response.json(session()); }, approvedEditor: async (email, id) => { checks++; assert.equal(email, 'sam@sampenny.io'); assert.equal(id, 'neon-user-1'); return { email, role: 'owner' }; } };
   assert.equal((await requireEditor(req, env, deps)).role, 'owner');
   await requireEditor(req, env, deps); assert.equal(checks, 2, 'permission is rechecked each request');
   await assert.rejects(requireEditor(req, env, { ...deps, approvedEditor: async () => { throw new EditorError(403, 'Removed'); } }), { status: 403 });
@@ -41,6 +43,47 @@ test('only a current verified Neon session plus current editor permission author
     await assert.rejects(requireEditor(req, env, { ...deps, fetcher: async () => Response.json(data) }), { status: 401 });
   }
   await assert.rejects(requireEditor(request('POST', 'velocity_staging_session=t', 'https://evil.test'), env, deps), { status: 403 });
+});
+
+test('OTP login preserves the signed provider cookie and proves the session before returning success', async () => {
+  let signIns = 0; let sessionChecks = 0;
+  const deps = {
+    rateLimit: async () => {}, approvedEditor: async () => ({ email: 'sam@sampenny.io', role: 'owner' }),
+    fetcher: async (url, init) => {
+      if (url.endsWith('/sign-in/email-otp')) {
+        signIns++;
+        return Response.json({ token: 'unsigned-body-token', user: session().user }, { headers: { 'Set-Cookie': `${signedCookie}; Path=/; Secure; HttpOnly; SameSite=None` } });
+      }
+      sessionChecks++;
+      // Reproduce Neon: a JSON bearer token cannot authenticate get-session.
+      return Response.json(init.headers.Cookie === signedCookie ? session() : null);
+    },
+  };
+  const cookie = await verifyCode('sam@sampenny.io', '123456', request('POST'), env, deps);
+  assert.equal(signIns, 1); assert.equal(sessionChecks, 1);
+  assert.equal(readSessionCookie(request('GET', cookie)), signedCookie);
+  assert.ok(!cookie.includes('unsigned-body-token'));
+  assert.equal((await requireEditor(request('GET', cookie), env, deps)).role, 'owner');
+  await assert.rejects(verifyCode('sam@sampenny.io', '123456', request('POST'), env, {
+    ...deps, fetcher: async () => Response.json({ token: 'unsigned-body-token', user: session().user }),
+  }), { status: 503 });
+  await assert.rejects(verifyCode('sam@sampenny.io', '123456', request('POST'), env, {
+    ...deps, fetcher: async (url, init) => url.endsWith('/sign-in/email-otp') ? deps.fetcher(url, init) : Response.json(null),
+  }), { status: 503 });
+});
+
+test('legacy and malformed credentials never authenticate; sign-out forwards the signed cookie', async () => {
+  for (const token of ['unsigned-body-token', `${signedCookie}; injected=1`, `${signedCookie}\r\nX-Header: bad`]) {
+    await assert.rejects(requireEditor(request('GET', `velocity_staging_session=${encodeURIComponent(token)}`), env, {
+      fetcher: async () => { assert.fail('Invalid credentials must not be sent upstream'); },
+    }), { status: 401 });
+  }
+  await callAuth('/sign-out', editorConfig(env), { token: signedCookie, body: {}, fetcher: async (_url, init) => {
+    assert.equal(init.headers.Cookie, signedCookie);
+    assert.equal(init.headers.Origin, 'http://localhost:4321');
+    assert.equal(init.headers.Authorization, undefined);
+    return Response.json({ success: true });
+  } });
 });
 
 test('Mike and non-editors never trigger setup emails; Sam uses managed OTP', async () => {

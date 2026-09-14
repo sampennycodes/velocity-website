@@ -53,6 +53,11 @@ $('code-form').addEventListener('submit', event => {
   });
 });
 $('change-email').addEventListener('click', () => { sessionStorage.removeItem('velocity-setup-email'); $('code-form').hidden = true; $('email-form').hidden = false; $('email').focus(); });
+$('resend-code').addEventListener('click', () => { void act($('resend-code'), async () => {
+  const result = await api('send-code', { email });
+  sessionStorage.setItem('velocity-setup-email', email); $<HTMLInputElement>('otp').value = '';
+  message(result.message); $('otp').focus();
+}); });
 $('sign-out').addEventListener('click', () => { void act($('sign-out'), async () => {
   await api('sign-out', {}); $('workspace').hidden = true; $('login').hidden = false; $('email-form').hidden = false; $('code-form').hidden = true;
   $<HTMLImageElement>('image-preview').removeAttribute('src'); $('uploaded-image').hidden = true; $('history').replaceChildren(); jobId = ''; message('You are signed out.');
