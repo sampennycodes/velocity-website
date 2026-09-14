@@ -1,0 +1,102 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ReviewSlider from "../ReviewSlider.astro";
+import ContactForm from "../ContactForm.astro";
+import GoogleRating from "../GoogleRating.astro";
+import MikeProfile from "../MikeProfile.astro";
+import HeroProofPoints from "../HeroProofPoints.astro";
+
+import { value } from "../../../lib/content/model.js";
+import type { SiteContent } from "../../../lib/content/types";
+interface Props { content: SiteContent; editing?: boolean; }
+const { content, editing = false } = Astro.props;
+const v = key => value(content, key);
+---
+
+<Layout content={content} editing={editing} title={v("home.seo.title")} description={v("home.seo.description")} socialImage={v("home.seo.image").src} socialImageWidth={v("home.seo.image").width} socialImageHeight={v("home.seo.image").height}>
+  <section data-editor-group="home.hero" id="hero" class="section hero home-hero">
+    <div class="container">
+      <div class="grid hero-layout">
+        <div class="hero-copy">
+          <h1 class="display"><span data-content-text="home.hero.heading">{v("home.hero.heading")}</span> <span class="accent-word" data-content-text="home.hero.highlight">{v("home.hero.highlight")}</span></h1>
+          <p class="lead" data-content-text="home.hero.intro">{v("home.hero.intro")}</p>
+          <div class="actions">
+            <a data-content-href="home.hero.primaryLink" href={v("home.hero.primaryLink")} class="btn primary"><span data-content-text="home.hero.primaryLabel">{v("home.hero.primaryLabel")}</span> <span aria-hidden="true">↗</span></a>
+            <a data-content-href="home.hero.secondaryLink" href={v("home.hero.secondaryLink")} class="btn ghost"><span data-content-text="home.hero.secondaryLabel">{v("home.hero.secondaryLabel")}</span> <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="hero-proof"><GoogleRating /></div>
+        </div>
+        <MikeProfile content={content} placement="hero" />
+      </div>
+      <HeroProofPoints />
+    </div>
+  </section>
+
+  <section data-editor-group="home.services" id="services" class="section home-services">
+    <div class="container">
+      <div class="section-heading reveal"><h2 class="h2" data-content-text="home.services.heading">{v("home.services.heading")}</h2></div>
+      <div class="services-list">
+        <a data-content-href="home.services.0.link" href={v("home.services.0.link")} class="service-row reveal">
+          <span class="service-number">01</span>
+          <h3 class="service-title">
+            <img class="service-logo service-logo--google" src="/google-g.png" width="32" height="32" alt="" loading="lazy" decoding="async" />
+            <span data-content-text="home.services.0.title">{v("home.services.0.title")}</span>
+          </h3>
+          <p data-content-text="home.services.0.description">{v("home.services.0.description")}</p>
+          <span class="service-arrow" aria-hidden="true">↗</span>
+        </a>
+        <article class="service-row reveal">
+          <span class="service-number">02</span>
+          <h3 class="service-title">
+            <img class="service-logo" src="/meta-logo.svg" width="32" height="32" alt="" loading="lazy" decoding="async" />
+            <span data-content-text="home.services.1.title">{v("home.services.1.title")}</span>
+          </h3>
+          <p data-content-text="home.services.1.description">{v("home.services.1.description")}</p>
+        </article>
+        <article class="service-row reveal">
+          <span class="service-number">03</span>
+          <h3 class="service-title">
+            <img class="service-logo" src="/linkedin-in-white.png" width="32" height="32" alt="" loading="lazy" decoding="async" />
+            <span data-content-text="home.services.2.title">{v("home.services.2.title")}</span>
+          </h3>
+          <p data-content-text="home.services.2.description">{v("home.services.2.description")}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <ReviewSlider content={content} />
+
+  <section data-editor-group="home.about" id="about" class="section">
+    <div class="container about-layout">
+      <div class="reveal">
+        <h2 class="h2" data-content-text="home.about.heading">{v("home.about.heading")}</h2>
+        <MikeProfile content={content} placement="about" />
+      </div>
+      <div class="reveal">
+        <p class="lead" data-content-text="home.about.intro">{v("home.about.intro")}</p>
+        <ul class="checklist">
+          <li data-content-text="home.about.bullet0">{v("home.about.bullet0")}</li>
+          <li data-content-text="home.about.bullet1">{v("home.about.bullet1")}</li>
+          <li data-content-text="home.about.bullet2">{v("home.about.bullet2")}</li>
+          <li data-content-text="home.about.bullet3">{v("home.about.bullet3")}</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section data-editor-group="home.contact" id="contact" class="section contact-section">
+    <div class="container contact-layout">
+      <div>
+        <h2 class="h2" data-content-text="home.contact.heading">{v("home.contact.heading")}</h2>
+        <p class="lead" data-content-text="home.contact.intro">{v("home.contact.intro")}</p>
+        <div class="contact-details">
+          <a data-content-href="shared.contact.email" data-href-format="mailto" data-content-text="shared.contact.email" href={"mailto:" + v("shared.contact.email")}>{v("shared.contact.email")}</a>
+          <a data-content-href="shared.contact.phoneLink" data-href-format="tel" data-content-text="shared.contact.phone" href={"tel:" + v("shared.contact.phoneLink").replace(/[ ()-]/g, "")}>{v("shared.contact.phone")}</a>
+        </div>
+      </div>
+      <ContactForm preview={editing} />
+    </div>
+  </section>
+  <slot name="editor-script" slot="editor-script" />
+</Layout>

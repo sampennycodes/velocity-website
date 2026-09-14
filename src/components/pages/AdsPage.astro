@@ -1,0 +1,115 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ContactForm from "../ContactForm.astro";
+import ReviewSlider from "../ReviewSlider.astro";
+
+export const excludeFromSitemap = false;
+
+const pageTitle = "Google Ads in Traralgon | Velocity Marketing";
+const pageDescription = "Local Google Ads management for Traralgon businesses, built to drive measurable growth.";
+const canonicalUrl = "https://velocitymarketing.com.au/google-ads-traralgon";
+
+import { value } from "../../../lib/content/model.js";
+import type { SiteContent } from "../../../lib/content/types";
+interface Props { content: SiteContent; editing?: boolean; }
+const { content, editing = false } = Astro.props;
+const v = key => value(content, key);
+---
+
+<Layout content={content} editing={editing} title={v("ads.seo.title")} description={v("ads.seo.description")} socialImage={v("ads.seo.image").src} socialImageWidth={v("ads.seo.image").width} socialImageHeight={v("ads.seo.image").height} canonical={canonicalUrl}>
+  <section data-editor-group="ads.hero" id="hero" class="section hero">
+    <div class="container grid two-col align-center">
+      <div class="reveal">
+        <div class="badge glass" data-content-text="ads.hero.badge">{v("ads.hero.badge")}</div>
+        <h1 class="display text-gradient" data-content-text="ads.hero.heading">{v("ads.hero.heading")}</h1>
+        <p class="lead" data-content-text="ads.hero.intro">{v("ads.hero.intro")}</p>
+        <div class="actions">
+          <a data-content-href="ads.hero.primaryLink" href={v("ads.hero.primaryLink")} class="btn primary"><span data-content-text="ads.hero.primaryLabel">{v("ads.hero.primaryLabel")}</span></a>
+          <a data-content-href="ads.hero.secondaryLink" href={v("ads.hero.secondaryLink")} class="btn ghost"><span data-content-text="ads.hero.secondaryLabel">{v("ads.hero.secondaryLabel")}</span></a>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <span class="stat__num">10</span>
+            <span class="stat__label">Years Experience</span>
+          </div>
+          <div class="stat">
+            <span class="stat__num">AU</span>
+            <span class="stat__label">Local to Traralgon</span>
+          </div>
+          <div class="stat">
+            <span class="stat__num">G Ads</span>
+            <span class="stat__label">Google Certified</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-art reveal" aria-hidden="false">
+        <img
+          data-editor-group="shared.profile" data-content-image="shared.profile.image" src={v("shared.profile.image").src} style={v("shared.profile.image").assetId ? "aspect-ratio:1;object-fit:cover;object-position:" + v("shared.profile.image").x + "% " + v("shared.profile.image").y + "%" : undefined}
+          alt={v("shared.profile.image").description}
+          width="520"
+          height="520"
+          loading="eager"
+          decoding="async"
+          class="hero-photo"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section data-editor-group="ads.services" id="services" class="section">
+    <div class="container">
+      <h2 class="h2 center reveal" data-content-text="ads.services.heading">{v("ads.services.heading")}</h2>
+      <div class="grid cards">
+        <article class="card hover-lift reveal">
+          <h3 class="card__title" data-content-text="ads.services.0.title">{v("ads.services.0.title")}</h3>
+          <p class="card__body" data-content-text="ads.services.0.description">{v("ads.services.0.description")}</p>
+        </article>
+        <article class="card hover-lift reveal">
+          <h3 class="card__title" data-content-text="ads.services.1.title">{v("ads.services.1.title")}</h3>
+          <p class="card__body" data-content-text="ads.services.1.description">{v("ads.services.1.description")}</p>
+        </article>
+        <article class="card hover-lift reveal">
+          <h3 class="card__title" data-content-text="ads.services.2.title">{v("ads.services.2.title")}</h3>
+          <p class="card__body" data-content-text="ads.services.2.description">{v("ads.services.2.description")}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <ReviewSlider content={content} />
+
+  <section data-editor-group="ads.about" id="about" class="section alt">
+    <div class="container grid align-center">
+      <div class="reveal">
+        <h2 class="h2" data-content-text="ads.about.heading">{v("ads.about.heading")}</h2>
+        <p data-content-text="ads.about.intro">{v("ads.about.intro")}</p>
+        <ul class="checklist">
+          <li data-content-text="ads.about.bullet0">{v("ads.about.bullet0")}</li>
+          <li data-content-text="ads.about.bullet1">{v("ads.about.bullet1")}</li>
+          <li data-content-text="ads.about.bullet2">{v("ads.about.bullet2")}</li>
+          <li data-content-text="ads.about.bullet3">{v("ads.about.bullet3")}</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section data-editor-group="ads.contact" id="contact" class="section">
+    <div class="container center">
+      <div class="center">
+        <h2 class="h2 reveal" data-content-text="ads.contact.heading">{v("ads.contact.heading")}</h2>
+      </div>
+      <div class="contact-stack">
+        <p class="lead reveal contact-lead" style="text-align: center;" data-content-text="ads.contact.intro">{v("ads.contact.intro")}</p>
+        <div class="chips reveal" style="text-align: center !important; display: flex !important; justify-content: center !important;">
+          <a class="chip" data-content-href="shared.contact.email" data-href-format="mailto" data-content-text="shared.contact.email" href={"mailto:" + v("shared.contact.email")}>{v("shared.contact.email")}</a>
+          <a class="chip" data-content-href="shared.contact.phoneLink" data-href-format="tel" data-content-text="shared.contact.phone" href={"tel:" + v("shared.contact.phoneLink").replace(/[ ()-]/g, "")}>{v("shared.contact.phone")}</a>
+        </div>
+
+        <ContactForm preview={editing} />
+      </div>
+    </div>
+  </section>
+
+
+  <slot name="editor-script" slot="editor-script" />
+</Layout>

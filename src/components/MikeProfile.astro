@@ -1,24 +1,28 @@
 ---
+import { value, format } from "../../lib/content/model.js";
 interface Props {
+  content: any;
   placement: "hero" | "about";
 }
 
-const { placement } = Astro.props;
+const { placement, content } = Astro.props;
+const v = key => value(content, key);
+const portrait = v("shared.profile.image");
 // LinkedIn's white [in] asset: https://brand.linkedin.com/downloads
 ---
 
-<figure class:list={["mike-profile", `${placement}-profile`]}>
+<figure data-editor-group="shared.profile" class:list={["mike-profile", `${placement}-profile`]}>
   <div class="portrait-panel">
-    <img src="/img_8071.png" alt="Mike Nicholas" width="1295" height="1367" fetchpriority={placement === "hero" ? "high" : "auto"} loading={placement === "hero" ? "eager" : "lazy"} decoding="async" class="hero-photo" />
+    <img data-content-image="shared.profile.image" src={portrait.src} alt={portrait.description} style={`object-position:${portrait.x}% ${portrait.y}%`} width="1295" height="1367" fetchpriority={placement === "hero" ? "high" : "auto"} loading={placement === "hero" ? "eager" : "lazy"} decoding="async" class="hero-photo" />
   </div>
   <figcaption class="portrait-caption">
     <span class="portrait-identity">
-      <strong>Mike Nicholas</strong>
-      <span>Paid Media Specialist</span>
+      <strong data-content-text="shared.profile.name">{v("shared.profile.name")}</strong>
+      <span data-content-text="shared.profile.role">{v("shared.profile.role")}</span>
     </span>
-    <a class="linkedin-link" href="https://au.linkedin.com/in/mikenicholas91" target="_blank" rel="noopener noreferrer" aria-label="Connect with Mike Nicholas on LinkedIn (opens in a new tab)">
+    <a class="linkedin-link" data-content-href="shared.profile.linkedin" href={v("shared.profile.linkedin")} target="_blank" rel="noopener noreferrer" data-content-label="shared.profile.name" data-label-format="linkedin-label" aria-label={format(v("shared.profile.name"), "linkedin-label")}>
       <img src="/linkedin-in-white.png" alt="" width="840" height="779" />
-      <span>Connect on LinkedIn</span>
+      <span data-content-text="shared.profile.linkLabel">{v("shared.profile.linkLabel")}</span>
     </a>
   </figcaption>
 </figure>

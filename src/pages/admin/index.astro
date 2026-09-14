@@ -1,86 +1,47 @@
 ---
-import manropeFont from '../../assets/fonts/manrope-latin-variable.woff2?url';
+import manrope from '../../assets/fonts/manrope-latin-variable.woff2?url';
 ---
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex, nofollow" />
-    <meta name="referrer" content="same-origin" />
-    <title>Editor setup · Velocity Marketing</title>
-    <link rel="icon" href="/favicon.ico" />
-    <link rel="preload" href={manropeFont} as="font" type="font/woff2" crossorigin="anonymous" />
-  </head>
-  <body>
-    <header><a href="/" aria-label="Velocity Marketing home"><img src="/logo.png" alt="Velocity Marketing" width="215" height="60" /></a><span class="tag">V2 WIP · Staging</span></header>
-    <main>
-      <div class="intro"><p class="eyebrow">CLIENT EDITOR</p><h1>Let’s get you set up.</h1><p>Verify your sign-in, image storage and staging publishing before the visual editor is enabled.</p></div>
-      <p id="message" role="status" aria-live="polite">Checking your session…</p>
-      <section id="login" class="card" aria-labelledby="login-heading">
-        <span class="step">01 / SIGN IN</span><h2 id="login-heading">Your email. One code.</h2>
-        <p>During setup, login codes are enabled for Sam only. Mike will receive no setup invitations.</p>
-        <form id="email-form"><label for="email">Email address</label><input id="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com" /><button type="submit">Send login code <span aria-hidden="true">↗</span></button></form>
-        <form id="code-form" hidden><label for="otp">Six-digit email code</label><input id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" required /><button type="submit">Sign in</button><button type="button" id="resend-code" class="secondary">Send a new code</button><button type="button" id="change-email" class="secondary">Use another email</button></form>
-      </section>
-      <div id="workspace" hidden>
-        <div class="identity"><p>Signed in as <strong id="identity-email"></strong></p><button id="sign-out" class="secondary">Sign out</button></div>
-        <div class="grid">
-          <section class="card" aria-labelledby="image-heading"><span class="step">02 / PRIVATE IMAGE</span><h2 id="image-heading">Try an image upload.</h2><p>JPEG, PNG or WebP, up to 3 MB and 16 megapixels. Test images remain private and do not change the website.</p>
-            <p id="storage-state" class="hint"></p>
-            <form id="upload-form"><label for="image-file">Image</label><input type="file" id="image-file" accept="image/jpeg,image/png,image/webp" required /><label for="image-description">Image description</label><textarea id="image-description" rows="3" maxlength="500" required placeholder="Describe the image for someone who cannot see it"></textarea><button type="submit" id="upload-button">Upload private image</button></form>
-            <progress id="upload-progress" max="100" value="0" aria-label="Image upload progress" hidden></progress>
-            <figure id="uploaded-image" hidden><img id="image-preview" alt="" /><figcaption id="image-details"></figcaption></figure>
-          </section>
-          <section class="card" aria-labelledby="publish-heading"><span class="step">03 / STAGING BUILD</span><h2 id="publish-heading">Prove publishing.</h2><p>Build the approved V2 source against one saved integration revision. This tests the publishing connection; page editing comes next.</p>
-            <p id="publish-state" class="hint"></p><button id="publish-button" disabled>Start staging build</button>
-            <p id="job-status" role="status" aria-live="polite"></p><a id="deployment-link" target="_blank" rel="noopener noreferrer" hidden>Open staging build ↗</a>
-            <button id="check-status" class="secondary" hidden>Check status</button>
-          </section>
-        </div>
-        <section class="card history"><h2>Recent integration builds</h2><ul id="history"></ul><p id="no-history">No integration builds yet.</p></section>
-      </div>
-      <footer><p>Need help? Contact Sam. The full editor will open here after the integration checks pass.</p><a href="/">Back to website ↗</a></footer>
-    </main>
-    <script>import '../../scripts/editor-setup';</script>
-  </body>
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" /><meta name="referrer" content="same-origin" />
+  <title>Website editor · Velocity Marketing</title><link rel="icon" href="/favicon.ico" />
+  <link rel="preload" href={manrope} as="font" type="font/woff2" crossorigin="anonymous" />
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" aria-label="Velocity Marketing home"><img src="/logo.png" width="172" height="48" alt="Velocity Marketing" /></a>
+    <span class="editor-title">Website editor <span class="pill">Staging</span></span>
+    <div class="toolbar" id="toolbar" hidden><span id="save-state" role="status">Loading…</span><button id="history-button" class="quiet">History</button><button id="save-button">Save draft</button><button id="publish-button" class="primary" disabled>Publish to staging ↗</button></div>
+  </header>
+  <section id="login" class="login-wrap" aria-labelledby="login-heading">
+    <div class="login-card"><p class="eyebrow">YOUR WEBSITE, IN YOUR HANDS</p><h1 id="login-heading">Welcome back.</h1><p>Sign in to update your pages. Your site’s design stays in place.</p>
+      <p id="login-message" role="status" aria-live="polite">Checking your session…</p>
+      <form id="email-form"><label for="email">Email address</label><input id="email" type="email" autocomplete="email" maxlength="254" required /><button class="primary" type="submit">Send login code ↗</button></form>
+      <form id="code-form" hidden><label for="otp">Six-digit email code</label><input id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" required /><button class="primary" type="submit">Sign in</button><div class="login-links"><button type="button" id="resend-code" class="quiet">Send a new code</button><button type="button" id="change-email" class="quiet">Use another email</button></div></form>
+      <p class="fine">Access is currently enabled for Sam. Mike will receive no setup invitations.</p>
+    </div>
+  </section>
+  <main id="workspace" hidden>
+    <div class="notice" id="notice" role="status" aria-live="polite">Loading your draft…</div>
+    <div class="conflict" id="conflict" hidden><span>Your edits are still here.</span><button id="download-draft">Download my edits</button><button id="reload-draft">Load latest saved draft</button></div>
+    <div class="editor-grid">
+      <aside class="sections" aria-label="Pages and sections"><p class="eyebrow">PAGES</p><label class="sr-only" for="page-picker">Page</label><select id="page-picker"><option value="home">Home</option><option value="ads">Google Ads in Traralgon</option></select><p class="eyebrow section-label">EDIT A SECTION</p><nav id="section-nav" aria-label="Editable sections"></nav><label class="sr-only" for="section-picker">Section</label><select id="section-picker"></select><div class="account"><span id="identity"></span><button id="sign-out" class="quiet">Sign out</button></div></aside>
+      <section class="canvas" aria-label="Page preview"><div class="canvas-bar"><span id="preview-title">Home</span><div class="view-switch" aria-label="Preview width"><button id="desktop-view" aria-pressed="true" title="Desktop preview">Desktop</button><button id="mobile-view" aria-pressed="false" title="Mobile preview">Mobile</button></div><button id="show-fields" class="quiet">Edit section</button></div><p class="canvas-hint">Select a section in the preview or choose it from the list.</p><div class="preview-stage" id="preview-stage"><div class="preview-sheet" id="preview-sheet"><iframe id="page-preview" title="Editable page preview" src="/admin/preview/home" referrerpolicy="same-origin"></iframe></div></div></section>
+      <aside class="properties" id="properties" aria-labelledby="panel-title"><div class="panel-heading"><div><span class="eyebrow" id="panel-scope">HOME PAGE</span><h1 id="panel-title">Hero</h1></div><button id="close-fields" class="quiet">Back to preview</button></div><p id="panel-description" class="fine"></p><form id="fields-form" novalidate></form><p class="fine panel-note">Changes appear in the preview immediately. Save your draft when you’re ready.</p></aside>
+    </div>
+    <footer class="editor-footer"><span id="updated">Your draft is private.</span><span id="publish-status">Staging publishing is not connected yet. Draft editing is available.</span><button id="check-publish" class="quiet" hidden>Check publishing</button><a id="deployment-link" target="_blank" rel="noopener noreferrer" hidden>Open published staging page ↗</a></footer>
+  </main>
+  <dialog id="history-dialog" aria-labelledby="history-title"><div class="dialog-heading"><div><p class="eyebrow">SAVED VERSIONS</p><h2 id="history-title">Your history</h2></div><button id="close-history" class="quiet">Close</button></div><p>Restore a version into your draft, review it, then publish. Your history stays intact.</p><p id="history-message" role="status"></p><ol id="history-list"></ol><button id="more-history" hidden>Load older versions</button></dialog>
+  <script>import '../../scripts/editor';</script>
+</body>
 </html>
-<style define:vars={{ manropeFont }}>
-  @font-face { font-family: Manrope; src: url('../../assets/fonts/manrope-latin-variable.woff2') format('woff2'); font-weight: 200 800; font-display: optional; }
-  :global(*) { box-sizing: border-box; }
-  :global([hidden]) { display: none !important; }
-  :global(body) { margin: 0; background: #141414; color: #f6f5f8; font: 16px/1.65 Manrope, system-ui, sans-serif; }
-  :global(button), :global(input), :global(textarea) { font: inherit; }
-  :global(button), :global(a), :global(input), :global(textarea) { outline-offset: 5px; }
-  :global(:focus-visible) { outline: 3px solid #c9b5fa; }
-  :global(a) { color: #cfbaff; text-underline-offset: 4px; }
-  header { max-width: 1280px; margin: auto; padding: 30px 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid #3f3f3f; }
-  header img { object-fit: contain; width: 215px; height: auto; display: block; }
-  .tag { color: #d7c6ff; border: 1px solid #705294; padding: 7px 13px; border-radius: 100px; font-size: 14px; white-space: nowrap; }
-  main { max-width: 1152px; padding: 64px 40px; margin: auto; }
-  .intro { max-width: 680px; margin-bottom: 30px; }
-  .eyebrow, .step { font-size: 14px; color: #c9b5fa; letter-spacing: .08em; font-weight: 700; }
-  h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); letter-spacing: -.05em; line-height: 1.1; margin: 16px 0 22px; }
-  h2 { font-size: 1.55rem; line-height: 1.3; letter-spacing: -.025em; margin: 12px 0; }
-  p { color: #c1bdc8; margin: 0 0 20px; }
-  .card { border: 1px solid #48434e; background: #202020; padding: 32px; border-radius: 12px; }
-  #login { max-width: 600px; }
-  #message { border-left: 3px solid #a982e0; padding: 12px 18px; background: #27222f; min-height: 50px; }
-  label { display: block; font-weight: 650; margin: 20px 0 8px; }
-  input, textarea { display: block; width: 100%; color: #fff; background: #141414; border: 1px solid #6b626f; border-radius: 7px; padding: 12px; }
-  textarea { resize: vertical; }
-  button { cursor: pointer; color: #fff; background: #7540b2; border: 1px solid #a677dc; border-radius: 7px; padding: 12px 18px; font-weight: 700; margin-top: 20px; min-height: 48px; }
-  button:hover { background: #8851c6; }
-  button:disabled { opacity: .5; cursor: not-allowed; }
-  button.secondary { background: transparent; border-color: #665d70; }
-  .identity { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-bottom: 24px; }
-  .identity p, .identity button { margin: 0; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
-  .hint { padding: 12px; border: 1px solid #50455e; border-radius: 6px; color: #dbceee; font-size: 14px; }
-  progress { width: 100%; margin-top: 20px; accent-color: #a677dc; }
-  figure { margin: 24px 0 0; } figure img { width: 100%; max-height: 300px; object-fit: contain; background: #141414; }
-  figcaption { color: #c1bdc8; font-size: 14px; margin-top: 10px; }
-  .history { margin-top: 24px; } ul { padding-left: 22px; } li { margin-bottom: 12px; }
-  footer { margin-top: 40px; font-size: 14px; } footer p { margin-bottom: 8px; }
-  @media (max-width: 720px) { header { padding: 24px; flex-wrap: wrap; } main { padding: 40px 24px; } .grid { grid-template-columns: 1fr; } .card { padding: 24px; } .identity { align-items: flex-start; flex-direction: column; } }
+<style>
+@font-face{font-family:Manrope;src:url('../../assets/fonts/manrope-latin-variable.woff2') format('woff2');font-weight:200 800;font-display:swap}
+:global(*){box-sizing:border-box}:global([hidden]){display:none!important}:global(body){margin:0;font:14px/1.55 Manrope,system-ui,sans-serif;color:#272330;background:#eeeaf1}:global(button),:global(input),:global(textarea),:global(select){font:inherit}:global(button),:global(a),:global(input),:global(textarea),:global(select){outline-offset:3px}:global(:focus-visible){outline:3px solid #9a65d5}:global(button){min-height:40px;padding:9px 14px;border:1px solid #c9c1d2;border-radius:7px;background:white;color:#30223e;font-weight:650;cursor:pointer}:global(button:hover){background:#f1eaf8}:global(button:disabled){opacity:.48;cursor:not-allowed}:global(button.primary){background:#7540b2;color:#fff;border-color:#7540b2}:global(button.primary:hover){background:#613392}:global(button.quiet){background:transparent;border-color:transparent}:global(a){color:#6d369f}:global(input),:global(textarea),:global(select){width:100%;padding:10px 12px;background:#fff;border:1px solid #c7bdcf;border-radius:6px;color:#302438}:global(textarea){resize:vertical;min-height:100px}:global(label){display:block;font-weight:650;margin-bottom:7px}:global(.fine){font-size:12px;color:#756b7f}:global(.eyebrow){font-size:10px;font-weight:800;letter-spacing:.1em;color:#84718f;margin:0 0 12px}:global(.sr-only){position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0)}
+.topbar{background:#171519;color:white;min-height:86px;display:flex;align-items:center;gap:26px;padding:16px 28px}.topbar img{display:block;width:172px;height:auto}.editor-title{border-left:1px solid #48414d;padding-left:25px;font-size:14px;font-weight:600;display:flex;gap:12px;align-items:center}.pill{font-size:10px;border:1px solid #806590;border-radius:20px;padding:3px 8px;color:#dfc9f5}.toolbar{margin-left:auto;display:flex;gap:9px;align-items:center}.toolbar .quiet{color:#e7dced}.toolbar .quiet:hover{background:#302738}#save-state{font-size:12px;color:#d2c4dc;margin-right:8px}.notice{background:#f9f6fc;border-bottom:1px solid #dcd3e3;padding:10px 28px;min-height:43px;font-size:12px}.conflict{display:flex;align-items:center;gap:12px;background:#fff1d2;padding:12px 28px}.editor-grid{display:grid;grid-template-columns:210px minmax(0,1fr) 330px;height:calc(100vh - 181px);min-height:560px}.sections{padding:24px 18px;background:#f9f7fb;border-right:1px solid #d8d0df;overflow:auto;display:flex;flex-direction:column}.section-label{margin-top:28px!important}:global(#section-nav button){display:block;text-align:left;width:100%;border:0;border-radius:6px;font-size:12px;background:transparent;margin:3px 0;padding:10px 12px}:global(#section-nav button[aria-current=true]){background:#ece1f8;color:#602c94}:global(#section-nav .shared-label){font-size:10px;letter-spacing:.1em;color:#84718f;margin:23px 12px 8px}.account{margin-top:auto;padding-top:32px;font-size:10px;color:#71677a;overflow-wrap:anywhere}.account button{font-size:11px;margin-left:-12px}.canvas{min-width:0;padding:16px 20px 20px;background:#e8e3ed;overflow:hidden}.canvas-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#5d5269;font-size:12px}.view-switch{display:flex;background:#f6f3f9;border-radius:7px;padding:3px}.view-switch button{font-size:10px;min-height:28px;padding:5px 10px;border:none;background:transparent}.view-switch button[aria-pressed=true]{background:white;box-shadow:0 1px 4px #29133620}.canvas-hint{text-align:center;font-size:11px;color:#7e7389;margin:13px 0}.preview-stage{height:calc(100% - 72px);overflow:auto;display:flex;justify-content:center;align-items:flex-start}.preview-sheet{background:#141414;box-shadow:0 4px 20px #30134025;flex-shrink:0}iframe{display:block;border:0;transform-origin:top left;background:#141414}.properties{background:white;border-left:1px solid #d8d0df;padding:24px;overflow:auto}.panel-heading{display:flex;justify-content:space-between;gap:10px;align-items:start}.panel-heading h1{font-size:24px;line-height:1.2;letter-spacing:-.04em;margin:0 0 18px}.panel-heading .eyebrow{margin-bottom:8px}.panel-note{border-top:1px solid #e5dfe9;padding-top:18px;margin-top:24px}:global(.field){margin:0 0 21px}:global(.field label){font-size:12px}:global(.field input),:global(.field textarea){font-size:12px}:global(.field small){display:block;font-size:10px;color:#8d3656;margin-top:5px}:global(.field .image-thumb){width:100%;height:160px;object-fit:contain;background:#f0edf3;border-radius:8px;margin-bottom:10px}:global(.image-meta){font-size:11px;color:#7c6b88;margin:8px 0}:global(.field input[type=range]){padding:0;accent-color:#7540b2}:global(.field input[type=file]){font-size:10px;padding:8px}:global(.upload-status){font-size:11px;color:#7540b2}:global(.field progress){width:100%;accent-color:#7540b2}:global(.image-alt){margin-top:12px}.editor-footer{display:flex;align-items:center;gap:18px;justify-content:space-between;padding:12px 24px;background:#f8f5fa;border-top:1px solid #dbd3e2;font-size:10px;color:#786d83}.editor-footer button{font-size:10px;min-height:25px;padding:3px 6px}.editor-footer a{font-size:10px}.login-wrap{min-height:calc(100vh - 86px);display:grid;place-items:center;padding:36px}.login-card{background:white;border:1px solid #ddd3e6;border-radius:14px;padding:44px;max-width:480px;width:100%;box-shadow:0 10px 50px #4a1e6f08}.login-card h1{font-size:40px;line-height:1.2;letter-spacing:-.05em;margin:12px 0}.login-card>p{color:#7e6e89}.login-card form{margin:24px 0}.login-card form>.primary{width:100%;margin-top:18px}.login-links{display:flex;justify-content:space-between}.login-links button{font-size:11px;padding:8px 0}.login-card #login-message{background:#f6f0fb;padding:12px;border-left:3px solid #9860cd;font-size:12px}body:has(#workspace:not([hidden])) .login-wrap:not([hidden]){position:fixed;inset:0;z-index:20;background:#17111adb;min-height:100vh}.editor-footer #publish-status{margin-left:auto}dialog{border:1px solid #d9c9e5;border-radius:14px;padding:32px;max-width:660px;width:calc(100% - 32px);max-height:85vh;color:#302438;box-shadow:0 15px 80px #180c3033}dialog::backdrop{background:#17111a99}.dialog-heading{display:flex;justify-content:space-between;align-items:start}.dialog-heading h2{margin:0;font-size:28px;letter-spacing:-.035em}dialog>p{color:#786786;font-size:13px}:global(#history-list){list-style:none;margin:20px 0;padding:0}:global(#history-list li){display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid #e5ddec;padding:16px 0}:global(#history-list strong){display:block;font-size:13px}:global(#history-list small){font-size:11px;color:#84728f}:global(#history-list button){white-space:nowrap;font-size:12px}#section-picker,#close-fields,#show-fields{display:none}
+@media(max-width:1200px){.editor-grid{grid-template-columns:175px minmax(0,1fr) 300px}.properties{padding:20px}.topbar{padding:16px 20px;gap:15px}.editor-title{padding-left:16px}.toolbar{gap:5px}.toolbar button{font-size:11px}.canvas{padding-inline:12px}}
+@media(max-width:900px){.topbar{flex-wrap:wrap}.topbar img{width:145px}.toolbar{width:100%;margin:0;justify-content:flex-end}.toolbar #save-state{margin-right:auto}.editor-grid{grid-template-columns:165px minmax(0,1fr);height:calc(100vh - 230px)}.properties{display:none;position:fixed;right:0;top:0;bottom:0;width:min(390px,100%);z-index:10;box-shadow:-10px 0 60px #210c4938}:global(body.fields-open .properties){display:block}#close-fields,#show-fields{display:block;font-size:10px}.editor-footer{flex-wrap:wrap;gap:8px}.editor-footer #publish-status{margin-left:0}.conflict{flex-wrap:wrap}}
+@media(max-width:580px){.editor-title{font-size:12px}.editor-grid{display:flex;flex-direction:column;min-height:620px;height:calc(100vh - 240px)}.sections{display:block;padding:10px 14px;border-bottom:1px solid #d8d0df;overflow:visible}.sections>.eyebrow,.section-label,#section-nav,.account{display:none}#page-picker,#section-picker{display:inline-block;width:calc(50% - 5px);font-size:11px;padding:8px}#section-picker{margin-left:6px}.canvas{flex:1;min-height:500px}.canvas-hint{font-size:10px}.toolbar button{padding:8px}.notice{padding:10px 16px}.login-card{padding:28px}.login-wrap{padding:20px}.conflict{padding:12px 16px}.view-switch button{padding:5px}.editor-footer{font-size:9px}}
 </style>

@@ -1,9 +1,14 @@
-<footer class="footer">
+---
+import { value, format } from "../../lib/content/model.js";
+const { content } = Astro.props;
+const v = key => value(content, key);
+---
+<footer data-editor-group="shared.navigation" class="footer">
   <div class="container">
     <div class="footer-top">
       <a href="/" aria-label="Velocity Marketing home"><img src="/logo.png" alt="Velocity Marketing" width="3509" height="983" class="footer-logo" loading="lazy" /></a>
-      <p>Made with love in Traralgon, VIC <span aria-hidden="true">👋🏻</span></p>
+      <p><span data-content-text="shared.footer.message">{v("shared.footer.message")}</span> <span aria-hidden="true">👋🏻</span></p>
     </div>
-    <div class="footer-bottom"><p>&copy; {new Date().getFullYear()} Velocity Marketing. All rights reserved.</p><a href="#main-content">Back to top ↑</a></div>
+    <div class="footer-bottom"><p data-content-text="shared.footer.copyright" data-text-format="copyright">{format(v("shared.footer.copyright"), "copyright")}</p><a data-content-href="shared.footer.topLink" data-content-text="shared.footer.topLabel" href={v("shared.footer.topLink")}>{v("shared.footer.topLabel")}</a></div>
   </div>
 </footer>

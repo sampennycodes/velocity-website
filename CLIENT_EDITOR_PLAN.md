@@ -1,6 +1,8 @@
 # Velocity Marketing V2 WIP — client editor
 
-Implementation plan · 14 September 2026 · V2 WIP · Proposed, not implemented
+Implementation plan · 14 September 2026 · V2 WIP
+
+Implementation status: the draft editor and content migration are now implemented on staging. Publishing remains disabled pending its scoped credential; final browser acceptance and production release remain outstanding. See `EDITOR_SETUP.md` for verification and `CLIENT_EDITOR_GUIDE.md` for usage.
 
 ## Version and scope
 

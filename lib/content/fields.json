@@ -1,0 +1,754 @@
+{
+  "groups": [
+    {
+      "id": "home.hero",
+      "label": "Hero",
+      "page": "home",
+      "description": ""
+    },
+    {
+      "id": "home.services",
+      "label": "Services",
+      "page": "home",
+      "description": ""
+    },
+    {
+      "id": "home.about",
+      "label": "About",
+      "page": "home",
+      "description": ""
+    },
+    {
+      "id": "home.contact",
+      "label": "Contact",
+      "page": "home",
+      "description": "Displayed contact details are shared. Enquiry delivery settings are managed separately."
+    },
+    {
+      "id": "home.seo",
+      "label": "Search & sharing",
+      "page": "home",
+      "description": ""
+    },
+    {
+      "id": "ads.hero",
+      "label": "Hero",
+      "page": "ads",
+      "description": ""
+    },
+    {
+      "id": "ads.services",
+      "label": "Specialties",
+      "page": "ads",
+      "description": ""
+    },
+    {
+      "id": "ads.about",
+      "label": "About",
+      "page": "ads",
+      "description": ""
+    },
+    {
+      "id": "ads.contact",
+      "label": "Contact",
+      "page": "ads",
+      "description": "Displayed contact details are shared. Enquiry delivery settings are managed separately."
+    },
+    {
+      "id": "ads.seo",
+      "label": "Search & sharing",
+      "page": "ads",
+      "description": ""
+    },
+    {
+      "id": "shared.profile",
+      "label": "Mike’s profile",
+      "page": "shared",
+      "description": "Shared portrait and identity across desktop and mobile placements."
+    },
+    {
+      "id": "shared.reviews",
+      "label": "Reviews",
+      "page": "shared",
+      "description": "The same three reviews appear on both editable pages."
+    },
+    {
+      "id": "shared.contact",
+      "label": "Public contact details",
+      "page": "shared",
+      "description": "Used in both pages and the navigation. Changing these does not change where enquiries are delivered."
+    },
+    {
+      "id": "shared.navigation",
+      "label": "Navigation & footer",
+      "page": "shared",
+      "description": "These shared components also appear on the other existing routes."
+    }
+  ],
+  "fields": [
+    {
+      "group": "home.hero",
+      "key": "home.hero.heading",
+      "label": "Heading",
+      "type": "text",
+      "max": 300,
+      "initial": "Paid Advertising That Drives"
+    },
+    {
+      "group": "home.hero",
+      "key": "home.hero.highlight",
+      "label": "Highlighted phrase",
+      "type": "text",
+      "max": 300,
+      "initial": "Real Growth"
+    },
+    {
+      "group": "home.hero",
+      "key": "home.hero.intro",
+      "label": "Introduction",
+      "type": "textarea",
+      "max": 1200,
+      "initial": "I help businesses like yours achieve their goals with strategic, results-oriented paid media campaigns."
+    },
+    {
+      "group": "home.hero",
+      "key": "home.hero.primaryLabel",
+      "label": "Primary button label",
+      "type": "text",
+      "max": 300,
+      "initial": "Get a Free Consultation"
+    },
+    {
+      "group": "home.hero",
+      "key": "home.hero.primaryLink",
+      "label": "Primary button destination",
+      "type": "link",
+      "max": 1000,
+      "initial": "#contact"
+    },
+    {
+      "group": "home.hero",
+      "key": "home.hero.secondaryLabel",
+      "label": "Secondary button label",
+      "type": "text",
+      "max": 300,
+      "initial": "Explore Services"
+    },
+    {
+      "group": "home.hero",
+      "key": "home.hero.secondaryLink",
+      "label": "Secondary button destination",
+      "type": "link",
+      "max": 1000,
+      "initial": "#services"
+    },
+    {
+      "group": "home.services",
+      "key": "home.services.heading",
+      "label": "Section heading",
+      "type": "text",
+      "max": 300,
+      "initial": "Services"
+    },
+    {
+      "group": "home.services",
+      "key": "home.services.0.title",
+      "label": "Google Ads: title",
+      "type": "text",
+      "max": 300,
+      "initial": "Google Ads"
+    },
+    {
+      "group": "home.services",
+      "key": "home.services.0.description",
+      "label": "Google Ads: description",
+      "type": "textarea",
+      "max": 1800,
+      "initial": "Put your business at the top of search results and connect with customers the moment they're ready to buy or enquire. Explore our local Traralgon campaigns."
+    },
+    {
+      "group": "home.services",
+      "key": "home.services.0.link",
+      "label": "Google Ads destination",
+      "type": "link",
+      "max": 1000,
+      "initial": "/google-ads-traralgon"
+    },
+    {
+      "group": "home.services",
+      "key": "home.services.1.title",
+      "label": "Meta Ads: title",
+      "type": "text",
+      "max": 300,
+      "initial": "Meta Ads"
+    },
+    {
+      "group": "home.services",
+      "key": "home.services.1.description",
+      "label": "Meta Ads: description",
+      "type": "textarea",
+      "max": 1800,
+      "initial": "Reach more people, spark engagement, and grow your business with precision-targeted advertising on the world's largest social media platform."
+    },
+    {
+      "group": "home.services",
+      "key": "home.services.2.title",
+      "label": "LinkedIn Ads: title",
+      "type": "text",
+      "max": 300,
+      "initial": "LinkedIn Ads"
+    },
+    {
+      "group": "home.services",
+      "key": "home.services.2.description",
+      "label": "LinkedIn Ads: description",
+      "type": "textarea",
+      "max": 1800,
+      "initial": "Reach decision-makers, generate qualified B2B leads, and strengthen your brand presence on the world's leading professional network."
+    },
+    {
+      "group": "home.about",
+      "key": "home.about.heading",
+      "label": "Heading",
+      "type": "text",
+      "max": 300,
+      "initial": "Why Work With Me?"
+    },
+    {
+      "group": "home.about",
+      "key": "home.about.intro",
+      "label": "Introduction",
+      "type": "textarea",
+      "max": 2000,
+      "initial": "My name is Mike Nicholas, and I'm a Paid Media Specialist with a passion for helping businesses succeed. I believe in a data-driven approach and I'm committed to delivering measurable results."
+    },
+    {
+      "group": "home.about",
+      "key": "home.about.bullet0",
+      "label": "Bullet 1",
+      "type": "textarea",
+      "max": 700,
+      "initial": "10 years of experience in the industry"
+    },
+    {
+      "group": "home.about",
+      "key": "home.about.bullet1",
+      "label": "Bullet 2",
+      "type": "textarea",
+      "max": 700,
+      "initial": "Proven track record with a diverse range of clients"
+    },
+    {
+      "group": "home.about",
+      "key": "home.about.bullet2",
+      "label": "Bullet 3",
+      "type": "textarea",
+      "max": 700,
+      "initial": "Certified across Google, Meta, and LinkedIn ad platforms"
+    },
+    {
+      "group": "home.about",
+      "key": "home.about.bullet3",
+      "label": "Bullet 4",
+      "type": "textarea",
+      "max": 700,
+      "initial": "Transparent reporting and communication"
+    },
+    {
+      "group": "home.contact",
+      "key": "home.contact.heading",
+      "label": "Heading",
+      "type": "text",
+      "max": 300,
+      "initial": "Let's chat"
+    },
+    {
+      "group": "home.contact",
+      "key": "home.contact.intro",
+      "label": "Introduction",
+      "type": "textarea",
+      "max": 1200,
+      "initial": "Ready to grow your paid media? Let's talk."
+    },
+    {
+      "group": "home.seo",
+      "key": "home.seo.title",
+      "label": "Page title",
+      "type": "text",
+      "max": 180,
+      "initial": "Velocity Marketing — Paid Media Specialist"
+    },
+    {
+      "group": "home.seo",
+      "key": "home.seo.description",
+      "label": "Search description",
+      "type": "textarea",
+      "max": 400,
+      "initial": "I help businesses achieve measurable growth with strategic, data-driven paid media."
+    },
+    {
+      "group": "home.seo",
+      "key": "home.seo.image",
+      "label": "Social image",
+      "type": "image",
+      "max": 300,
+      "initial": {
+        "src": "/ogimage.png",
+        "assetId": null,
+        "description": "Velocity Marketing",
+        "width": 1200,
+        "height": 630,
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "group": "ads.hero",
+      "key": "ads.hero.badge",
+      "label": "Location label",
+      "type": "text",
+      "max": 300,
+      "initial": "Traralgon Google Ads"
+    },
+    {
+      "group": "ads.hero",
+      "key": "ads.hero.heading",
+      "label": "Heading",
+      "type": "text",
+      "max": 300,
+      "initial": "Google Ads in Traralgon That Drive Local Growth"
+    },
+    {
+      "group": "ads.hero",
+      "key": "ads.hero.intro",
+      "label": "Introduction",
+      "type": "textarea",
+      "max": 1200,
+      "initial": "Partner with a Traralgon-based Google Ads specialist delivering conversion-focused campaigns for Gippsland businesses."
+    },
+    {
+      "group": "ads.hero",
+      "key": "ads.hero.primaryLabel",
+      "label": "Primary button label",
+      "type": "text",
+      "max": 300,
+      "initial": "Get a Free Consultation"
+    },
+    {
+      "group": "ads.hero",
+      "key": "ads.hero.primaryLink",
+      "label": "Primary button destination",
+      "type": "link",
+      "max": 1000,
+      "initial": "#contact"
+    },
+    {
+      "group": "ads.hero",
+      "key": "ads.hero.secondaryLabel",
+      "label": "Secondary button label",
+      "type": "text",
+      "max": 300,
+      "initial": "Explore Specialties"
+    },
+    {
+      "group": "ads.hero",
+      "key": "ads.hero.secondaryLink",
+      "label": "Secondary button destination",
+      "type": "link",
+      "max": 1000,
+      "initial": "#services"
+    },
+    {
+      "group": "ads.services",
+      "key": "ads.services.heading",
+      "label": "Section heading",
+      "type": "text",
+      "max": 300,
+      "initial": "Some of Our Specialties"
+    },
+    {
+      "group": "ads.services",
+      "key": "ads.services.0.title",
+      "label": "Shopping: title",
+      "type": "text",
+      "max": 300,
+      "initial": "Shopping"
+    },
+    {
+      "group": "ads.services",
+      "key": "ads.services.0.description",
+      "label": "Shopping: description",
+      "type": "textarea",
+      "max": 1800,
+      "initial": "Showcase your catalogue in Google Shopping with optimized feeds, smart bidding, and product data that converts ready-to-buy customers."
+    },
+    {
+      "group": "ads.services",
+      "key": "ads.services.1.title",
+      "label": "Search: title",
+      "type": "text",
+      "max": 300,
+      "initial": "Search"
+    },
+    {
+      "group": "ads.services",
+      "key": "ads.services.1.description",
+      "label": "Search: description",
+      "type": "textarea",
+      "max": 1800,
+      "initial": "Own the top of Google Search with tightly structured campaigns aligned to local keywords, intent, and meaningful conversions."
+    },
+    {
+      "group": "ads.services",
+      "key": "ads.services.2.title",
+      "label": "Display: title",
+      "type": "text",
+      "max": 300,
+      "initial": "Display"
+    },
+    {
+      "group": "ads.services",
+      "key": "ads.services.2.description",
+      "label": "Display: description",
+      "type": "textarea",
+      "max": 1800,
+      "initial": "Stay front-of-mind across the Google Display Network with creative, remarketing, and audience targeting that reinforces your message."
+    },
+    {
+      "group": "ads.about",
+      "key": "ads.about.heading",
+      "label": "Heading",
+      "type": "text",
+      "max": 300,
+      "initial": "Why Work With Me?"
+    },
+    {
+      "group": "ads.about",
+      "key": "ads.about.intro",
+      "label": "Introduction",
+      "type": "textarea",
+      "max": 2000,
+      "initial": "My name is Mike Nicholas, and I'm a Paid Media Specialist partnering with businesses across Traralgon and the wider Gippsland region. I believe in a data-driven approach and I'm committed to delivering measurable results."
+    },
+    {
+      "group": "ads.about",
+      "key": "ads.about.bullet0",
+      "label": "Bullet 1",
+      "type": "textarea",
+      "max": 700,
+      "initial": "10 years of experience in the industry"
+    },
+    {
+      "group": "ads.about",
+      "key": "ads.about.bullet1",
+      "label": "Bullet 2",
+      "type": "textarea",
+      "max": 700,
+      "initial": "Proven track record with a diverse range of clients"
+    },
+    {
+      "group": "ads.about",
+      "key": "ads.about.bullet2",
+      "label": "Bullet 3",
+      "type": "textarea",
+      "max": 700,
+      "initial": "Certified across Google, Meta, and LinkedIn ad platforms"
+    },
+    {
+      "group": "ads.about",
+      "key": "ads.about.bullet3",
+      "label": "Bullet 4",
+      "type": "textarea",
+      "max": 700,
+      "initial": "Transparent reporting and communication"
+    },
+    {
+      "group": "ads.contact",
+      "key": "ads.contact.heading",
+      "label": "Heading",
+      "type": "text",
+      "max": 300,
+      "initial": "Get in Touch"
+    },
+    {
+      "group": "ads.contact",
+      "key": "ads.contact.intro",
+      "label": "Introduction",
+      "type": "textarea",
+      "max": 1200,
+      "initial": "Ready to grow your Google Ads in Traralgon? Let's talk."
+    },
+    {
+      "group": "ads.seo",
+      "key": "ads.seo.title",
+      "label": "Page title",
+      "type": "text",
+      "max": 180,
+      "initial": "Google Ads in Traralgon | Velocity Marketing"
+    },
+    {
+      "group": "ads.seo",
+      "key": "ads.seo.description",
+      "label": "Search description",
+      "type": "textarea",
+      "max": 400,
+      "initial": "Local Google Ads management for Traralgon businesses, built to drive measurable growth."
+    },
+    {
+      "group": "ads.seo",
+      "key": "ads.seo.image",
+      "label": "Social image",
+      "type": "image",
+      "max": 300,
+      "initial": {
+        "src": "/ogimage.png",
+        "assetId": null,
+        "description": "Velocity Marketing",
+        "width": 1200,
+        "height": 630,
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "group": "shared.profile",
+      "key": "shared.profile.image",
+      "label": "Portrait",
+      "type": "image",
+      "max": 300,
+      "initial": {
+        "src": "/img_8071.png",
+        "assetId": null,
+        "description": "Mike Nicholas",
+        "width": 1295,
+        "height": 1367,
+        "x": 50,
+        "y": 0
+      }
+    },
+    {
+      "group": "shared.profile",
+      "key": "shared.profile.name",
+      "label": "Name",
+      "type": "text",
+      "max": 300,
+      "initial": "Mike Nicholas"
+    },
+    {
+      "group": "shared.profile",
+      "key": "shared.profile.role",
+      "label": "Role",
+      "type": "text",
+      "max": 300,
+      "initial": "Paid Media Specialist"
+    },
+    {
+      "group": "shared.profile",
+      "key": "shared.profile.linkedin",
+      "label": "LinkedIn URL",
+      "type": "webLink",
+      "max": 1000,
+      "initial": "https://au.linkedin.com/in/mikenicholas91"
+    },
+    {
+      "group": "shared.profile",
+      "key": "shared.profile.linkLabel",
+      "label": "LinkedIn link label",
+      "type": "text",
+      "max": 300,
+      "initial": "Connect on LinkedIn"
+    },
+    {
+      "group": "shared.reviews",
+      "key": "shared.reviews.heading",
+      "label": "Heading",
+      "type": "text",
+      "max": 300,
+      "initial": "What Clients Say"
+    },
+    {
+      "group": "shared.reviews",
+      "key": "shared.reviews.intro",
+      "label": "Introduction",
+      "type": "textarea",
+      "max": 1000,
+      "initial": "Backed by measurable performance and transparent communication, our partners consistently rate us five stars."
+    },
+    {
+      "group": "shared.reviews",
+      "key": "shared.reviews.0.name",
+      "label": "Review 1: name",
+      "type": "text",
+      "max": 200,
+      "initial": "Tom Galland"
+    },
+    {
+      "group": "shared.reviews",
+      "key": "shared.reviews.0.business",
+      "label": "Review 1: business",
+      "type": "text",
+      "max": 200,
+      "initial": "SEO Growth"
+    },
+    {
+      "group": "shared.reviews",
+      "key": "shared.reviews.0.quote",
+      "label": "Review 1: quote",
+      "type": "textarea",
+      "max": 2500,
+      "initial": "Working with Mike has been a real game-changer for us. We'd spent years trying to find an agency that actually understood what we were aiming to achieve and knew how to put the right strategies in place."
+    },
+    {
+      "group": "shared.reviews",
+      "key": "shared.reviews.1.name",
+      "label": "Review 2: name",
+      "type": "text",
+      "max": 200,
+      "initial": "Hanlon Clarke"
+    },
+    {
+      "group": "shared.reviews",
+      "key": "shared.reviews.1.business",
+      "label": "Review 2: business",
+      "type": "text",
+      "max": 200,
+      "initial": "Happy Travels"
+    },
+    {
+      "group": "shared.reviews",
+      "key": "shared.reviews.1.quote",
+      "label": "Review 2: quote",
+      "type": "textarea",
+      "max": 2500,
+      "initial": "We've worked with a bunch of digital marketers over the years and honestly Mike is in a different league. He just gets it."
+    },
+    {
+      "group": "shared.reviews",
+      "key": "shared.reviews.2.name",
+      "label": "Review 3: name",
+      "type": "text",
+      "max": 200,
+      "initial": "Jasmine Crutchfield"
+    },
+    {
+      "group": "shared.reviews",
+      "key": "shared.reviews.2.business",
+      "label": "Review 3: business",
+      "type": "text",
+      "max": 200,
+      "initial": "The Collective. Cospace"
+    },
+    {
+      "group": "shared.reviews",
+      "key": "shared.reviews.2.quote",
+      "label": "Review 3: quote",
+      "type": "textarea",
+      "max": 2500,
+      "initial": "Such a fantastic experience working with Mike on our Meta campaign. Mike brings a deep understanding of the platform, clear strategy, and a creative and data-driven approach that helped us reach and engage our audience effectively."
+    },
+    {
+      "group": "shared.contact",
+      "key": "shared.contact.email",
+      "label": "Public email",
+      "type": "email",
+      "max": 254,
+      "initial": "mike@velocitymarketing.com.au"
+    },
+    {
+      "group": "shared.contact",
+      "key": "shared.contact.phone",
+      "label": "Displayed phone number",
+      "type": "phone",
+      "max": 40,
+      "initial": "0427 733 566"
+    },
+    {
+      "group": "shared.contact",
+      "key": "shared.contact.phoneLink",
+      "label": "Dialling number",
+      "type": "phone",
+      "max": 30,
+      "initial": "0427733566"
+    },
+    {
+      "group": "shared.navigation",
+      "key": "shared.nav.servicesLabel",
+      "label": "Services label",
+      "type": "text",
+      "max": 300,
+      "initial": "Services"
+    },
+    {
+      "group": "shared.navigation",
+      "key": "shared.nav.servicesLink",
+      "label": "Services destination",
+      "type": "link",
+      "max": 1000,
+      "initial": "#services"
+    },
+    {
+      "group": "shared.navigation",
+      "key": "shared.nav.aboutLabel",
+      "label": "About label",
+      "type": "text",
+      "max": 300,
+      "initial": "About"
+    },
+    {
+      "group": "shared.navigation",
+      "key": "shared.nav.aboutLink",
+      "label": "About destination",
+      "type": "link",
+      "max": 1000,
+      "initial": "#about"
+    },
+    {
+      "group": "shared.navigation",
+      "key": "shared.nav.contactLabel",
+      "label": "Contact label",
+      "type": "text",
+      "max": 300,
+      "initial": "Contact"
+    },
+    {
+      "group": "shared.navigation",
+      "key": "shared.nav.contactLink",
+      "label": "Contact destination",
+      "type": "link",
+      "max": 1000,
+      "initial": "#contact"
+    },
+    {
+      "group": "shared.navigation",
+      "key": "shared.footer.message",
+      "label": "Footer message",
+      "type": "text",
+      "max": 300,
+      "initial": "Made with love in Traralgon, VIC"
+    },
+    {
+      "group": "shared.navigation",
+      "key": "shared.footer.copyright",
+      "label": "Copyright text",
+      "type": "text",
+      "max": 300,
+      "initial": "Velocity Marketing. All rights reserved."
+    },
+    {
+      "group": "shared.navigation",
+      "key": "shared.footer.topLabel",
+      "label": "Back-to-top label",
+      "type": "text",
+      "max": 300,
+      "initial": "Back to top ↑"
+    },
+    {
+      "group": "shared.navigation",
+      "key": "shared.footer.topLink",
+      "label": "Back-to-top destination",
+      "type": "link",
+      "max": 1000,
+      "initial": "#main-content"
+    }
+  ]
+}

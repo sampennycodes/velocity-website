@@ -1,39 +1,18 @@
 ---
-interface Review {
-  name: string;
-  business: string;
-  quote: string;
-  image?: string;
-}
-
-const reviews: Review[] = [
-  {
-    name: "Tom Galland",
-    business: "SEO Growth",
-    quote: "Working with Mike has been a real game-changer for us. We'd spent years trying to find an agency that actually understood what we were aiming to achieve and knew how to put the right strategies in place.",
-  },
-  {
-    name: "Hanlon Clarke",
-    business: "Happy Travels",
-    quote: "We've worked with a bunch of digital marketers over the years and honestly Mike is in a different league. He just gets it.",
-  },
-  {
-    name: "Jasmine Crutchfield",
-    business: "The Collective. Cospace",
-    quote: "Such a fantastic experience working with Mike on our Meta campaign. Mike brings a deep understanding of the platform, clear strategy, and a creative and data-driven approach that helped us reach and engage our audience effectively.",
-  }
-];
-
+import { value, format } from "../../lib/content/model.js";
+const { content } = Astro.props;
+const v = key => value(content, key);
+const reviews = [0, 1, 2].map(i => ({ i, name: v(`shared.reviews.${i}.name`), business: v(`shared.reviews.${i}.business`), quote: v(`shared.reviews.${i}.quote`) }));
 ---
-<section class="section reviews-section" aria-labelledby="reviews-heading">
+<section data-editor-group="shared.reviews" class="section reviews-section" aria-labelledby="reviews-heading">
   <div class="container">
     <span class="eyebrow section-kicker">Perfect 5* Rating</span>
-    <div class="section-heading reveal"><h2 class="h2" id="reviews-heading">What Clients Say</h2><p class="lead">Backed by measurable performance and transparent communication, our partners consistently rate us five stars.</p></div>
+    <div class="section-heading reveal"><h2 class="h2" id="reviews-heading" data-content-text="shared.reviews.heading">{v("shared.reviews.heading")}</h2><p class="lead" data-content-text="shared.reviews.intro">{v("shared.reviews.intro")}</p></div>
     <div class="reviews-grid">
       {reviews.map(review => <figure class="review-card reveal">
         <div class="review-stars" aria-label="Rated five out of five stars">★★★★★</div>
-        <blockquote>“{review.quote}”</blockquote>
-        <figcaption><span class="review-initials" aria-hidden="true">{review.name.split(' ').map(part => part[0]).join('')}</span><span><strong>{review.name}</strong><span class="review-business">{review.business}</span></span></figcaption>
+        <blockquote data-content-text={`shared.reviews.${review.i}.quote`} data-text-format="quote">{format(review.quote, "quote")}</blockquote>
+        <figcaption><span class="review-initials" aria-hidden="true" data-content-text={`shared.reviews.${review.i}.name`} data-text-format="initials">{format(review.name, "initials")}</span><span><strong data-content-text={`shared.reviews.${review.i}.name`}>{review.name}</strong><span class="review-business" data-content-text={`shared.reviews.${review.i}.business`}>{review.business}</span></span></figcaption>
       </figure>)}
     </div>
   </div>

@@ -1,0 +1,8 @@
+---
+import HomePage from '../../../components/pages/HomePage.astro';
+import AdsPage from '../../../components/pages/AdsPage.astro';
+import { initialContent } from '../../../../lib/content/model.js';
+export function getStaticPaths() { return ['home', 'ads'].map(page => ({ params: { page } })); }
+const Page = Astro.params.page === 'home' ? HomePage : AdsPage;
+---
+<Page content={initialContent} editing={true}><Fragment slot="editor-script"><script>import "../../../scripts/editor-preview";</script></Fragment></Page>
