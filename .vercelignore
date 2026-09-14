@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+.vercel
+.git
+node_modules
+dist
+.generated

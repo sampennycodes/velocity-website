@@ -6,19 +6,22 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://velocitymarketing.com.au',
   output: 'static',
+  // Keep the pre-upgrade HTML whitespace treatment.
+  compressHTML: true,
   integrations: [
     {
       name: 'velocity-local-contact',
       hooks: {
         'astro:config:setup': ({ command, injectRoute }) => {
           if (command === 'dev') {
+            injectRoute({ pattern: '/api/editor', entrypoint: './src/endpoints/editor.ts', prerender: false });
             injectRoute({ pattern: '/api/contact', entrypoint: './src/endpoints/contact.ts', prerender: false });
           }
         }
       }
     },
     sitemap({
-      filter: (page) => !page.includes('/traralgon')
+      filter: (page) => !page.includes('/traralgon') && !page.includes('/admin')
     })
   ],
   server: {

@@ -27,3 +27,8 @@ pnpm-debug.log*
 .env.*
 !.env.example
 .vercel/
+
+# Local editor build proof
+.generated/
+.vercel
+.env*

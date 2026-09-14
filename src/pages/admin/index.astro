@@ -1,0 +1,86 @@
+---
+import manropeFont from '../../assets/fonts/manrope-latin-variable.woff2?url';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="same-origin" />
+    <title>Editor setup · Velocity Marketing</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preload" href={manropeFont} as="font" type="font/woff2" crossorigin="anonymous" />
+  </head>
+  <body>
+    <header><a href="/" aria-label="Velocity Marketing home"><img src="/logo.png" alt="Velocity Marketing" width="215" height="60" /></a><span class="tag">V2 WIP · Staging</span></header>
+    <main>
+      <div class="intro"><p class="eyebrow">CLIENT EDITOR</p><h1>Let’s get you set up.</h1><p>Verify your sign-in, image storage and staging publishing before the visual editor is enabled.</p></div>
+      <p id="message" role="status" aria-live="polite">Checking your session…</p>
+      <section id="login" class="card" aria-labelledby="login-heading">
+        <span class="step">01 / SIGN IN</span><h2 id="login-heading">Your email. One code.</h2>
+        <p>During setup, login codes are enabled for Sam only. Mike will receive no setup invitations.</p>
+        <form id="email-form"><label for="email">Email address</label><input id="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com" /><button type="submit">Send login code <span aria-hidden="true">↗</span></button></form>
+        <form id="code-form" hidden><label for="otp">Six-digit email code</label><input id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" required /><button type="submit">Sign in</button><button type="button" id="change-email" class="secondary">Use another email</button></form>
+      </section>
+      <div id="workspace" hidden>
+        <div class="identity"><p>Signed in as <strong id="identity-email"></strong></p><button id="sign-out" class="secondary">Sign out</button></div>
+        <div class="grid">
+          <section class="card" aria-labelledby="image-heading"><span class="step">02 / PRIVATE IMAGE</span><h2 id="image-heading">Try an image upload.</h2><p>JPEG, PNG or WebP, up to 3 MB and 16 megapixels. Test images remain private and do not change the website.</p>
+            <p id="storage-state" class="hint"></p>
+            <form id="upload-form"><label for="image-file">Image</label><input type="file" id="image-file" accept="image/jpeg,image/png,image/webp" required /><label for="image-description">Image description</label><textarea id="image-description" rows="3" maxlength="500" required placeholder="Describe the image for someone who cannot see it"></textarea><button type="submit" id="upload-button">Upload private image</button></form>
+            <progress id="upload-progress" max="100" value="0" aria-label="Image upload progress" hidden></progress>
+            <figure id="uploaded-image" hidden><img id="image-preview" alt="" /><figcaption id="image-details"></figcaption></figure>
+          </section>
+          <section class="card" aria-labelledby="publish-heading"><span class="step">03 / STAGING BUILD</span><h2 id="publish-heading">Prove publishing.</h2><p>Build the approved V2 source against one saved integration revision. This tests the publishing connection; page editing comes next.</p>
+            <p id="publish-state" class="hint"></p><button id="publish-button" disabled>Start staging build</button>
+            <p id="job-status" role="status" aria-live="polite"></p><a id="deployment-link" target="_blank" rel="noopener noreferrer" hidden>Open staging build ↗</a>
+            <button id="check-status" class="secondary" hidden>Check status</button>
+          </section>
+        </div>
+        <section class="card history"><h2>Recent integration builds</h2><ul id="history"></ul><p id="no-history">No integration builds yet.</p></section>
+      </div>
+      <footer><p>Need help? Contact Sam. The full editor will open here after the integration checks pass.</p><a href="/">Back to website ↗</a></footer>
+    </main>
+    <script>import '../../scripts/editor-setup';</script>
+  </body>
+</html>
+<style define:vars={{ manropeFont }}>
+  @font-face { font-family: Manrope; src: url('../../assets/fonts/manrope-latin-variable.woff2') format('woff2'); font-weight: 200 800; font-display: optional; }
+  :global(*) { box-sizing: border-box; }
+  :global([hidden]) { display: none !important; }
+  :global(body) { margin: 0; background: #141414; color: #f6f5f8; font: 16px/1.65 Manrope, system-ui, sans-serif; }
+  :global(button), :global(input), :global(textarea) { font: inherit; }
+  :global(button), :global(a), :global(input), :global(textarea) { outline-offset: 5px; }
+  :global(:focus-visible) { outline: 3px solid #c9b5fa; }
+  :global(a) { color: #cfbaff; text-underline-offset: 4px; }
+  header { max-width: 1280px; margin: auto; padding: 30px 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid #3f3f3f; }
+  header img { object-fit: contain; width: 215px; height: auto; display: block; }
+  .tag { color: #d7c6ff; border: 1px solid #705294; padding: 7px 13px; border-radius: 100px; font-size: 14px; white-space: nowrap; }
+  main { max-width: 1152px; padding: 64px 40px; margin: auto; }
+  .intro { max-width: 680px; margin-bottom: 30px; }
+  .eyebrow, .step { font-size: 14px; color: #c9b5fa; letter-spacing: .08em; font-weight: 700; }
+  h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); letter-spacing: -.05em; line-height: 1.1; margin: 16px 0 22px; }
+  h2 { font-size: 1.55rem; line-height: 1.3; letter-spacing: -.025em; margin: 12px 0; }
+  p { color: #c1bdc8; margin: 0 0 20px; }
+  .card { border: 1px solid #48434e; background: #202020; padding: 32px; border-radius: 12px; }
+  #login { max-width: 600px; }
+  #message { border-left: 3px solid #a982e0; padding: 12px 18px; background: #27222f; min-height: 50px; }
+  label { display: block; font-weight: 650; margin: 20px 0 8px; }
+  input, textarea { display: block; width: 100%; color: #fff; background: #141414; border: 1px solid #6b626f; border-radius: 7px; padding: 12px; }
+  textarea { resize: vertical; }
+  button { cursor: pointer; color: #fff; background: #7540b2; border: 1px solid #a677dc; border-radius: 7px; padding: 12px 18px; font-weight: 700; margin-top: 20px; min-height: 48px; }
+  button:hover { background: #8851c6; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  button.secondary { background: transparent; border-color: #665d70; }
+  .identity { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-bottom: 24px; }
+  .identity p, .identity button { margin: 0; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .hint { padding: 12px; border: 1px solid #50455e; border-radius: 6px; color: #dbceee; font-size: 14px; }
+  progress { width: 100%; margin-top: 20px; accent-color: #a677dc; }
+  figure { margin: 24px 0 0; } figure img { width: 100%; max-height: 300px; object-fit: contain; background: #141414; }
+  figcaption { color: #c1bdc8; font-size: 14px; margin-top: 10px; }
+  .history { margin-top: 24px; } ul { padding-left: 22px; } li { margin-bottom: 12px; }
+  footer { margin-top: 40px; font-size: 14px; } footer p { margin-bottom: 8px; }
+  @media (max-width: 720px) { header { padding: 24px; flex-wrap: wrap; } main { padding: 40px 24px; } .grid { grid-template-columns: 1fr; } .card { padding: 24px; } .identity { align-items: flex-start; flex-direction: column; } }
+</style>

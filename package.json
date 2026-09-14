@@ -6,13 +6,28 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "prebuild": "node scripts/editor-build-revision.js",
+    "editor:migrate": "node scripts/editor-migrate.js",
+    "editor:access": "node scripts/editor-access.js",
+    "editor:generate": "drizzle-kit generate",
+    "test": "node --test tests/*.test.js"
   },
   "dependencies": {
-    "astro": "^5.12.9",
-    "resend": "^6.0.1"
+    "@neondatabase/serverless": "^1.1.0",
+    "@vercel/blob": "^2.8.0",
+    "@vercel/functions": "^3.9.7",
+    "astro": "^7.3.2",
+    "drizzle-orm": "^0.45.2",
+    "resend": "^6.0.1",
+    "sharp": "^0.35.4",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@astrojs/sitemap": "^3.5.1"
+    "@astrojs/sitemap": "^3.7.4",
+    "drizzle-kit": "^0.31.10"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }
