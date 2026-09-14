@@ -56,7 +56,7 @@ The allowed editor rows are `sam@sampenny.io` (enabled owner) and `mike@velocity
 
 ## Completing the phase 1 checks
 
-1. Configure dedicated SMTP using a verified sender in Neon Auth. The project currently uses Neon’s shared sender; dedicated SMTP is not yet proven. Keep authentication mail independent from the preview enquiry form, which intentionally does not send.
+1. Dedicated staging SMTP is now configured with `smtp.resend.com:465`, Sam’s existing Resend sending credential and `sam@sampenny.io` as sender. Neon confirmed dispatch of a test message to Sam; inbox receipt still needs confirmation. Mike’s preferred sender can be configured during onboarding. Keep authentication mail independent from the preview enquiry form, which intentionally does not send.
 2. Sign in as Sam using a real emailed code. Confirm refresh retains the session and sign-out removes access. The browser receives an HttpOnly, Secure-on-HTTPS, SameSite Strict cookie; it never receives a bearer token in JSON.
 3. Upload a JPEG, PNG or WebP through `/admin` with an image description. Maximum input is 3 MiB and 16 megapixels. Confirm the preview loads while signed in and the image endpoint denies anonymous requests. Images are resized within 2048×2048, retain aspect ratio and use new private object names.
 4. Create a project-scoped Vercel token, store it only as `EDITOR_VERCEL_TOKEN` in staging configuration, and record its expiry outside source control. Set the team/project IDs above and `EDITOR_APPROVED_SOURCE_SHA` to the full tested commit on this branch. Then enable staging publishing.
@@ -73,7 +73,12 @@ A `preparing`, `building` or `unknown` job blocks a second job. For an ambiguous
 - Built static artifacts contain none of the configured server credentials.
 - Live staging database checks confirm Sam is enabled, Mike is disabled, integration revisions reject changes, only one active publication can exist, and production publication records are rejected. Test writes were rolled back.
 
-Real authenticated login, private upload, dedicated SMTP and the server-triggered pinned deployment require the remaining setup checks above. Do not report them as passed based on unit tests or an ordinary preview deployment.
+- Preview deployment `dpl_Df7CF5cq2T6Hbek8F45Y4aYjFs6h` reached READY with a preview target. Its live API denies all six tested anonymous read/write actions with 401 and rejects a cross-origin login-code request with 403. Responses use private, no-store caching.
+- Neon confirmed dispatch of the dedicated SMTP test to Sam. No email was sent to Mike.
+
+Real authenticated login, private upload, SMTP inbox receipt and the server-triggered pinned deployment require the remaining setup checks above. Do not report them as passed based on unit tests or an ordinary preview deployment.
+
+Staging review: [Open editor setup](https://velocity-website-git-codex-visual-refresh-sam-pennys-projects.vercel.app/admin). Publishing remains disabled pending approval and installation of the project-scoped token. The Mac was locked during the final browser checks, so a fresh desktop/mobile browser review is also pending.
 
 ## Release boundary
 
