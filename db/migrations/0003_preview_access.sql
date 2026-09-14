@@ -1,0 +1,2 @@
+ALTER TABLE "velocity_editor"."editors" DROP CONSTRAINT "valid_role";--> statement-breakpoint
+ALTER TABLE "velocity_editor"."editors" ADD CONSTRAINT "valid_role" CHECK ("velocity_editor"."editors"."role" in ('owner', 'editor', 'preview'));

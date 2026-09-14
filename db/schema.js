@@ -5,7 +5,7 @@ const time = name => timestamp(name, { withTimezone: true }).notNull().defaultNo
 export const editors = editor.table('editors', {
   email: text('email').primaryKey(), userId: text('user_id').unique(), role: text('role').notNull(),
   enabled: boolean('enabled').notNull().default(false), createdAt: time('created_at'),
-}, table => [check('valid_role', sql`${table.role} in ('owner', 'editor')`)]);
+}, table => [check('valid_role', sql`${table.role} in ('owner', 'editor', 'preview')`)]);
 export const revisions = editor.table('integration_revisions', {
   id: uuid('id').primaryKey().defaultRandom(), author: text('author').notNull().references(() => editors.email),
   sourceSha: text('source_sha').notNull(), snapshot: jsonb('snapshot').notNull(), createdAt: time('created_at'),

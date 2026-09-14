@@ -2,7 +2,7 @@
 
 The full draft editor is implemented at `/admin`: Home and Google Ads page selection, section selection in the preview, 80 fixed content fields, shared profile/reviews/navigation/contact details, image uploads and portrait cropping, saved drafts, version conflicts, history and restore-to-draft. The editor uses the existing Astro components for its preview. The public site remains static.
 
-The server-controlled publishing implementation is present but **disabled** pending approval and installation of the scoped Vercel deployment token. Production release is not authorized. Mike remains disabled and the email delivery gate still allows only Sam.
+The server-controlled publishing implementation is present but **disabled** pending approval and installation of the scoped Vercel deployment token. Production release is not authorized. Mike is enabled with the `preview` role: browser-only text, link and image experiments, with server-side denial of saving, restoring, uploads and publishing. The OTP gate allows Sam and Mike; no invitations are sent and codes are sent only on request.
 
 The latest user request to provide the actual editor superseded the original plan’s sequencing gate; the remaining publishing check is isolated behind the disabled publishing control. The setup-only screen has been replaced.
 
@@ -64,11 +64,12 @@ A `preparing`, `building` or `unknown` job blocks another job. If reconciliation
 
 ## Verification
 
-- 21 automated tests pass, covering contact behavior, auth/session handling, email gating, image validation, field/schema/link restrictions, media metadata, conflict checks, anonymous draft/history/save/restore denial, and pinned staging deployment matching.
+- 25 automated tests pass, covering contact behavior, auth/session handling, email gating, image validation, field/schema/link restrictions, media metadata, conflict checks, anonymous draft/history/save/restore denial, and pinned staging deployment matching.
 - Live database transaction checks passed for draft saving, stale-version conflicts, restoration, immutable history, one active publisher and production-target rejection. All test draft/history/publication writes were rolled back.
 - Live storage checks passed for private upload and read, anonymous denial, public copying and byte-for-byte equality. The retained test asset is a public Velocity logo, not client draft content.
 - Public-route baseline comparison passed. Production dependency audit was clear after upgrading Astro to 7.3.2; `compressHTML: true` and relocation of the duplicate legacy simulator preserve previous rendering.
 - Sam confirmed real login works after the session-cookie correction.
+- Preview-role tests cover write denial before storage access, read-only draft loading, local image URL restrictions and on-request OTP eligibility.
 - Final signed-in browser verification of the new editor is pending the Mac unlock. The real Vercel publication remains pending its scoped credential. These are not implied by the database and storage checks.
 
 See `CLIENT_EDITOR_GUIDE.md` for the client workflow. Keep all testing on staging. A future approved production release must rebuild with production settings, not promote a preview artifact.

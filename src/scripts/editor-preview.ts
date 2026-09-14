@@ -1,6 +1,7 @@
 import { contentSchema, format } from "../../lib/content/model.js";
+import { previewImageSource } from "../../lib/content/preview.js";
 const parentOrigin = location.origin;
-function apply(content: any) {
+function apply(content: any, previewImages: unknown) {
   const page = location.pathname.split("/").filter(Boolean).at(-1);
   document.title = content.values[`${page}.seo.title`];
   for (const selector of [
@@ -35,12 +36,13 @@ function apply(content: any) {
     .forEach((img) => {
       const value = content.values[img.dataset.contentImage!];
       if (!value) return;
-      if (img.getAttribute("src") !== value.src) img.src = value.src;
+      const source = previewImageSource(previewImages, img.dataset.contentImage!, parentOrigin) || value.src;
+      if (img.getAttribute("src") !== source) img.src = source;
       img.alt = value.description;
       img.style.objectPosition = `${value.x}% ${value.y}%`;
       if (img.parentElement?.classList.contains("hero-art")) {
-        img.style.aspectRatio = value.assetId ? "1" : "";
-        img.style.objectFit = value.assetId ? "cover" : "";
+        img.style.aspectRatio = value.assetId || source !== value.src ? "1" : "";
+        img.style.objectFit = value.assetId || source !== value.src ? "cover" : "";
       }
     });
 }
@@ -83,7 +85,7 @@ window.addEventListener("message", (event) => {
   if (event.origin !== parentOrigin || event.source !== window.parent) return;
   if (event.data?.type === "velocity-content") {
     const parsed = contentSchema.safeParse(event.data.content);
-    if (parsed.success) apply(parsed.data);
+    if (parsed.success) apply(parsed.data, event.data.previewImages);
   }
   if (
     event.data?.type === "velocity-focus" &&

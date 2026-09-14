@@ -11,17 +11,25 @@ let signedIn = false,
   uploading = false,
   publishing = false,
   publishReady = false;
+let canSave = false;
+const previewImages = new Map<string, string>();
+function clearPreviewImages() {
+  for (const url of previewImages.values()) URL.revokeObjectURL(url);
+  previewImages.clear();
+}
 let email = sessionStorage.getItem("velocity-setup-email") || "",
   viewport = 1280,
   jobId = "",
   publishKey = crypto.randomUUID(),
   historyCursor: string | null = null;
-const dirty = () => content && JSON.stringify(content) !== saved;
+const dirty = () => content && (JSON.stringify(content) !== saved || previewImages.size > 0);
 const notice = (text: string) => {
   $("notice").textContent = text;
 };
 function updateState() {
-  $("save-state").textContent = uploading
+  $("save-state").textContent = !canSave
+    ? "Preview only · changes are not saved"
+    : uploading
     ? "Uploading…"
     : busy
       ? "Saving…"
@@ -29,9 +37,9 @@ function updateState() {
         ? "Unsaved changes"
         : "All changes saved";
   $<HTMLButtonElement>("save-button").disabled =
-    !signedIn || busy || uploading || !dirty();
+    !signedIn || !canSave || busy || uploading || !dirty();
   $<HTMLButtonElement>("publish-button").disabled =
-    !signedIn || busy || uploading || publishing || dirty() || !publishReady;
+    !signedIn || !canSave || busy || uploading || publishing || dirty() || !publishReady;
 }
 function showLogin(message: string) {
   $<HTMLDialogElement>("history-dialog").close();
@@ -86,7 +94,7 @@ async function action(
 function tellPreview() {
   if (content)
     $<HTMLIFrameElement>("page-preview").contentWindow?.postMessage(
-      { type: "velocity-content", content },
+      { type: "velocity-content", content, previewImages: Object.fromEntries(previewImages) },
       location.origin,
     );
 }
@@ -193,7 +201,7 @@ function renderFields() {
     if (f.type === "image") {
       const img = document.createElement("img");
       img.className = "image-thumb";
-      img.src = content.values[f.key].src;
+      img.src = previewImages.get(f.key) || content.values[f.key].src;
       img.alt = content.values[f.key].description;
       wrap.append(img);
       const file = document.createElement("input");
@@ -203,8 +211,9 @@ function renderFields() {
       wrap.append(file);
       const helper = document.createElement("p");
       helper.className = "image-meta";
-      helper.textContent =
-        "JPEG, PNG or WebP · up to 3 MB · private until published";
+      helper.textContent = canSave
+        ? "JPEG, PNG or WebP · up to 3 MB · private until published"
+        : "JPEG, PNG or WebP · up to 3 MB · stays in this browser only";
       wrap.append(helper);
       const altLabel = document.createElement("label");
       altLabel.htmlFor = id + "-alt";
@@ -255,7 +264,7 @@ function renderFields() {
       status.className = "upload-status";
       status.setAttribute("role", "status");
       wrap.append(status);
-      file.addEventListener("change", () => {
+      file.addEventListener("change", async () => {
         const upload = file.files?.[0];
         if (!upload) return;
         if (uploading) {
@@ -265,6 +274,36 @@ function renderFields() {
         if (upload.size > 3 * 1024 * 1024 || !alt.value.trim()) {
           status.textContent =
             "Choose an image up to 3 MB and add an image description.";
+          return;
+        }
+        if (!canSave) {
+          // Local image previews never touch the upload API or saved content.
+          file.disabled = true;
+          uploading = true;
+          updateState();
+          try {
+            if (!["image/jpeg", "image/png", "image/webp"].includes(upload.type))
+              throw new Error("Choose a JPEG, PNG or WebP image.");
+            const bitmap = await createImageBitmap(upload);
+            const pixels = bitmap.width * bitmap.height;
+            bitmap.close();
+            if (pixels > 16000000) throw new Error("Choose an image up to 16 megapixels.");
+            const previous = previewImages.get(f.key);
+            const url = URL.createObjectURL(upload);
+            previewImages.set(f.key, url);
+            if (previous) URL.revokeObjectURL(previous);
+            img.src = url;
+            img.alt = alt.value;
+            status.textContent = "Preview only. This image is not uploaded or saved.";
+            changed();
+          } catch (error) {
+            status.textContent = (error as Error).message || "This image could not be previewed.";
+          } finally {
+            file.disabled = false;
+            file.value = "";
+            uploading = false;
+            updateState();
+          }
           return;
         }
         uploading = true;
@@ -357,18 +396,26 @@ function acceptDraft(data: any, replace = true) {
     tellPreview();
   }
   $("updated").textContent =
-    `Draft ${version} · saved ${new Date(data.updatedAt).toLocaleString()} by ${data.updatedBy}`;
+    data.updatedAt
+      ? `Draft ${version} · saved ${new Date(data.updatedAt).toLocaleString()} by ${data.updatedBy}`
+      : "Starting from the current website content.";
   $("conflict").hidden = true;
   updateState();
 }
 async function load() {
   const session = await api("session");
+  canSave = session.canSave === true;
   signedIn = true;
   email = session.email;
   $("identity").textContent = session.email;
   $("login").hidden = true;
   $("workspace").hidden = false;
   $("toolbar").hidden = false;
+  for (const id of ["save-button", "history-button", "publish-button"])
+    $(id).hidden = !canSave;
+  $("panel-note").textContent = canSave
+    ? "Changes appear in the preview immediately. Save your draft when you’re ready."
+    : "Preview only. Try any changes here; refreshing or signing out discards them.";
   if (!content) {
     const draft = await api("draft");
     acceptDraft(draft);
@@ -379,16 +426,20 @@ async function load() {
   const active = status.publications.find((p: any) =>
     ["preparing", "building", "unknown"].includes(p.status),
   );
-  if (active) {
+  if (canSave && active) {
     jobId = active.id;
     publishing = true;
     void checkPublish();
   }
-  $("publish-status").textContent = publishReady
+  $("publish-status").textContent = !canSave
+    ? "Preview only · saving and publishing are disabled."
+    : publishReady
     ? "Publishes to staging only."
     : "Staging publishing is not connected yet. Draft editing is available.";
   notice(
-    dirty()
+    !canSave
+      ? "Preview mode: try text, links and images. Changes stay in this tab and are discarded on refresh."
+      : dirty()
       ? "You’re signed back in. Your unsaved edits are still here."
       : "Choose a section to edit. Your saved draft is private until you publish.",
   );
@@ -450,6 +501,7 @@ $("sign-out").addEventListener("click", () => {
   if (dirty() && !confirm("Sign out and discard unsaved changes?")) return;
   void action($("sign-out"), async () => {
     await api("sign-out", {});
+    clearPreviewImages();
     content = null;
     saved = "";
     signedIn = false;
@@ -504,7 +556,7 @@ window.addEventListener("message", (event) => {
     selectGroup(event.data.group, true);
 });
 $("save-button").addEventListener("click", async () => {
-  if (busy || uploading || !dirty()) return;
+  if (!canSave || busy || uploading || !dirty()) return;
   const parsed = contentSchema.safeParse(content);
   if (!parsed.success) {
     const key = parsed.error.issues[0].path[1];
@@ -583,6 +635,7 @@ async function loadHistory(append = false) {
     details.append(title, meta);
     button.textContent = "Restore to draft";
     button.addEventListener("click", () => {
+      if (!canSave) return;
       if (
         !confirm(
           "Restore this version into your draft? Unsaved edits will be replaced; saved history stays intact.",
@@ -607,6 +660,7 @@ async function loadHistory(append = false) {
     : "No saved versions yet.";
 }
 $("history-button").addEventListener("click", () => {
+  if (!canSave) return;
   $<HTMLDialogElement>("history-dialog").showModal();
   $("history-message").textContent = "Loading…";
   void loadHistory().catch((e) => {
@@ -643,7 +697,7 @@ async function checkPublish() {
   }
 }
 $("publish-button").addEventListener("click", () => {
-  if (dirty() || publishing || !publishReady) return;
+  if (!canSave || dirty() || publishing || !publishReady) return;
   void action($("publish-button"), async () => {
     publishing = true;
     updateState();
