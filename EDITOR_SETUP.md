@@ -1,6 +1,6 @@
 # Client editor — implementation and staging setup
 
-The full draft editor is implemented at `/admin`: Home and Google Ads page selection, section selection in the preview, 102 fixed content fields, shared profile/reviews/navigation/contact details, image uploads and portrait cropping, saved drafts, version conflicts, history and restore-to-draft. The editor uses the existing Astro components for its preview. The public site remains static.
+The full draft editor is implemented at `/admin`: Home and 17 towns under Location Pages, section selection in the preview, 537 fixed content fields, shared profile/reviews/navigation/contact details, image uploads and portrait cropping, saved drafts, version conflicts, history and restore-to-draft. The editor uses the existing Astro components for its preview. The public site remains static.
 
 Staging publishing is enabled and verified. Mike is enabled with the `editor` role; Sam remains `owner`. Both can save drafts, upload images, restore history and update staging. The optional `preview` role still denies all writes. The OTP gate allows Sam and Mike; no invitations are sent and codes are sent only on request. Production release is not authorized.
 
@@ -93,3 +93,11 @@ The shared Contact emails group adds eight validated fields and in-editor sample
 Advance the branch-scoped `EDITOR_APPROVED_SOURCE_SHA` to the tested code revision before deploying this editor, so later Save & update staging builds include the email fields. Production publishing remains a separate future release task; carry the approved snapshot into that release instead of relying on default production content.
 
 The shared Contact form group stores a referral visibility flag plus Required and Show status label flags for each field. Older snapshots preserve the original requirements and visible labels; the referral question defaults to visible and optional. The same packaged contact settings control server validation, and hidden referral answers are discarded. Other details are bounded to 500 characters and escaped in the internal notification. The CMS preview applies these flags immediately. Optional missing email produces only the team notification; missing name uses readable template fallbacks. Entirely empty submissions remain invalid. Contact delivery remains disabled on staging.
+
+## Location page rollout
+
+`lib/content/locations.js` is the shared town, route and region catalogue, including distinct starting copy. `location-fields.js` expands the existing field registry into independently editable town fields. Traralgon keeps its `ads.*` keys and `/admin/preview/ads` identity. New pages use `location-{town}.*` keys. Added fields default when an older snapshot is read; legacy required fields remain strict. Public routes stay static.
+
+The 4 MB content request limit covers full-site saves at the registered field lengths. The normal authentication, optimistic version checks, image validation and immutable publication workflow still apply.
+
+After deploying the new source to V2 and updating the preview branch’s `EDITOR_APPROVED_SOURCE_SHA`, run `node scripts/editor-location-rollout.js --author=sam@sampenny.io` to review the content change. Add `--save` to write a normal draft revision, then use the CMS to update staging. `--local-preview` writes only the ignored local build snapshot. Run this editorial update once; it is intentionally not part of ordinary builds or history restoration. Unrelated client edits remain authoritative, and new pages inherit the existing Traralgon button settings and social image.

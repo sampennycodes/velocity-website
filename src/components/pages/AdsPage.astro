@@ -3,34 +3,35 @@ import Layout from "../../layouts/Layout.astro";
 import ContactForm from "../ContactForm.astro";
 import ReviewSlider from "../ReviewSlider.astro";
 
-export const excludeFromSitemap = false;
-
-const pageTitle = "Google Ads in Traralgon | Velocity Marketing";
-const pageDescription = "Local Google Ads management for Traralgon businesses, built to drive measurable growth.";
-const canonicalUrl = "https://velocitymarketing.com.au/google-ads-traralgon";
+import ServiceAreas from '../ServiceAreas.astro';
+import { locationMap } from '../../../lib/content/locations.js';
 
 import { value } from "../../../lib/content/model.js";
 import { responsiveImage } from "../../../lib/site.js";
 import type { SiteContent } from "../../../lib/content/types";
-interface Props { content: SiteContent; editing?: boolean; }
-const { content, editing = false } = Astro.props;
-const v = key => value(content, key);
+interface Props { content: SiteContent; editing?: boolean; locationSlug?: string; }
+const { content, editing = false, locationSlug = 'traralgon' } = Astro.props;
+const location = locationMap[locationSlug];
+if (!location) throw new Error('Unknown location');
+const key = suffix => `${location.page}.${suffix}`;
+const canonicalUrl = `https://velocitymarketing.com.au${location.path}`;
+const v = field => value(content, field);
 const portrait = v("shared.profile.image");
 const portraitStyle = `object-position:${portrait.x}% ${portrait.y}%;`
   + (portrait.assetId ? "aspect-ratio:1;object-fit:cover;" : "")
   + (portrait.rounding === undefined ? "" : `--portrait-rounding:${portrait.rounding}%;`);
 ---
 
-<Layout content={content} editing={editing} title={v("ads.seo.title")} description={v("ads.seo.description")} socialImage={v("ads.seo.image").src} socialImageWidth={v("ads.seo.image").width} socialImageHeight={v("ads.seo.image").height} canonical={canonicalUrl}>
-  <section data-editor-group="ads.hero" id="hero" class="section hero">
+<Layout content={content} editing={editing} title={v(key("seo.title"))} description={v(key("seo.description"))} socialImage={v(key("seo.image")).src} socialImageWidth={v(key("seo.image")).width} socialImageHeight={v(key("seo.image")).height} canonical={canonicalUrl}>
+  <section data-editor-group={key("hero")} id="hero" class="section hero">
     <div class="container grid two-col align-center">
       <div class="reveal">
-        <div class="badge glass" data-content-text="ads.hero.badge">{v("ads.hero.badge")}</div>
-        <h1 class="display text-gradient" data-content-text="ads.hero.heading">{v("ads.hero.heading")}</h1>
-        <p class="lead" data-content-text="ads.hero.intro">{v("ads.hero.intro")}</p>
+        <div class="badge glass" data-content-text={key("hero.badge")}>{v(key("hero.badge"))}</div>
+        <h1 class="display text-gradient" data-content-text={key("hero.heading")}>{v(key("hero.heading"))}</h1>
+        <p class="lead" data-content-text={key("hero.intro")}>{v(key("hero.intro"))}</p>
         <div class="actions">
-          <a data-content-href="ads.hero.primaryLink" href={v("ads.hero.primaryLink")} class="btn btn--primary"><span data-content-text="ads.hero.primaryLabel">{v("ads.hero.primaryLabel")}</span></a>
-          <a data-content-href="ads.hero.secondaryLink" href={v("ads.hero.secondaryLink")} class="btn ghost"><span data-content-text="ads.hero.secondaryLabel">{v("ads.hero.secondaryLabel")}</span></a>
+          <a data-content-href={key("hero.primaryLink")} href={v(key("hero.primaryLink"))} class="btn btn--primary"><span data-content-text={key("hero.primaryLabel")}>{v(key("hero.primaryLabel"))}</span></a>
+          <a data-content-href={key("hero.secondaryLink")} href={v(key("hero.secondaryLink"))} class="btn ghost"><span data-content-text={key("hero.secondaryLabel")}>{v(key("hero.secondaryLabel"))}</span></a>
         </div>
         <div class="stats">
           <div class="stat">
@@ -39,7 +40,7 @@ const portraitStyle = `object-position:${portrait.x}% ${portrait.y}%;`
           </div>
           <div class="stat">
             <span class="stat__num">AU</span>
-            <span class="stat__label">Local to Traralgon</span>
+            <span class="stat__label" data-content-text={key("hero.localLabel")}>{v(key("hero.localLabel"))}</span>
           </div>
           <div class="stat">
             <span class="stat__num">G Ads</span>
@@ -62,21 +63,21 @@ const portraitStyle = `object-position:${portrait.x}% ${portrait.y}%;`
     </div>
   </section>
 
-  <section data-editor-group="ads.services" id="services" class="section">
+  <section data-editor-group={key("services")} id="services" class="section">
     <div class="container">
-      <h2 class="h2 center reveal" data-content-text="ads.services.heading">{v("ads.services.heading")}</h2>
+      <h2 class="h2 center reveal" data-content-text={key("services.heading")}>{v(key("services.heading"))}</h2>
       <div class="grid cards">
         <article class="card hover-lift reveal">
-          <h3 class="card__title" data-content-text="ads.services.0.title">{v("ads.services.0.title")}</h3>
-          <p class="card__body" data-content-text="ads.services.0.description">{v("ads.services.0.description")}</p>
+          <h3 class="card__title" data-content-text={key("services.0.title")}>{v(key("services.0.title"))}</h3>
+          <p class="card__body" data-content-text={key("services.0.description")}>{v(key("services.0.description"))}</p>
         </article>
         <article class="card hover-lift reveal">
-          <h3 class="card__title" data-content-text="ads.services.1.title">{v("ads.services.1.title")}</h3>
-          <p class="card__body" data-content-text="ads.services.1.description">{v("ads.services.1.description")}</p>
+          <h3 class="card__title" data-content-text={key("services.1.title")}>{v(key("services.1.title"))}</h3>
+          <p class="card__body" data-content-text={key("services.1.description")}>{v(key("services.1.description"))}</p>
         </article>
         <article class="card hover-lift reveal">
-          <h3 class="card__title" data-content-text="ads.services.2.title">{v("ads.services.2.title")}</h3>
-          <p class="card__body" data-content-text="ads.services.2.description">{v("ads.services.2.description")}</p>
+          <h3 class="card__title" data-content-text={key("services.2.title")}>{v(key("services.2.title"))}</h3>
+          <p class="card__body" data-content-text={key("services.2.description")}>{v(key("services.2.description"))}</p>
         </article>
       </div>
     </div>
@@ -84,28 +85,30 @@ const portraitStyle = `object-position:${portrait.x}% ${portrait.y}%;`
 
   <ReviewSlider content={content} />
 
-  <section data-editor-group="ads.about" id="about" class="section alt">
+  <section data-editor-group={key("about")} id="about" class="section alt">
     <div class="container grid align-center">
       <div class="reveal">
-        <h2 class="h2" data-content-text="ads.about.heading">{v("ads.about.heading")}</h2>
-        <p data-content-text="ads.about.intro">{v("ads.about.intro")}</p>
+        <h2 class="h2" data-content-text={key("about.heading")}>{v(key("about.heading"))}</h2>
+        <p data-content-text={key("about.intro")}>{v(key("about.intro"))}</p>
         <ul class="checklist">
-          <li data-content-text="ads.about.bullet0">{v("ads.about.bullet0")}</li>
-          <li data-content-text="ads.about.bullet1">{v("ads.about.bullet1")}</li>
-          <li data-content-text="ads.about.bullet2">{v("ads.about.bullet2")}</li>
-          <li data-content-text="ads.about.bullet3">{v("ads.about.bullet3")}</li>
+          <li data-content-text={key("about.bullet0")}>{v(key("about.bullet0"))}</li>
+          <li data-content-text={key("about.bullet1")}>{v(key("about.bullet1"))}</li>
+          <li data-content-text={key("about.bullet2")}>{v(key("about.bullet2"))}</li>
+          <li data-content-text={key("about.bullet3")}>{v(key("about.bullet3"))}</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <section data-editor-group="ads.contact" id="contact" class="section">
+  <ServiceAreas content={content} locationSlug={location.slug} />
+
+  <section data-editor-group={key("contact")} id="contact" class="section">
     <div class="container center">
       <div class="center">
-        <h2 class="h2 reveal" data-content-text="ads.contact.heading">{v("ads.contact.heading")}</h2>
+        <h2 class="h2 reveal" data-content-text={key("contact.heading")}>{v(key("contact.heading"))}</h2>
       </div>
       <div class="contact-stack">
-        <p class="lead reveal contact-lead" style="text-align: center;" data-content-text="ads.contact.intro">{v("ads.contact.intro")}</p>
+        <p class="lead reveal contact-lead" style="text-align: center;" data-content-text={key("contact.intro")}>{v(key("contact.intro"))}</p>
         <div class="chips reveal" style="text-align: center !important; display: flex !important; justify-content: center !important;">
           <a class="chip" data-content-href="shared.contact.email" data-href-format="mailto" data-content-text="shared.contact.email" href={"mailto:" + v("shared.contact.email")}>{v("shared.contact.email")}</a>
           <a class="chip" data-content-href="shared.contact.phoneLink" data-href-format="tel" data-content-text="shared.contact.phone" href={"tel:" + v("shared.contact.phoneLink").replace(/[ ()-]/g, "")}>{v("shared.contact.phone")}</a>

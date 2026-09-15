@@ -9,6 +9,9 @@ function apply(content: any, previewImages: unknown) {
   if (form) syncContactForm(form, { fields: formFieldSettings(content.values), referral: referralSettings(content.values) });
   const page = location.pathname.split("/").filter(Boolean).at(-1);
   document.title = content.values[`${page}.seo.title`];
+  for (const selector of ['meta[property="og:title"]', 'meta[name="twitter:title"]']) {
+    document.querySelector(selector)?.setAttribute('content', content.values[`${page}.seo.title`]);
+  }
   for (const selector of [
     'meta[name="description"]',
     'meta[property="og:description"]',

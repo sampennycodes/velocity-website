@@ -2,7 +2,12 @@
   "headers": [
     {
       "source": "/optimized/:path*",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/favicon.ico",
@@ -58,14 +63,34 @@
   ],
   "redirects": [
     {
+      "source": "/google-ads-traralgon",
+      "destination": "/paid-ads-traralgon",
+      "permanent": true
+    },
+    {
+      "source": "/traralgon",
+      "destination": "/paid-ads-traralgon",
+      "permanent": true
+    },
+    {
       "source": "/admin/:path*",
-      "has": [{ "type": "host", "value": "velocitymarketing.com.au" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "velocitymarketing.com.au"
+        }
+      ],
       "destination": "https://velocitymarketing-v2.vercel.app/admin/:path*",
       "permanent": false
     },
     {
       "source": "/admin/:path*",
-      "has": [{ "type": "host", "value": "www.velocitymarketing.com.au" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.velocitymarketing.com.au"
+        }
+      ],
       "destination": "https://velocitymarketing-v2.vercel.app/admin/:path*",
       "permanent": false
     },
@@ -80,7 +105,9 @@
       "includeFiles": ".generated/contact-email-settings.json"
     },
     "api/editor-api.js": {
-      "regions": ["syd1"],
+      "regions": [
+        "syd1"
+      ],
       "maxDuration": 300
     }
   },

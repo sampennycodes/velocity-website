@@ -1,3 +1,4 @@
+import { pageMap } from '../../lib/content/locations.js';
 import { fields, groups, contentSchema, contactEmailSettings, referralSettings } from "../../lib/content/model.js";
 import { contactEmails, contactEmailVariables } from "../../lib/contact-email.js";
 import { imageSource } from "../../lib/site.js";
@@ -234,7 +235,7 @@ function renderFields() {
       ? "SHARED CONTENT"
       : page === "home"
         ? "HOME PAGE"
-        : "GOOGLE ADS PAGE";
+        : `${pageMap[page].label.toUpperCase()} PAGE`;
   $("panel-description").textContent = editingEmails ? emailTypes[emailType].description : selected.description || "";
   $("panel-note").textContent = group === "shared.emails"
     ? "The samples use Alex Smith as an example lead. Save & update staging keeps these settings with the website version. Email delivery starts when the approved V2 version goes live."
@@ -569,7 +570,7 @@ function renderEmailPreview() {
     tab.tabIndex = index === emailType ? 0 : -1;
   });
   $("preview-stage").hidden = !preview.hidden;
-  $("preview-title").textContent = !preview.hidden ? "Contact emails" : page === "home" ? "Home" : "Google Ads in Traralgon";
+  $("preview-title").textContent = !preview.hidden ? "Contact emails" : pageMap[page].label;
   $("canvas-hint").textContent = !preview.hidden
     ? "An example enquiry. Switch to Mobile to check the narrower layout."
     : "Select a section in the preview or choose it from the list.";
@@ -768,7 +769,7 @@ $("page-picker").addEventListener("change", () => {
   navigation();
   renderFields();
   $("preview-title").textContent =
-    page === "home" ? "Home" : "Google Ads in Traralgon";
+    pageMap[page].label;
   $<HTMLIFrameElement>("page-preview").src = `/admin/preview/${page}`;
 });
 $("section-picker").addEventListener("change", () =>
@@ -814,8 +815,8 @@ $("save-button").addEventListener("click", async () => {
     const key = parsed.error.issues[0].path[1];
     const field = fields.find((f) => f.key === key);
     if (field) {
-      if (field.group.startsWith("home.") || field.group.startsWith("ads.")) {
-        const targetPage = field.group.split(".")[0];
+      const targetPage = groups.find(group => group.id === field.group)?.page;
+      if (targetPage && targetPage !== "shared" && pageMap[targetPage]) {
         if (page !== targetPage) {
           $<HTMLSelectElement>("page-picker").value = targetPage;
           $("page-picker").dispatchEvent(new Event("change"));

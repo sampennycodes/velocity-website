@@ -1,0 +1,43 @@
+---
+import { regions, locationMap, nearbyLocations } from '../../lib/content/locations.js';
+import type { SiteContent } from '../../lib/content/types';
+interface Props { content: SiteContent; locationSlug?: string; }
+const { content, locationSlug } = Astro.props;
+const location = locationSlug ? locationMap[locationSlug] : null;
+const group = location ? `${location.page}.areas` : 'home.areas';
+const headingKey = `${group}.heading`;
+---
+<section id="areas-we-service" class="section service-areas" data-editor-group={group}>
+  <div class="container">
+    <h2 class="h2 reveal" data-content-text={headingKey}>{content.values[headingKey]}</h2>
+    {location ? (
+      <ul class="area-links nearby-links reveal">
+        {nearbyLocations(location.slug).map(town => <li><a href={town.path}>{town.name}<span aria-hidden="true">↗</span></a></li>)}
+      </ul>
+    ) : (
+      <div class="area-regions">
+        {regions.map(region => <div class="area-region reveal">
+          <h3>{region.name}</h3>
+          <ul class="area-links">{region.slugs.map(slug => <li><a href={locationMap[slug].path}>{locationMap[slug].name}<span aria-hidden="true">↗</span></a></li>)}</ul>
+        </div>)}
+      </div>
+    )}
+  </div>
+</section>
+<style>
+  .service-areas { border-top: 1px solid var(--border, #ffffff1f); }
+  .service-areas .h2 { margin-bottom: 2.5rem; }
+  .area-regions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem 3rem; }
+  .area-region h3 { font-size: 1.2rem; margin: 0 0 1rem; color: var(--accent, #c79bff); }
+  .area-links { list-style: none; padding: 0; margin: 0; }
+  .area-links li { border-bottom: 1px solid #ffffff1f; }
+  .area-links a { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 48px; padding: .65rem 0; font-size: 1rem; text-decoration: none; }
+  .area-links a span { color: var(--accent, #c79bff); transition: transform .2s; }
+  .area-links a:hover { color: var(--accent, #c79bff); }
+  .area-links a:hover span { transform: translate(2px, -2px); }
+  .area-links a:focus-visible { outline: 2px solid var(--accent, #c79bff); outline-offset: 4px; }
+  .nearby-links { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 2rem; }
+  @media (max-width: 900px) { .area-regions, .nearby-links { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 540px) { .area-regions, .nearby-links { grid-template-columns: 1fr; } .area-regions { gap: 2rem; } }
+  @media (prefers-reduced-motion: reduce) { .area-links a span { transition: none; } }
+</style>

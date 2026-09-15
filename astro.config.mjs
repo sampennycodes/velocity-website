@@ -6,6 +6,10 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://velocitymarketing.com.au',
   output: 'static',
+  redirects: {
+    '/google-ads-traralgon': { status: 301, destination: '/paid-ads-traralgon' },
+    '/traralgon': { status: 301, destination: '/paid-ads-traralgon' },
+  },
   // Keep the pre-upgrade HTML whitespace treatment.
   compressHTML: true,
   integrations: [
@@ -21,7 +25,7 @@ export default defineConfig({
       }
     },
     sitemap({
-      filter: (page) => !page.includes('/traralgon') && !page.includes('/admin')
+      filter: (page) => !['/traralgon', '/google-ads-traralgon'].includes(new URL(page).pathname.replace(/\/$/, '')) && !new URL(page).pathname.startsWith('/admin')
     })
   ],
   server: {

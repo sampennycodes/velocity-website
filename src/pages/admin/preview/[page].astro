@@ -1,8 +1,10 @@
 ---
 import HomePage from '../../../components/pages/HomePage.astro';
 import AdsPage from '../../../components/pages/AdsPage.astro';
+import { locations, pages } from '../../../../lib/content/locations.js';
 import { initialContent } from '../../../../lib/content/model.js';
-export function getStaticPaths() { return ['home', 'ads'].map(page => ({ params: { page } })); }
+export function getStaticPaths() { return pages.map(page => ({ params: { page: page.id } })); }
 const Page = Astro.params.page === 'home' ? HomePage : AdsPage;
+const locationSlug = locations.find(location => location.page === Astro.params.page)?.slug;
 ---
-<Page content={initialContent} editing={true}><Fragment slot="editor-script"><script>import "../../../scripts/editor-preview";</script></Fragment></Page>
+<Page locationSlug={locationSlug} content={initialContent} editing={true}><Fragment slot="editor-script"><script>import "../../../scripts/editor-preview";</script></Fragment></Page>

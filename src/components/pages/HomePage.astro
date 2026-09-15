@@ -5,6 +5,7 @@ import ContactForm from "../ContactForm.astro";
 import GoogleRating from "../GoogleRating.astro";
 import MikeProfile from "../MikeProfile.astro";
 import HeroProofPoints from "../HeroProofPoints.astro";
+import ServiceAreas from '../ServiceAreas.astro';
 
 import { value } from "../../../lib/content/model.js";
 import { imageSource } from "../../../lib/site.js";
@@ -85,6 +86,8 @@ const v = key => value(content, key);
       </div>
     </div>
   </section>
+
+  <ServiceAreas content={content} />
 
   <section data-editor-group="home.contact" id="contact" class="section contact-section">
     <div class="container contact-layout">

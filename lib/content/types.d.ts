@@ -1,5 +1,5 @@
 // Fixed content contract. Keep these keys aligned with fields.json.
-export type TextFieldKey =
+type LegacyTextFieldKey =
   "home.hero.heading" |
   "home.hero.highlight" |
   "home.hero.intro" |
@@ -86,7 +86,11 @@ export type TextFieldKey =
   "shared.footer.copyright" |
   "shared.footer.topLabel" |
   "shared.footer.topLink";
-export type ImageFieldKey = "home.seo.image" | "ads.seo.image" | "shared.profile.image";
+export type LocationSlug = 'warragul' | 'drouin' | 'trafalgar' | 'yarragon' | 'neerim-south' | 'moe' | 'morwell' | 'traralgon' | 'sale' | 'bairnsdale' | 'lakes-entrance' | 'orbost' | 'mallacoota' | 'leongatha' | 'korumburra' | 'foster' | 'wonthaggi';
+export type LocationPageId = 'ads' | `location-${Exclude<LocationSlug, 'traralgon'>}`;
+type AdsTextSuffix = Extract<LegacyTextFieldKey, `ads.${string}`> extends `ads.${infer Suffix}` ? Suffix : never;
+export type TextFieldKey = LegacyTextFieldKey | 'home.areas.heading' | `${LocationPageId}.${AdsTextSuffix | 'areas.heading' | 'hero.localLabel'}`;
+export type ImageFieldKey = `${LocationPageId}.seo.image` | "home.seo.image" | "ads.seo.image" | "shared.profile.image";
 export type BooleanFieldKey = "shared.form.nameRequired" | "shared.form.nameShowMarker" | "shared.form.emailRequired" | "shared.form.emailShowMarker" | "shared.form.phoneRequired" | "shared.form.phoneShowMarker" | "shared.form.referralEnabled" | "shared.form.referralRequired" | "shared.form.referralShowMarker" | "shared.form.referralOtherRequired" | "shared.form.referralOtherShowMarker" | "shared.form.messageRequired" | "shared.form.messageShowMarker";
 export interface ImageValue { src: string; assetId: string | null; description: string; width: number; height: number; x: number; y: number; rounding?: number; }
 export interface SiteContent { schemaVersion: 1; values: Record<TextFieldKey, string> & Record<ImageFieldKey, ImageValue> & Record<BooleanFieldKey, boolean>; }

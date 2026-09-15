@@ -63,7 +63,7 @@ See the [Resend sending API](https://resend.com/docs/api-reference/emails/send-e
 - `src/endpoints/contact.ts`: local development API.
 - `.env.example`: configuration names only; never add live credentials to Git.
 
-The Google Ads and Traralgon pages retain their URLs and local content, with the shared navigation, form and visual theme. Existing social images and the simulator remain in place.
+Location pages use `/paid-ads-{town}` URLs and the shared navigation, form and visual theme. The legacy `/google-ads-traralgon` and `/traralgon` routes permanently redirect to `/paid-ads-traralgon`. Existing social images and the simulator remain in place.
 
 ## Font loading
 
