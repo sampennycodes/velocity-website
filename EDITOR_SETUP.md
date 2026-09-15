@@ -1,6 +1,6 @@
 # Client editor — implementation and staging setup
 
-The full draft editor is implemented at `/admin`: Home and Google Ads page selection, section selection in the preview, 88 fixed content fields, shared profile/reviews/navigation/contact details, image uploads and portrait cropping, saved drafts, version conflicts, history and restore-to-draft. The editor uses the existing Astro components for its preview. The public site remains static.
+The full draft editor is implemented at `/admin`: Home and Google Ads page selection, section selection in the preview, 102 fixed content fields, shared profile/reviews/navigation/contact details, image uploads and portrait cropping, saved drafts, version conflicts, history and restore-to-draft. The editor uses the existing Astro components for its preview. The public site remains static.
 
 Staging publishing is enabled and verified. Mike is enabled with the `editor` role; Sam remains `owner`. Both can save drafts, upload images, restore history and update staging. The optional `preview` role still denies all writes. The OTP gate allows Sam and Mike; no invitations are sent and codes are sent only on request. Production release is not authorized.
 

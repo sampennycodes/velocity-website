@@ -16,6 +16,8 @@ If another browser saves first, your edits remain on screen. Use **Download my e
 
 If a session expires, sign in again without closing the page. Unsaved edits stay in memory while you sign in. If an email code expires, use **Send a new code**.
 
+Choose **Shared → Reviews → Rating label** to change “Perfect 5* Rating” above the reviews heading. The preview updates as you type, and the label applies to both editable pages after **Save & update staging**.
+
 Choose **Shared → Contact form** to configure each field: Name, Email, Phone Number, How did you hear about us?, Other — please specify, and Message. **Required** controls whether the visitor must answer. **Show status label** controls whether the label displays `*` for required or `(optional)` for optional. Hiding this label does not change validation. The referral question also has **Show question** to hide the whole question and its Other details field. Changes appear immediately in the preview and apply to every contact form after **Save & update staging**.
 
 The referral choices are Word of mouth, Google Search, Search Engine (Other), AI Assistant (ChatGPT, etc.), and Other (Please specify). Other reveals its details field and follows that field’s Required setting. If Email is optional and left blank, the enquiry reaches your team without an autoresponder. If Name is optional and left blank, `{firstName}` becomes “there” and `{name}` becomes “a website visitor”. Completely empty enquiries cannot be submitted.

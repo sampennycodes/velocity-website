@@ -53,6 +53,7 @@ export type TextFieldKey =
   "shared.profile.role" |
   "shared.profile.linkedin" |
   "shared.profile.linkLabel" |
+  "shared.reviews.ratingLabel" |
   "shared.reviews.heading" |
   "shared.reviews.intro" |
   "shared.reviews.0.name" |

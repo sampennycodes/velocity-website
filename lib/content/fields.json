@@ -572,6 +572,15 @@
     },
     {
       "group": "shared.reviews",
+      "key": "shared.reviews.ratingLabel",
+      "label": "Rating label",
+      "help": "The short label above the reviews heading, for example Perfect 5* Rating.",
+      "type": "text",
+      "max": 120,
+      "initial": "Perfect 5* Rating"
+    },
+    {
+      "group": "shared.reviews",
       "key": "shared.reviews.heading",
       "label": "Heading",
       "type": "text",

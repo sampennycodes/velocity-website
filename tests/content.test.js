@@ -26,8 +26,11 @@ test('refreshed social cards support saved drafts and retain custom uploaded ima
   assert.match(imageSource('/img_8071.png'), /^\/optimized\/img_8071-800-.*\.webp$/);
 });
 test("content schema preserves fixed slots and rejects unsafe links and injected image sources", () => {
-  assert.equal(fields.length, 101);
+  assert.equal(fields.length, 102);
   assert.equal(contentSchema.parse(initialContent).schemaVersion, 1);
+  const oldReviews = structuredClone(initialContent);
+  delete oldReviews.values["shared.reviews.ratingLabel"];
+  assert.equal(contentSchema.parse(oldReviews).values["shared.reviews.ratingLabel"], "Perfect 5* Rating");
   // Old revisions omit rounding; new saves preserve only bounded percentages.
   assert.equal(contentSchema.parse(initialContent).values["shared.profile.image"].rounding, undefined);
   for (const rounding of [0, 25, 50]) {

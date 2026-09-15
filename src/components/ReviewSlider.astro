@@ -6,7 +6,7 @@ const reviews = [0, 1, 2].map(i => ({ i, name: v(`shared.reviews.${i}.name`), bu
 ---
 <section data-editor-group="shared.reviews" class="section reviews-section" aria-labelledby="reviews-heading">
   <div class="container">
-    <span class="eyebrow section-kicker">Perfect 5* Rating</span>
+    <span class="eyebrow section-kicker" data-content-text="shared.reviews.ratingLabel">{v("shared.reviews.ratingLabel")}</span>
     <div class="section-heading reveal"><h2 class="h2" id="reviews-heading" data-content-text="shared.reviews.heading">{v("shared.reviews.heading")}</h2><p class="lead" data-content-text="shared.reviews.intro">{v("shared.reviews.intro")}</p></div>
     <div class="reviews-grid">
       {reviews.map(review => <figure class="review-card reveal">
