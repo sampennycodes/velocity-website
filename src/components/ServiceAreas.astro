@@ -7,9 +7,10 @@ const location = locationSlug ? locationMap[locationSlug] : null;
 const group = location ? `${location.page}.areas` : 'home.areas';
 const headingKey = `${group}.heading`;
 ---
-<section id="areas-we-service" class="section service-areas" data-editor-group={group}>
+<section id="areas-we-service" class:list={['section service-areas', { 'home-areas': !location }]} data-editor-group={group}>
   <div class="container">
     <h2 class="h2 reveal" data-content-text={headingKey}>{content.values[headingKey]}</h2>
+    {!location && <p class="area-intro reveal" data-content-text="home.areas.intro">{content.values['home.areas.intro']}</p>}
     {location ? (
       <ul class="area-links nearby-links reveal">
         {nearbyLocations(location.slug).map(town => <li><a href={town.path}>{town.name}<span aria-hidden="true">↗</span></a></li>)}
@@ -27,6 +28,8 @@ const headingKey = `${group}.heading`;
 <style>
   .service-areas { border-top: 1px solid var(--border, #ffffff1f); }
   .service-areas .h2 { margin-bottom: 2.5rem; }
+  .home-areas .h2 { margin-bottom: 1rem; }
+  .area-intro { max-width: 48rem; margin: 0 0 2.5rem; color: var(--muted); font-size: 1.1rem; line-height: 1.7; }
   .area-regions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem 3rem; }
   .area-region h3 { font-size: 1.2rem; margin: 0 0 1rem; color: var(--accent, #c79bff); }
   .area-links { list-style: none; padding: 0; margin: 0; }
