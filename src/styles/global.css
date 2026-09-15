@@ -334,20 +334,20 @@ figure,blockquote {
   text-decoration:none;
   transition:background .2s,transform .2s;
 }
-.btn.primary {
+.btn.btn--primary {
   background:var(--brand-purple);
   color:#ffffff;
 }
-.btn.primary:hover {
+.btn.btn--primary:hover {
   background:var(--brand-purple-hover);
   transform:translateY(-2px);
 }
-.home-hero .btn.primary {
+.home-hero .btn.btn--primary {
   border-color:#b9a4ff99;
   box-shadow:0 0 0 1px #b9a4ff26,0 0 10px 1px #865bff66,inset 0 0 8px #b9a4ff1a;
   transition:background .2s,border-color .2s,transform .2s,box-shadow .25s;
 }
-.home-hero .btn.primary:hover,.home-hero .btn.primary:focus-visible {
+.home-hero .btn.btn--primary:hover,.home-hero .btn.btn--primary:focus-visible {
   border-color:#d4c6ff;
   box-shadow:0 0 0 1px #b9a4ff40,0 0 14px 2px #865bff80,inset 0 0 10px #b9a4ff26;
 }
@@ -807,11 +807,11 @@ a.service-row:hover .service-arrow {
 .contact-section .input::placeholder,.contact-section .textarea::placeholder {
   color:#666666;
 }
-.contact-section .btn.primary {
+.contact-section .btn.btn--primary {
   background:var(--brand-purple);
   color:#ffffff;
 }
-.contact-section .btn.primary:hover {
+.contact-section .btn.btn--primary:hover {
   background:var(--brand-purple-hover);
 }
 .contact-section .form__error {

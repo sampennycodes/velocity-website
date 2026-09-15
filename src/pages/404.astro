@@ -5,7 +5,7 @@ const pageTitle = "Page Not Found | Velocity Marketing";
 const pageDescription = "Looks like you might be lost. Let Velocity Marketing guide you back home.";
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
+<Layout title={pageTitle} description={pageDescription} noIndex>
   <section id="not-found" class="section hero not-found">
     <div class="container">
       <div class="badge glass">404 Error</div>
@@ -19,7 +19,7 @@ const pageDescription = "Looks like you might be lost. Let Velocity Marketing gu
       </div>
       <p class="lead">We couldn't find the page you're after, but the growth insights you need are just a click away.</p>
       <div class="actions not-found__actions">
-        <a href="/" class="btn primary">Return home</a>
+        <a href="/" class="btn btn--primary">Return home</a>
       </div>
     </div>
   </section>

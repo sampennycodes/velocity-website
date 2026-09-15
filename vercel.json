@@ -58,6 +58,18 @@
   ],
   "redirects": [
     {
+      "source": "/admin/:path*",
+      "has": [{ "type": "host", "value": "velocitymarketing.com.au" }],
+      "destination": "https://velocitymarketing-v2.vercel.app/admin/:path*",
+      "permanent": false
+    },
+    {
+      "source": "/admin/:path*",
+      "has": [{ "type": "host", "value": "www.velocitymarketing.com.au" }],
+      "destination": "https://velocitymarketing-v2.vercel.app/admin/:path*",
+      "permanent": false
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/sitemap-index.xml",
       "permanent": true

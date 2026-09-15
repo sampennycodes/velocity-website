@@ -31,11 +31,12 @@ const fieldSettings = formFieldSettings(values);
     <span id="error-referralOther" class="form__error" hidden>Please specify how you heard about us.</span>
   </div>
   <div class="form__row"><label class="label" for="message">Message <span data-field-marker="message" class={fieldSettings.message.required ? 'required' : 'optional'} hidden={!fieldSettings.message.showMarker}>{fieldSettings.message.required ? '*' : '(optional)'}</span></label><textarea id="message" name="message" class="textarea" rows="5" required={fieldSettings.message.required} maxlength="10000" aria-describedby="error-message"></textarea><span id="error-message" class="form__error" hidden>Please tell me a little about what you need.</span></div>
-  <div class="form__actions"><button class="btn primary" type="submit">Send Message <span aria-hidden="true">↗</span></button><span id="contact-status" role="status" aria-live="polite" class="form__status"></span></div>
+  <div class="form__actions"><button class="btn btn--primary" type="submit">Send Message <span aria-hidden="true">↗</span></button><span id="contact-status" role="status" aria-live="polite" class="form__status"></span></div>
 </form>
 <script>
   import { syncContactForm } from '../scripts/contact-form';
   import { contactFormFields } from '../../lib/contact-form.js';
+  import { trackAcceptedContact } from '../../lib/contact-tracking.js';
   const form = document.querySelector<HTMLFormElement>('#contact-form');
   const status = document.querySelector<HTMLElement>('#contact-status');
   const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
@@ -68,7 +69,11 @@ const fieldSettings = formFieldSettings(values);
     try {
       const response = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
       const result = await response.json();
-      if (response.ok && result.success) { status.textContent = 'Thanks! I’ll be in touch shortly.'; form.reset(); }
+      if (response.ok && result.success) {
+        status.textContent = 'Thanks! I’ll be in touch shortly.';
+        form.reset();
+        trackAcceptedContact(window);
+      }
       else { status.textContent = result.message || 'Your message could not be sent. Please try again or email Mike directly.'; }
     } catch { status.textContent = 'Your message could not be sent. Please try again or email Mike directly.'; }
     finally { button.disabled = false; form.removeAttribute('aria-busy'); }

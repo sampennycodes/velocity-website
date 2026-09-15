@@ -1,5 +1,5 @@
 import { loadEnvFile } from 'node:process';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createPool } from '../lib/editor/connection.js';
 try { loadEnvFile('.env'); } catch (error) { if (error.code !== 'ENOENT') throw error; }
 const id = process.env.VELOCITY_INTEGRATION_REVISION;
@@ -27,6 +27,16 @@ const { contentSchema, initialContent, fields } = await import('../lib/content/m
 let content = initialContent;
 let contentRevisionId = null;
 let requestedRevision = process.env.VELOCITY_CONTENT_REVISION;
+if (process.env.VERCEL_ENV === 'production') {
+  if (process.env.PUBLIC_SITE_PREVIEW === 'true' || process.env.CONTACT_FORM_DISABLED === 'true') {
+    throw new Error('Production release requires preview mode and contact-form disabling to be off.');
+  }
+  const { productionRelease } = await import('../lib/content/production.js');
+  const release = productionRelease(JSON.parse(await readFile('content/production.json', 'utf8')));
+  content = release.content;
+  contentRevisionId = release.revisionId;
+  console.log(`Rendering approved production content revision ${contentRevisionId}`);
+}
 const staging = process.env.EDITOR_ENVIRONMENT === 'staging' && process.env.VERCEL_ENV !== 'production';
 // Read this build's immutable deployment metadata instead of mutating the
 // project's shared build command or a moving environment-variable pointer.
