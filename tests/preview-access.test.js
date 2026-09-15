@@ -17,7 +17,7 @@ const auth = {
 const request = (action, method = 'GET') => new Request(origin + '/api/editor?action=' + action, { method, headers: { origin, cookie } });
 
 test('authenticated preview access cannot save, restore, upload, publish or reconcile publication jobs', async () => {
-  for (const [action, method] of [['save', 'POST'], ['restore', 'POST'], ['upload', 'POST'], ['publish', 'POST'], ['publish-status&id=invalid', 'GET']]) {
+  for (const [action, method] of [['save', 'POST'], ['save-publish', 'POST'], ['restore', 'POST'], ['upload', 'POST'], ['publish', 'POST'], ['publish-status&id=invalid', 'GET']]) {
     const response = await handleEditor(request(action, method), env, { auth });
     assert.equal(response.status, 403, action);
     assert.match((await response.json()).message, /Preview-only/);

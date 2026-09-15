@@ -26,8 +26,19 @@ console.log(proof ? `Building pinned integration revision ${proof.revisionId}` :
 const { contentSchema, initialContent, fields } = await import('../lib/content/model.js');
 let content = initialContent;
 let contentRevisionId = null;
-const requestedRevision = process.env.VELOCITY_CONTENT_REVISION;
+let requestedRevision = process.env.VELOCITY_CONTENT_REVISION;
 const staging = process.env.EDITOR_ENVIRONMENT === 'staging' && process.env.VERCEL_ENV !== 'production';
+// Read this build's immutable deployment metadata instead of mutating the
+// project's shared build command or a moving environment-variable pointer.
+if (staging && process.env.VERCEL_ENV === 'preview' && process.env.EDITOR_PUBLISH_ENABLED === 'true' && process.env.VERCEL_URL) {
+  const { deploymentContentRevision } = await import('../lib/editor/build-context.js');
+  const response = await fetch(`https://api.vercel.com/v13/deployments/${encodeURIComponent(process.env.VERCEL_URL)}?teamId=${process.env.EDITOR_VERCEL_TEAM_ID}`, {
+    headers: { Authorization: `Bearer ${process.env.EDITOR_VERCEL_TOKEN}` },
+    cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(20000),
+  });
+  if (!response.ok) throw new Error('Could not verify this content deployment.');
+  requestedRevision = deploymentContentRevision(await response.json(), process.env) || requestedRevision;
+}
 if (requestedRevision || (staging && process.env.EDITOR_ENABLED === 'true' && process.env.DATABASE_URL)) {
   if (!staging || (requestedRevision && process.env.VERCEL_ENV !== 'preview')) throw new Error('Content publishing is staging-only.');
   if (requestedRevision && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(requestedRevision)) throw new Error('Invalid content revision.');

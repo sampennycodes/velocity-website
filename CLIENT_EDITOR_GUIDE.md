@@ -7,10 +7,10 @@ Open the [staging editor](https://velocity-website-git-codex-visual-refresh-sam-
 3. Update the fields on the right. The preview updates as you type. **Shared content** changes both pages; navigation and footer changes also affect other routes that use those components.
 4. For a portrait or social image, choose a JPEG, PNG or WebP up to 3 MB, add an image description, and wait for the image to appear. In preview-only mode it stays in your browser; with full draft access it uploads privately. The portrait’s crop sliders choose which part of the image stays visible. Uploaded images remain private until publishing.
    **Corner rounding** adjusts the portrait from square corners to a circle at the far right. It applies to the shared portrait on both pages; crop controls position the image inside the circle.
-5. With full draft access, select **Save draft**. Wait for **All changes saved** before closing the editor. Saving does not change the public website.
+5. With publishing connected, select **Save & update staging**. The button saves your changes and starts the staging build. Wait for **Saved · staging is up to date**, then open the staging link to review. Production is unaffected. If publishing is unavailable, **Save draft** keeps your changes private.
 6. With full draft access, **History** lists saved versions. Choose **Restore to draft**, review the restored version, and save any further changes. Restoring keeps the intervening history.
 
-**Publishing is currently disabled while the staging deployment credential awaits approval.** Once connected, save your draft and choose **Publish to staging**. Use **Check publishing** until Vercel confirms success; the editor then provides a link to the published staging build. This editor cannot publish to production.
+The staging connection is being finalized before Mike receives save access. Once enabled, saving also updates staging; there is no separate publishing step. If a build fails, your saved changes remain available. Use **Retry staging update**. This editor cannot publish to production.
 
 If another browser saves first, your edits remain on screen. Use **Download my edits** to keep a copy, then **Load latest saved draft** and reapply your changes. The editor will not overwrite the newer version silently.
 

@@ -131,10 +131,8 @@ test("content publishing pins an immutable revision and source; mismatched and p
   const payload = contentDeploymentPayload(config, job.revision_id, job.id);
   assert.equal(payload.target, undefined);
   assert.equal(payload.gitSource.sha, config.sha);
-  assert.equal(
-    payload.projectSettings.buildCommand,
-    `VELOCITY_CONTENT_REVISION=${job.revision_id} npm run build`,
-  );
+  assert.equal(payload.projectSettings, undefined, 'Publishing must not change the shared project build command');
+  assert.equal(payload.meta.velocityContentRevision, job.revision_id);
   const valid = {
     projectId: config.project,
     ownerId: config.team,

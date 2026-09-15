@@ -12,6 +12,8 @@ let signedIn = false,
   publishing = false,
   publishReady = false;
 let canSave = false;
+let stagingNeedsUpdate = false, checkingPublish = false;
+let publishTimer: ReturnType<typeof setTimeout> | undefined;
 const previewImages = new Map<string, string>();
 function clearPreviewImages() {
   for (const url of previewImages.values()) URL.revokeObjectURL(url);
@@ -33,13 +35,16 @@ function updateState() {
     ? "Uploading…"
     : busy
       ? "Saving…"
+      : publishing
+        ? "Saved · updating staging…"
       : dirty()
         ? "Unsaved changes"
-        : "All changes saved";
+        : stagingNeedsUpdate ? "Saved · staging needs updating" : publishReady ? "Saved · staging is up to date" : "All changes saved";
   $<HTMLButtonElement>("save-button").disabled =
-    !signedIn || !canSave || busy || uploading || !dirty();
+    !signedIn || !canSave || busy || uploading || publishing || (!dirty() && !stagingNeedsUpdate);
   $<HTMLButtonElement>("publish-button").disabled =
     !signedIn || !canSave || busy || uploading || publishing || dirty() || !publishReady;
+  $("publish-button").hidden = !canSave || !publishReady || !stagingNeedsUpdate || publishing || Boolean(dirty());
 }
 function showLogin(message: string) {
   $<HTMLDialogElement>("history-dialog").close();
@@ -459,6 +464,10 @@ async function load() {
   }
   const status = await api("status");
   publishReady = status.publishingConfigured;
+  stagingNeedsUpdate = publishReady && !status.stagingCurrent;
+  $("save-button").textContent = publishReady ? "Save & update staging" : "Save draft";
+  $("publish-button").textContent = "Retry staging update";
+  if (canSave && publishReady) $("panel-note").textContent = "Changes appear here immediately. Save & update staging makes them visible on the staging website.";
   const active = status.publications.find((p: any) =>
     ["preparing", "building", "unknown"].includes(p.status),
   );
@@ -470,14 +479,14 @@ async function load() {
   $("publish-status").textContent = !canSave
     ? "Preview only · saving and publishing are disabled."
     : publishReady
-    ? "Publishes to staging only."
+    ? "Save & update staging makes your changes visible on the staging website."
     : "Staging publishing is not connected yet. Draft editing is available.";
   notice(
     !canSave
       ? "Preview mode: try text, links and images. Changes stay in this tab and are discarded on refresh."
       : dirty()
       ? "You’re signed back in. Your unsaved edits are still here."
-      : "Choose a section to edit. Your saved draft is private until you publish.",
+      : publishReady ? "Choose a section to edit, then Save & update staging." : "Choose a section to edit. Your saved draft is private until you publish.",
   );
   sizePreview();
   tellPreview();
@@ -537,6 +546,7 @@ $("sign-out").addEventListener("click", () => {
   if (dirty() && !confirm("Sign out and discard unsaved changes?")) return;
   void action($("sign-out"), async () => {
     await api("sign-out", {});
+    clearTimeout(publishTimer);
     clearPreviewImages();
     content = null;
     saved = "";
@@ -592,7 +602,11 @@ window.addEventListener("message", (event) => {
     selectGroup(event.data.group, true);
 });
 $("save-button").addEventListener("click", async () => {
-  if (!canSave || busy || uploading || !dirty()) return;
+  if (!canSave || busy || uploading || publishing) return;
+  if (!dirty()) {
+    if (publishReady && stagingNeedsUpdate) void action($("save-button"), beginPublish);
+    return;
+  }
   const parsed = contentSchema.safeParse(content);
   if (!parsed.success) {
     const key = parsed.error.issues[0].path[1];
@@ -614,8 +628,21 @@ $("save-button").addEventListener("click", async () => {
   updateState();
   const requested = JSON.stringify(content);
   try {
-    const result = await api("save", { content: parsed.data, version });
-    acceptDraft(result, JSON.stringify(content) === requested);
+    const result = await api(publishReady ? "save-publish" : "save", { content: parsed.data, version, ...(publishReady ? { key: publishKey } : {}) });
+    acceptDraft(publishReady ? result.draft : result, JSON.stringify(content) === requested);
+    if (publishReady) {
+      stagingNeedsUpdate = true;
+      if (result.publication) {
+        jobId = result.publication.id;
+        publishing = !["ready", "failed"].includes(result.publication.status);
+        notice(dirty() ? "Saved changes are updating staging. Your newer edits are still unsaved." : "Saved. Updating the staging website…");
+        await checkPublish();
+      } else {
+        notice(result.publishError || "Saved, but staging could not be updated. Retry the staging update.");
+        publishKey = crypto.randomUUID();
+      }
+      return;
+    }
     notice(
       dirty()
         ? "Draft saved. Your newer edits are still unsaved."
@@ -681,9 +708,10 @@ async function loadHistory(append = false) {
       void action(button, async () => {
         const result = await api("restore", { revisionId: row.id, version });
         acceptDraft(result);
+        stagingNeedsUpdate = publishReady;
         $<HTMLDialogElement>("history-dialog").close();
         notice(
-          "Version restored into your draft. Review it before publishing.",
+          "Version restored into your draft. Review it, then Save & update staging.",
         );
       });
     });
@@ -710,17 +738,29 @@ $("more-history").addEventListener("click", () => {
   void action($("more-history"), () => loadHistory(true));
 });
 async function checkPublish() {
-  if (!jobId) return;
+  if (!jobId || checkingPublish) return;
+  checkingPublish = true;
+  clearTimeout(publishTimer);
   try {
     const job = await api(`publish-status&id=${encodeURIComponent(jobId)}`);
     publishing = ["preparing", "building", "unknown"].includes(job.status);
+    if (job.status === "ready") {
+      // Another editor may have saved a newer draft while this build ran.
+      const latest = await api("status");
+      stagingNeedsUpdate = !latest.stagingCurrent;
+      notice(dirty() ? "Staging updated. Your newer edits are still unsaved." : stagingNeedsUpdate ? "Staging updated. A newer saved draft is waiting to be applied." : "Saved successfully. The staging website is up to date.");
+    }
+    if (job.status === "failed") {
+      stagingNeedsUpdate = true;
+      notice(job.error || "Your changes are saved, but staging could not be updated. Retry the update.");
+    }
     $("publish-status").textContent =
       job.error ||
       (job.status === "ready"
-        ? "Staging is up to date. Vercel confirmed the deployment."
+        ? "Staging update confirmed."
         : publishing
-          ? "Publishing to staging…"
-          : "Publishing failed. Your draft is safe.");
+          ? "Updating staging…"
+          : "Staging update failed. Your saved changes are safe.");
     $("check-publish").hidden = !publishing;
     const link = $<HTMLAnchorElement>("deployment-link");
     link.hidden = job.status !== "ready" || !job.url;
@@ -730,22 +770,28 @@ async function checkPublish() {
   } catch (e) {
     $("publish-status").textContent = (e as Error).message;
     $("check-publish").hidden = false;
+  } finally {
+    checkingPublish = false;
+    if (publishing && signedIn && canSave)
+      publishTimer = setTimeout(() => void checkPublish(), 5000);
+    updateState();
+  }
+}
+async function beginPublish() {
+  publishing = true;
+  updateState();
+  try {
+    const job = await api("publish", { key: publishKey, version });
+    jobId = job.id;
+    await checkPublish();
+  } catch (e) {
+    publishing = false;
+    throw e;
   }
 }
 $("publish-button").addEventListener("click", () => {
   if (!canSave || dirty() || publishing || !publishReady) return;
-  void action($("publish-button"), async () => {
-    publishing = true;
-    updateState();
-    try {
-      const job = await api("publish", { key: publishKey, version });
-      jobId = job.id;
-      await checkPublish();
-    } catch (e) {
-      publishing = false;
-      throw e;
-    }
-  });
+  void action($("publish-button"), beginPublish);
 });
 $("check-publish").addEventListener("click", () => {
   void action($("check-publish"), checkPublish);
