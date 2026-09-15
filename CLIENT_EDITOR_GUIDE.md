@@ -1,16 +1,16 @@
 # Velocity website editor
 
-Open the [staging editor](https://velocity-website-git-codex-visual-refresh-sam-pennys-projects.vercel.app/admin) and sign in with your email code. Sam has full draft access. Mike can sign in with `mike@velocitymarketing.com.au` to try the editor in **preview-only mode**. His text, link and image changes stay in that browser tab and disappear when he refreshes or signs out. Saving, history restoration and publishing are disabled for his account. His test images are never uploaded.
+Open the [staging editor](https://velocity-website-git-codex-visual-refresh-sam-pennys-projects.vercel.app/admin) and sign in with your email code. Mike can sign in with `mike@velocitymarketing.com.au`; Sam uses `sam@sampenny.io`. Both can edit, upload images, save, restore history and update the staging website. Login codes are sent only when requested.
 
 1. Choose **Home** or **Google Ads in Traralgon**.
 2. Choose a section from the list, or select it in the page preview. On a phone, use the section selector and **Back to preview**.
 3. Update the fields on the right. The preview updates as you type. **Shared content** changes both pages; navigation and footer changes also affect other routes that use those components.
-4. For a portrait or social image, choose a JPEG, PNG or WebP up to 3 MB, add an image description, and wait for the image to appear. In preview-only mode it stays in your browser; with full draft access it uploads privately. The portrait’s crop sliders choose which part of the image stays visible. Uploaded images remain private until publishing.
+4. For a portrait or social image, choose a JPEG, PNG or WebP up to 3 MB, add an image description, and wait for the image to appear. The image uploads privately. The portrait’s crop sliders choose which part of the image stays visible. Uploaded images remain private until publishing.
    **Corner rounding** adjusts the portrait from square corners to a circle at the far right. It applies to the shared portrait on both pages; crop controls position the image inside the circle.
-5. With publishing connected, select **Save & update staging**. The button saves your changes and starts the staging build. Wait for **Saved · staging is up to date**, then open the staging link to review. Production is unaffected. If publishing is unavailable, **Save draft** keeps your changes private.
-6. With full draft access, **History** lists saved versions. Choose **Restore to draft**, review the restored version, and save any further changes. Restoring keeps the intervening history.
+5. Select **Save & update staging**. The button saves your changes and starts the staging build. Wait for **Saved · staging is up to date**, then open the staging link to review. Production is unaffected. Staging usually takes about a minute to update; keep editing or return later while the saved version builds.
+6. **History** lists saved versions. Choose **Restore to draft**, review the restored version, and save any further changes. Restoring keeps the intervening history.
 
-The staging connection is being finalized before Mike receives save access. Once enabled, saving also updates staging; there is no separate publishing step. If a build fails, your saved changes remain available. Use **Retry staging update**. This editor cannot publish to production.
+Saving also updates staging; there is no separate publishing step. If a build fails, your saved changes remain available. Use **Retry staging update**. This editor cannot publish to production.
 
 If another browser saves first, your edits remain on screen. Use **Download my edits** to keep a copy, then **Load latest saved draft** and reapply your changes. The editor will not overwrite the newer version silently.
 

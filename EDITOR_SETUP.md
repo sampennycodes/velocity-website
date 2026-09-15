@@ -2,9 +2,9 @@
 
 The full draft editor is implemented at `/admin`: Home and Google Ads page selection, section selection in the preview, 80 fixed content fields, shared profile/reviews/navigation/contact details, image uploads and portrait cropping, saved drafts, version conflicts, history and restore-to-draft. The editor uses the existing Astro components for its preview. The public site remains static.
 
-The server-controlled publishing implementation is present but **disabled** pending approval and installation of the scoped Vercel deployment token. Production release is not authorized. Mike is enabled with the `preview` role: browser-only text, link and image experiments, with server-side denial of saving, restoring, uploads and publishing. The OTP gate allows Sam and Mike; no invitations are sent and codes are sent only on request.
+Staging publishing is enabled and verified. Mike is enabled with the `editor` role; Sam remains `owner`. Both can save drafts, upload images, restore history and update staging. The optional `preview` role still denies all writes. The OTP gate allows Sam and Mike; no invitations are sent and codes are sent only on request. Production release is not authorized.
 
-The latest user request to provide the actual editor superseded the original plan’s sequencing gate; the remaining publishing check is isolated behind the disabled publishing control. The setup-only screen has been replaced.
+The setup-only screen has been replaced by the complete editor.
 
 ## Content and preview
 
@@ -54,9 +54,9 @@ Astro 7 runs its dev server in the background. Use `npm run astro -- dev stop` t
 
 `DATABASE_URL` is pooled; `DATABASE_URL_UNPOOLED` is used by migrations. Both use Neon’s WebSocket transport. `EDITOR_ORIGINS` contains exact origins, without wildcards or trailing slashes. Neon Auth has matching trusted origins. Production domains and production execution are rejected by the editor configuration.
 
-## Publishing connection still required
+## Staging publishing configuration
 
-Install an approved project-scoped credential as `EDITOR_VERCEL_TOKEN`, set the fixed team/project IDs and a full tested `EDITOR_APPROVED_SOURCE_SHA` containing this editor, then enable `EDITOR_PUBLISH_ENABLED` for the staging branch only and redeploy. The two Blob credentials are separate: `EDITOR_BLOB_PRIVATE_TOKEN` and `EDITOR_BLOB_PUBLIC_TOKEN`.
+`EDITOR_VERCEL_TOKEN` is a Vercel Secret restricted to Preview / `codex/visual-refresh`. The approved token is named **Velocity Editor Staging**, scoped to this project, and expires **14 December 2026**. Renew it before then and redeploy staging. The fixed team/project IDs and `EDITOR_PUBLISH_ENABLED=true` use the same branch restriction. `EDITOR_APPROVED_SOURCE_SHA` pins the tested implementation at `8b526b9d88522ec0b4db069d792d3ac31a7c8bb3`; advance it only after testing code changes that content builds should use. The two Blob credentials are separate: `EDITOR_BLOB_PRIVATE_TOKEN` and `EDITOR_BLOB_PUBLIC_TOKEN`.
 
 Publication validates the current saved version, locks out concurrent publications, prepares public copies of referenced images, creates an immutable publishing snapshot, then asks Vercel to build that exact revision and source. The prebuild resolves the revision from that deployment’s immutable metadata; publishing never changes the shared project build command. The API never accepts a production target. READY is recorded only after Vercel’s project, team, source SHA, revision and job metadata match and the stable staging link serves that revision. Ambiguous requests retain the publication lock and reconcile by metadata instead of blindly retrying. Failed builds leave the draft and last successful content record intact.
 
@@ -70,6 +70,8 @@ Saving with publishing enabled performs one Save & update staging action. The UI
 - Public-route baseline comparison passed. Production dependency audit was clear after upgrading Astro to 7.3.2; `compressHTML: true` and relocation of the duplicate legacy simulator preserve previous rendering.
 - Sam confirmed real login works after the session-cookie correction.
 - Preview-role tests cover write denial before storage access, read-only draft loading, local image URL restrictions and on-request OTP eligibility.
-- Final signed-in browser verification of the new editor is pending the Mac unlock. The real Vercel publication remains pending its scoped credential. These are not implied by the database and storage checks.
+- Signed-in browser verification passed on 15 September 2026: Save & update staging saved a temporary Home button-label change, created the pinned Vercel preview build, automatically confirmed the stable staging URL, and displayed the changed label on that public URL. The original label was then saved back through the same workflow. Mike’s role was changed from preview to editor after the first successful publication.
+- Dropdown arrow spacing was visually verified in the deployed editor. Browser interaction checks cover save progress, retry after publishing failure, and preserving edits made during a save.
+- Production remains at deployment `dpl_Dq2SuHn9CFTntUwLbGXwj8C1vKZM`, source `70ef263529c4402e87f2019e8d7c397baf3cd46a`; the shared build command remains unchanged (`null`).
 
 See `CLIENT_EDITOR_GUIDE.md` for the client workflow. Keep all testing on staging. A future approved production release must rebuild with production settings, not promote a preview artifact.
