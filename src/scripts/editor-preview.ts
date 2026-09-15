@@ -40,6 +40,12 @@ function apply(content: any, previewImages: unknown) {
       if (img.getAttribute("src") !== source) img.src = source;
       img.alt = value.description;
       img.style.objectPosition = `${value.x}% ${value.y}%`;
+      if (img.dataset.contentImage === "shared.profile.image") {
+        const frame = (img.closest(".portrait-panel") || img) as HTMLElement;
+        if (value.rounding === undefined) frame.style.removeProperty("--portrait-rounding");
+        else frame.style.setProperty("--portrait-rounding", value.rounding + "%");
+        frame.setAttribute("data-portrait-circle", String(value.rounding === 50));
+      }
       if (img.parentElement?.classList.contains("hero-art")) {
         img.style.aspectRatio = value.assetId || source !== value.src ? "1" : "";
         img.style.objectFit = value.assetId || source !== value.src ? "cover" : "";

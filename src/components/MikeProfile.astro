@@ -12,7 +12,7 @@ const portrait = v("shared.profile.image");
 ---
 
 <figure data-editor-group="shared.profile" class:list={["mike-profile", `${placement}-profile`]}>
-  <div class="portrait-panel">
+  <div class="portrait-panel" style={portrait.rounding === undefined ? undefined : `--portrait-rounding:${portrait.rounding}%`} data-portrait-circle={portrait.rounding === 50 ? "true" : undefined}>
     <img data-content-image="shared.profile.image" src={portrait.src} alt={portrait.description} style={`object-position:${portrait.x}% ${portrait.y}%`} width="1295" height="1367" fetchpriority={placement === "hero" ? "high" : "auto"} loading={placement === "hero" ? "eager" : "lazy"} decoding="async" class="hero-photo" />
   </div>
   <figcaption class="portrait-caption">

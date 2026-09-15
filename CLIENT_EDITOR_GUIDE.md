@@ -6,6 +6,7 @@ Open the [staging editor](https://velocity-website-git-codex-visual-refresh-sam-
 2. Choose a section from the list, or select it in the page preview. On a phone, use the section selector and **Back to preview**.
 3. Update the fields on the right. The preview updates as you type. **Shared content** changes both pages; navigation and footer changes also affect other routes that use those components.
 4. For a portrait or social image, choose a JPEG, PNG or WebP up to 3 MB, add an image description, and wait for the image to appear. In preview-only mode it stays in your browser; with full draft access it uploads privately. The portrait’s crop sliders choose which part of the image stays visible. Uploaded images remain private until publishing.
+   **Corner rounding** adjusts the portrait from square corners to a circle at the far right. It applies to the shared portrait on both pages; crop controls position the image inside the circle.
 5. With full draft access, select **Save draft**. Wait for **All changes saved** before closing the editor. Saving does not change the public website.
 6. With full draft access, **History** lists saved versions. Choose **Restore to draft**, review the restored version, and save any further changes. Restoring keeps the intervening history.
 

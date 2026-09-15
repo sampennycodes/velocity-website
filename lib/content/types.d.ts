@@ -78,5 +78,5 @@ export type TextFieldKey =
   "shared.footer.topLabel" |
   "shared.footer.topLink";
 export type ImageFieldKey = "home.seo.image" | "ads.seo.image" | "shared.profile.image";
-export interface ImageValue { src: string; assetId: string | null; description: string; width: number; height: number; x: number; y: number; }
+export interface ImageValue { src: string; assetId: string | null; description: string; width: number; height: number; x: number; y: number; rounding?: number; }
 export interface SiteContent { schemaVersion: 1; values: Record<TextFieldKey, string> & Record<ImageFieldKey, ImageValue>; }

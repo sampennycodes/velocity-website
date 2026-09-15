@@ -406,7 +406,7 @@ figure,blockquote {
 .hero-photo {
   width:100%;
   height:auto;
-  border-radius:var(--radius);
+  border-radius:var(--portrait-rounding,var(--radius));
 }
 .mike-profile {
   margin:0;
@@ -427,7 +427,7 @@ figure,blockquote {
   background:#ffffff;
   aspect-ratio:1295 / 1367;
   border:1px solid #4b425f;
-  border-radius:12px;
+  border-radius:var(--portrait-rounding,12px);
   overflow:hidden;
 }
 .portrait-panel .hero-photo {
@@ -438,6 +438,14 @@ figure,blockquote {
   object-fit:cover;
   object-position:center top;
   border-radius:0;
+}
+.mike-profile .portrait-panel[data-portrait-circle="true"] {
+  aspect-ratio:1;
+  flex:none;
+}
+.hero-art .hero-photo[data-portrait-circle="true"] {
+  aspect-ratio:1;
+  object-fit:cover;
 }
 .portrait-caption {
   display:flex;

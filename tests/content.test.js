@@ -16,6 +16,18 @@ import { handleEditor } from "../lib/editor/handler.js";
 test("content schema preserves fixed slots and rejects unsafe links and injected image sources", () => {
   assert.equal(fields.length, 80);
   assert.equal(contentSchema.parse(initialContent).schemaVersion, 1);
+  // Old revisions omit rounding; new saves preserve only bounded percentages.
+  assert.equal(contentSchema.parse(initialContent).values["shared.profile.image"].rounding, undefined);
+  for (const rounding of [0, 25, 50]) {
+    const rounded = structuredClone(initialContent);
+    rounded.values["shared.profile.image"].rounding = rounding;
+    assert.equal(contentSchema.parse(rounded).values["shared.profile.image"].rounding, rounding);
+  }
+  for (const rounding of [-1, 51, "50", 2.5]) {
+    const rounded = structuredClone(initialContent);
+    rounded.values["shared.profile.image"].rounding = rounding;
+    assert.equal(contentSchema.safeParse(rounded).success, false);
+  }
   for (const link of [
     "javascript:alert(1)",
     "data:text/html,bad",

@@ -14,6 +14,10 @@ import type { SiteContent } from "../../../lib/content/types";
 interface Props { content: SiteContent; editing?: boolean; }
 const { content, editing = false } = Astro.props;
 const v = key => value(content, key);
+const portrait = v("shared.profile.image");
+const portraitStyle = `object-position:${portrait.x}% ${portrait.y}%;`
+  + (portrait.assetId ? "aspect-ratio:1;object-fit:cover;" : "")
+  + (portrait.rounding === undefined ? "" : `--portrait-rounding:${portrait.rounding}%;`);
 ---
 
 <Layout content={content} editing={editing} title={v("ads.seo.title")} description={v("ads.seo.description")} socialImage={v("ads.seo.image").src} socialImageWidth={v("ads.seo.image").width} socialImageHeight={v("ads.seo.image").height} canonical={canonicalUrl}>
@@ -44,7 +48,7 @@ const v = key => value(content, key);
       </div>
       <div class="hero-art reveal" aria-hidden="false">
         <img
-          data-editor-group="shared.profile" data-content-image="shared.profile.image" src={v("shared.profile.image").src} style={v("shared.profile.image").assetId ? "aspect-ratio:1;object-fit:cover;object-position:" + v("shared.profile.image").x + "% " + v("shared.profile.image").y + "%" : undefined}
+          data-editor-group="shared.profile" data-content-image="shared.profile.image" src={portrait.src} style={portraitStyle} data-portrait-circle={portrait.rounding === 50 ? "true" : undefined}
           alt={v("shared.profile.image").description}
           width="520"
           height="520"

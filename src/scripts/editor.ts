@@ -254,6 +254,41 @@ function renderFields() {
           changed();
         });
       }
+      if (f.key === "shared.profile.image") {
+        const roundingLabel = document.createElement("label");
+        roundingLabel.htmlFor = id + "-rounding";
+        roundingLabel.textContent = "Corner rounding";
+        const range = document.createElement("input");
+        range.type = "range";
+        range.id = roundingLabel.htmlFor;
+        range.min = "0";
+        range.max = "50";
+        range.step = "1";
+        range.value = String(content.values[f.key].rounding ?? 0);
+        const output = document.createElement("output");
+        output.setAttribute("for", range.id);
+        const hint = document.createElement("p");
+        hint.className = "image-meta";
+        hint.textContent = "Square corners → rounded corners → circle. Use the crop controls to position the photo.";
+        const showRounding = () => {
+          const amount = content.values[f.key].rounding;
+          const text = amount === undefined ? "Original shape" : amount === 0 ? "Square corners" : amount === 50 ? "Circle" : amount + "%";
+          output.textContent = text;
+          range.setAttribute("aria-valuetext", text);
+          img.style.borderRadius = amount === undefined ? "" : amount + "%";
+          img.style.aspectRatio = amount === 50 ? "1" : "";
+          img.style.height = amount === 50 ? "auto" : "";
+          img.style.objectFit = amount === 50 ? "cover" : "";
+          img.style.objectPosition = `${content.values[f.key].x}% ${content.values[f.key].y}%`;
+        };
+        range.addEventListener("input", () => {
+          content.values[f.key].rounding = Number(range.value);
+          showRounding();
+          changed();
+        });
+        showRounding();
+        wrap.append(roundingLabel, range, output, hint);
+      }
       const progress = document.createElement("progress");
       progress.max = 100;
       progress.value = 0;
@@ -338,6 +373,7 @@ function renderFields() {
               description: alt.value,
               x: content.values[f.key].x,
               y: content.values[f.key].y,
+              ...(content.values[f.key].rounding === undefined ? {} : { rounding: content.values[f.key].rounding }),
             };
             img.src = result.url;
             img.alt = alt.value;
