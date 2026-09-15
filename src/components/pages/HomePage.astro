@@ -7,6 +7,7 @@ import MikeProfile from "../MikeProfile.astro";
 import HeroProofPoints from "../HeroProofPoints.astro";
 
 import { value } from "../../../lib/content/model.js";
+import { imageSource } from "../../../lib/site.js";
 import type { SiteContent } from "../../../lib/content/types";
 interface Props { content: SiteContent; editing?: boolean; }
 const { content, editing = false } = Astro.props;
@@ -39,7 +40,7 @@ const v = key => value(content, key);
         <a data-content-href="home.services.0.link" href={v("home.services.0.link")} class="service-row reveal">
           <span class="service-number">01</span>
           <h3 class="service-title">
-            <img class="service-logo service-logo--google" src="/google-g.png" width="32" height="32" alt="" loading="lazy" decoding="async" />
+            <img class="service-logo service-logo--google" src={imageSource('/google-g.png')} width="32" height="32" alt="" loading="lazy" decoding="async" />
             <span data-content-text="home.services.0.title">{v("home.services.0.title")}</span>
           </h3>
           <p data-content-text="home.services.0.description">{v("home.services.0.description")}</p>
@@ -56,7 +57,7 @@ const v = key => value(content, key);
         <article class="service-row reveal">
           <span class="service-number">03</span>
           <h3 class="service-title">
-            <img class="service-logo" src="/linkedin-in-white.png" width="32" height="32" alt="" loading="lazy" decoding="async" />
+            <img class="service-logo" src={imageSource('/linkedin-in-white.png')} width="32" height="32" alt="" loading="lazy" decoding="async" />
             <span data-content-text="home.services.2.title">{v("home.services.2.title")}</span>
           </h3>
           <p data-content-text="home.services.2.description">{v("home.services.2.description")}</p>

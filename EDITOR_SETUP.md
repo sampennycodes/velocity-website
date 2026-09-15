@@ -66,9 +66,15 @@ Publication validates the current saved version, locks out concurrent publicatio
 
 Saving with publishing enabled performs one Save & update staging action. The UI polls for completion, and a server background monitor continues normal builds if the tab closes. A failed update retains the saved draft and offers a retry. A `preparing`, `building` or `unknown` job blocks another job. If reconciliation cannot find the matching deployment, inspect Vercel before manually resolving it. Do not clear the lock simply because a request timed out. Old private/public media is retained for history; orphan cleanup is outside this release.
 
+## Performance
+
+The editor function runs in `syd1` beside the Sydney Neon database and Auth service. The authenticated workspace endpoint combines session, draft and status loading into one browser request, with independent data reads in parallel. Every request still verifies the current session and editor permission; private responses remain uncached. Publication estimates use the last ten jobs, considering only successful durations, with a 20–45 second fallback. The UI reports elapsed time and actual build/checking/completed states, never a simulated percentage.
+
+The default portrait has 480/800/1200px WebP variants; the logo and small raster marks also use reduced WebP copies. Originals remain for existing draft compatibility. `npm run images:optimize` regenerates the committed manifest and content-hashed files when source artwork changes. Only these hashed assets get year-long immutable caching. Custom images and preview uploads keep their own source and clear the default portrait's `srcset`. Image conversion is not part of each publishing build.
+
 ## Verification
 
-- 30 automated tests pass, covering contact behavior, auth/session handling, email gating, image validation, field/schema/link restrictions, media metadata, conflict checks, anonymous draft/history/save/restore denial, and pinned staging deployment matching.
+- 34 automated tests pass, covering contact behavior, auth/session handling, email gating, image validation, field/schema/link restrictions, media metadata, conflict checks, anonymous draft/history/save/restore denial, pinned staging deployment matching, combined workspace access, publication estimates and responsive image compatibility.
 - Live database transaction checks passed for draft saving, stale-version conflicts, restoration, immutable history, one active publisher and production-target rejection. All test draft/history/publication writes were rolled back.
 - Live storage checks passed for private upload and read, anonymous denial, public copying and byte-for-byte equality. The retained test asset is a public Velocity logo, not client draft content.
 - Public-route baseline comparison passed. Production dependency audit was clear after upgrading Astro to 7.3.2; `compressHTML: true` and relocation of the duplicate legacy simulator preserve previous rendering.

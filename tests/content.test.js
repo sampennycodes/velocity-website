@@ -22,7 +22,7 @@ test('refreshed social cards support saved drafts and retain custom uploaded ima
   }
   const custom = 'https://example.public.blob.vercel-storage.com/staging-published/card.webp';
   assert.equal(imageSource(custom), custom);
-  assert.equal(imageSource('/img_8071.png'), '/img_8071.png');
+  assert.match(imageSource('/img_8071.png'), /^\/optimized\/img_8071-800-.*\.webp$/);
 });
 test("content schema preserves fixed slots and rejects unsafe links and injected image sources", () => {
   assert.equal(fields.length, 80);

@@ -10,6 +10,7 @@ const pageDescription = "Local Google Ads management for Traralgon businesses, b
 const canonicalUrl = "https://velocitymarketing.com.au/google-ads-traralgon";
 
 import { value } from "../../../lib/content/model.js";
+import { responsiveImage } from "../../../lib/site.js";
 import type { SiteContent } from "../../../lib/content/types";
 interface Props { content: SiteContent; editing?: boolean; }
 const { content, editing = false } = Astro.props;
@@ -48,11 +49,12 @@ const portraitStyle = `object-position:${portrait.x}% ${portrait.y}%;`
       </div>
       <div class="hero-art reveal" aria-hidden="false">
         <img
-          data-editor-group="shared.profile" data-content-image="shared.profile.image" src={portrait.src} style={portraitStyle} data-portrait-circle={portrait.rounding === 50 ? "true" : undefined}
+          data-editor-group="shared.profile" data-content-image="shared.profile.image" {...responsiveImage(portrait.src)} sizes="(max-width: 760px) calc(100vw - 48px), (max-width: 1100px) 42vw, 520px" style={portraitStyle} data-portrait-circle={portrait.rounding === 50 ? "true" : undefined}
           alt={v("shared.profile.image").description}
           width="520"
           height="520"
           loading="eager"
+          fetchpriority="high"
           decoding="async"
           class="hero-photo"
         />

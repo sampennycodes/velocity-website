@@ -11,6 +11,7 @@
     "editor:migrate": "node scripts/editor-migrate.js",
     "editor:access": "node scripts/editor-access.js",
     "editor:generate": "drizzle-kit generate",
+    "images:optimize": "node scripts/optimize-site-images.js",
     "test": "node --test tests/*.test.js"
   },
   "dependencies": {

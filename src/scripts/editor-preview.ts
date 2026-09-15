@@ -1,6 +1,6 @@
 import { contentSchema, format } from "../../lib/content/model.js";
 import { previewImageSource } from "../../lib/content/preview.js";
-import { imageSource } from "../../lib/site.js";
+import { imageSource, responsiveImage } from "../../lib/site.js";
 const parentOrigin = location.origin;
 function apply(content: any, previewImages: unknown) {
   const page = location.pathname.split("/").filter(Boolean).at(-1);
@@ -38,7 +38,10 @@ function apply(content: any, previewImages: unknown) {
       const value = content.values[img.dataset.contentImage!];
       if (!value) return;
       const source = previewImageSource(previewImages, img.dataset.contentImage!, parentOrigin) || value.src;
-      if (img.getAttribute("src") !== source) img.src = source;
+      const optimized = responsiveImage(source);
+      if (optimized.srcset) img.srcset = optimized.srcset;
+      else img.removeAttribute("srcset");
+      if (img.getAttribute("src") !== optimized.src) img.src = optimized.src;
       img.alt = value.description;
       img.style.objectPosition = `${value.x}% ${value.y}%`;
       if (img.dataset.contentImage === "shared.profile.image") {

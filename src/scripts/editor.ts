@@ -1,5 +1,6 @@
 import { fields, groups, contentSchema } from "../../lib/content/model.js";
 import { imageSource } from "../../lib/site.js";
+import { publicationEstimate, publicationProgress } from "../../lib/editor/progress.js";
 const $ = <T extends HTMLElement>(id: string) =>
   document.getElementById(id) as T;
 let content: any = null,
@@ -15,6 +16,29 @@ let signedIn = false,
 let canSave = false;
 let stagingNeedsUpdate = false, checkingPublish = false;
 let publishTimer: ReturnType<typeof setTimeout> | undefined;
+let progressTimer: ReturnType<typeof setInterval> | undefined;
+let progressJob: any = null;
+let estimate = publicationEstimate();
+function renderProgress() {
+  const state = publicationProgress(progressJob, estimate);
+  const title = $("publication-title");
+  if (title.textContent !== state.title) title.textContent = state.title;
+  $("publication-detail").textContent = state.detail;
+  $("publication-elapsed").textContent = state.elapsed;
+  $("publication-spinner").hidden = !state.active;
+}
+function showProgress(job: any = null) {
+  progressJob = job;
+  $("publication-progress").hidden = false;
+  clearInterval(progressTimer);
+  renderProgress();
+  if (!job || !["ready", "failed"].includes(job.status))
+    progressTimer = setInterval(renderProgress, 1000);
+}
+function hideProgress() {
+  clearInterval(progressTimer);
+  $("publication-progress").hidden = true;
+}
 const previewImages = new Map<string, string>();
 function clearPreviewImages() {
   for (const url of previewImages.values()) URL.revokeObjectURL(url);
@@ -445,7 +469,8 @@ function acceptDraft(data: any, replace = true) {
   updateState();
 }
 async function load() {
-  const session = await api("session");
+  const { session, draft, status } = await api("workspace");
+  estimate = status.estimate || publicationEstimate(status.publications);
   canSave = session.canSave === true;
   signedIn = true;
   email = session.email;
@@ -459,11 +484,9 @@ async function load() {
     ? "Changes appear in the preview immediately. Save your draft when you’re ready."
     : "Preview only. Try any changes here; refreshing or signing out discards them.";
   if (!content) {
-    const draft = await api("draft");
     acceptDraft(draft);
     navigation();
   }
-  const status = await api("status");
   publishReady = status.publishingConfigured;
   stagingNeedsUpdate = publishReady && !status.stagingCurrent;
   $("save-button").textContent = publishReady ? "Save & update staging" : "Save draft";
@@ -472,15 +495,18 @@ async function load() {
   const active = status.publications.find((p: any) =>
     ["preparing", "building", "unknown"].includes(p.status),
   );
+  publishing = Boolean(canSave && active);
+  if (!publishing) hideProgress();
   if (canSave && active) {
     jobId = active.id;
     publishing = true;
+    showProgress(active);
     void checkPublish();
   }
   $("publish-status").textContent = !canSave
     ? "Preview only · saving and publishing are disabled."
     : publishReady
-    ? "Save & update staging makes your changes visible on the staging website."
+    ? `Staging updates usually take ${estimate.minSeconds}–${estimate.maxSeconds} seconds.`
     : "Staging publishing is not connected yet. Draft editing is available.";
   notice(
     !canSave
@@ -548,6 +574,7 @@ $("sign-out").addEventListener("click", () => {
   void action($("sign-out"), async () => {
     await api("sign-out", {});
     clearTimeout(publishTimer);
+    hideProgress();
     clearPreviewImages();
     content = null;
     saved = "";
@@ -626,19 +653,23 @@ $("save-button").addEventListener("click", async () => {
     return;
   }
   busy = true;
+  if (publishReady) showProgress();
   updateState();
   const requested = JSON.stringify(content);
   try {
     const result = await api(publishReady ? "save-publish" : "save", { content: parsed.data, version, ...(publishReady ? { key: publishKey } : {}) });
     acceptDraft(publishReady ? result.draft : result, JSON.stringify(content) === requested);
+    busy = false;
     if (publishReady) {
       stagingNeedsUpdate = true;
       if (result.publication) {
         jobId = result.publication.id;
         publishing = !["ready", "failed"].includes(result.publication.status);
+        showProgress(result.publication);
         notice(dirty() ? "Saved changes are updating staging. Your newer edits are still unsaved." : "Saved. Updating the staging website…");
-        await checkPublish();
+        void checkPublish();
       } else {
+        hideProgress();
         notice(result.publishError || "Saved, but staging could not be updated. Retry the staging update.");
         publishKey = crypto.randomUUID();
       }
@@ -650,6 +681,7 @@ $("save-button").addEventListener("click", async () => {
         : "Draft saved. The public website has not changed.",
     );
   } catch (e) {
+    hideProgress();
     notice((e as Error).message);
   } finally {
     busy = false;
@@ -745,6 +777,7 @@ async function checkPublish() {
   try {
     const job = await api(`publish-status&id=${encodeURIComponent(jobId)}`);
     publishing = ["preparing", "building", "unknown"].includes(job.status);
+    showProgress(job);
     if (job.status === "ready") {
       // Another editor may have saved a newer draft while this build ran.
       const latest = await api("status");
@@ -780,13 +813,16 @@ async function checkPublish() {
 }
 async function beginPublish() {
   publishing = true;
+  showProgress();
   updateState();
   try {
     const job = await api("publish", { key: publishKey, version });
     jobId = job.id;
+    showProgress(job);
     await checkPublish();
   } catch (e) {
     publishing = false;
+    hideProgress();
     throw e;
   }
 }

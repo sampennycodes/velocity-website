@@ -1,5 +1,6 @@
 ---
 import { value, format } from "../../lib/content/model.js";
+import { imageSource } from "../../lib/site.js";
 const { content, editing = false } = Astro.props;
 const v = key => value(content, key);
 const sectionPrefix = editing ? "" : ['/','/google-ads-traralgon','/traralgon'].includes(Astro.url.pathname.replace(/\/$/, '') || '/') ? '' : '/';
@@ -8,7 +9,7 @@ const destination = link => link.startsWith('#') ? sectionPrefix + link : link;
 ---
 <header data-editor-group="shared.navigation" class="header">
   <div class="container header__inner">
-    <a href="/" class="header__brand" aria-label="Velocity Marketing home"><img src="/logo.png" alt="Velocity Marketing" width="3509" height="983" /></a>
+    <a href="/" class="header__brand" aria-label="Velocity Marketing home"><img src={imageSource('/logo.png')} alt="Velocity Marketing" width="3509" height="983" /></a>
     <div class="header__actions">
       <nav class="nav" id="site-nav" aria-label="Main navigation">
         <div class="nav__links">

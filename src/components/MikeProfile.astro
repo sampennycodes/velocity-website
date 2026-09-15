@@ -1,5 +1,6 @@
 ---
 import { value, format } from "../../lib/content/model.js";
+import { imageSource, responsiveImage } from "../../lib/site.js";
 interface Props {
   content: any;
   placement: "hero" | "about";
@@ -13,7 +14,7 @@ const portrait = v("shared.profile.image");
 
 <figure data-editor-group="shared.profile" class:list={["mike-profile", `${placement}-profile`]}>
   <div class="portrait-panel" style={portrait.rounding === undefined ? undefined : `--portrait-rounding:${portrait.rounding}%`} data-portrait-circle={portrait.rounding === 50 ? "true" : undefined}>
-    <img data-content-image="shared.profile.image" src={portrait.src} alt={portrait.description} style={`object-position:${portrait.x}% ${portrait.y}%`} width="1295" height="1367" fetchpriority={placement === "hero" ? "high" : "auto"} loading={placement === "hero" ? "eager" : "lazy"} decoding="async" class="hero-photo" />
+    <img data-content-image="shared.profile.image" {...responsiveImage(portrait.src)} sizes="(max-width: 760px) calc(100vw - 48px), (max-width: 1100px) 42vw, 520px" alt={portrait.description} style={`object-position:${portrait.x}% ${portrait.y}%`} width="1295" height="1367" fetchpriority={placement === "hero" ? "high" : "auto"} loading={placement === "hero" ? "eager" : "lazy"} decoding="async" class="hero-photo" />
   </div>
   <figcaption class="portrait-caption">
     <span class="portrait-identity">
@@ -21,7 +22,7 @@ const portrait = v("shared.profile.image");
       <span data-content-text="shared.profile.role">{v("shared.profile.role")}</span>
     </span>
     <a class="linkedin-link" data-content-href="shared.profile.linkedin" href={v("shared.profile.linkedin")} target="_blank" rel="noopener noreferrer" data-content-label="shared.profile.name" data-label-format="linkedin-label" aria-label={format(v("shared.profile.name"), "linkedin-label")}>
-      <img src="/linkedin-in-white.png" alt="" width="840" height="779" />
+      <img src={imageSource("/linkedin-in-white.png")} alt="" width="840" height="779" />
       <span data-content-text="shared.profile.linkLabel">{v("shared.profile.linkLabel")}</span>
     </a>
   </figcaption>

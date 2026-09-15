@@ -1,0 +1,15 @@
+{
+  "/img_8071.png": {
+    "src": "/optimized/img_8071-800-5c6de8301963.webp",
+    "srcset": "/optimized/img_8071-480-0f2548546c7c.webp 480w, /optimized/img_8071-800-5c6de8301963.webp 800w, /optimized/img_8071-1200-db3d68f2bfc3.webp 1200w"
+  },
+  "/logo.png": {
+    "src": "/optimized/logo-520-a9efb2d12bea.webp"
+  },
+  "/google-g.png": {
+    "src": "/optimized/google-g-96-1c7eafb2ed00.webp"
+  },
+  "/linkedin-in-white.png": {
+    "src": "/optimized/linkedin-in-white-96-47d6fb620f0d.webp"
+  }
+}
