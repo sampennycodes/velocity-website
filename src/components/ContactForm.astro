@@ -1,26 +1,52 @@
 ---
+import { referralSettings } from '../../lib/content/model.js';
+import { buildContent } from '../../lib/content/build.js';
+import { referralOptions } from '../../lib/contact-referral.js';
+import type { SiteContent } from '../../lib/content/types';
+interface Props { preview?: boolean; content?: SiteContent; }
 const isPreview = Astro.props.preview || import.meta.env.DEV || import.meta.env.VERCEL_ENV === 'preview' || import.meta.env.PUBLIC_SITE_PREVIEW === 'true';
+const referral = referralSettings((Astro.props.content ?? buildContent).values);
 ---
-<form action="/api/contact" method="post" id="contact-form" class="form form-hero" novalidate data-preview={String(isPreview)}>
+<form action="/api/contact" method="post" id="contact-form" class="form form-hero" novalidate data-preview={String(isPreview)} data-editor-group="shared.form" data-referral-enabled={String(referral.enabled)} data-referral-required={String(referral.required)}>
   <div class="honeypot-field" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off" /></div>
   <div class="form__row two-up">
     <div class="form__row"><label class="label" for="name">Name <span class="required">*</span></label><input id="name" name="name" class="input" type="text" required maxlength="120" autocomplete="name" aria-describedby="error-name" /><span id="error-name" class="form__error" hidden>Please enter your name.</span></div>
     <div class="form__row"><label class="label" for="email">Email <span class="required">*</span></label><input id="email" name="email" class="input" type="email" required maxlength="254" autocomplete="email" aria-describedby="error-email" /><span id="error-email" class="form__error" hidden>Please enter a valid email address.</span></div>
   </div>
   <div class="form__row"><label class="label" for="phone">Phone Number <span class="optional">(optional)</span></label><input id="phone" name="phone" class="input" type="tel" maxlength="50" autocomplete="tel" /></div>
+  <div class="form__row" id="referral-question" hidden={!referral.enabled}>
+    <label class="label" for="referralSource">How did you hear about us? <span id="referral-marker" class={referral.required ? 'required' : 'optional'}>{referral.required ? '*' : '(optional)'}</span></label>
+    <select id="referralSource" name="referralSource" class="input" disabled={!referral.enabled} required={referral.enabled && referral.required} aria-describedby="error-referralSource">
+      <option value="">Please select</option>
+      {referralOptions.map(option => <option value={option.value}>{option.label}</option>)}
+    </select>
+    <span id="error-referralSource" class="form__error" hidden>Please tell us how you heard about us.</span>
+  </div>
+  <div class="form__row" id="referral-other-row" hidden>
+    <label class="label" for="referralOther">Please specify <span class="required">*</span></label>
+    <input id="referralOther" name="referralOther" class="input" type="text" maxlength="500" disabled aria-describedby="error-referralOther" />
+    <span id="error-referralOther" class="form__error" hidden>Please specify how you heard about us.</span>
+  </div>
   <div class="form__row"><label class="label" for="message">Message <span class="required">*</span></label><textarea id="message" name="message" class="textarea" rows="5" required maxlength="10000" aria-describedby="error-message"></textarea><span id="error-message" class="form__error" hidden>Please tell me a little about what you need.</span></div>
   <div class="form__actions"><button class="btn primary" type="submit">Send Message <span aria-hidden="true">↗</span></button><span id="contact-status" role="status" aria-live="polite" class="form__status"></span></div>
 </form>
 <script>
+  import { syncReferralQuestion } from '../scripts/contact-referral';
   const form = document.querySelector<HTMLFormElement>('#contact-form');
   const status = document.querySelector<HTMLElement>('#contact-status');
   const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
-  const fields = ['name', 'email', 'message'].map(id => document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement);
-  function validate(field: HTMLInputElement | HTMLTextAreaElement) {
-    const valid = Boolean(field.value.trim()) && field.validity.valid;
+  type FormField = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+  const fields = ['name', 'email', 'message', 'referralSource', 'referralOther'].map(id => document.getElementById(id) as FormField);
+  function validate(field: FormField) {
+    const valid = field.disabled || ((!field.required || Boolean(field.value.trim())) && field.validity.valid);
     document.getElementById(`error-${field.id}`)!.hidden = valid;
     field.setAttribute('aria-invalid', String(!valid));
     return valid;
+  }
+  if (form) {
+    syncReferralQuestion(form);
+    form.querySelector('#referralSource')!.addEventListener('change', () => syncReferralQuestion(form));
+    form.addEventListener('reset', () => queueMicrotask(() => syncReferralQuestion(form)));
   }
   fields.forEach(field => field.addEventListener('input', () => { if (field.getAttribute('aria-invalid') === 'true') validate(field); }));
   form?.addEventListener('submit', async event => {
@@ -43,4 +69,9 @@ const isPreview = Astro.props.preview || import.meta.env.DEV || import.meta.env.
     finally { button.disabled = false; form.removeAttribute('aria-busy'); }
   });
 </script>
-<style>button:disabled { opacity: .6; cursor: wait; transform: none; }</style>
+<style>
+button:disabled { opacity: .6; cursor: wait; transform: none; }
+#referral-question[hidden], #referral-other-row[hidden] { display: none !important; }
+select.input { appearance: none; padding-right: 42px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='m4 6 4 4 4-4' stroke='%23302438' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; }
+@media(forced-colors:active) { select.input { appearance: auto; background-image: none; } }
+</style>

@@ -24,6 +24,10 @@ Push the review branch to the existing GitHub repository. Its Vercel Git integra
 
 `VERCEL_ENV=preview` disables mail on the server and disables indexing, analytics and form delivery in the built pages. If building a static review outside Vercel, set `PUBLIC_SITE_PREVIEW=true`; that build still needs a separately hosted API to support real mail, and is intended for visual review only. Never use the preview build as production output.
 
+## Contact form
+
+Both editable pages include “How did you hear about us?” with Word of mouth, Google Search, Search Engine (Other), AI Assistant (ChatGPT, etc.), and Other (Please specify). Choosing Other reveals a required details field. The question is visible and optional by default. In **Shared → Contact form**, editors can hide it or require an answer. These settings update the CMS preview, follow the immutable content snapshot, and are enforced by the server. Hidden questions ignore submitted referral answers. The selected answer appears only in the internal enquiry, in escaped HTML and plain text.
+
 ## Contact emails
 
 The V2 handler uses `RESEND_API_KEY_NEW`, falling back to `RESEND_API_KEY` only when the new variable is empty. Keep both server-only. The user has verified `velocitymarketing.com.au` in Resend.
@@ -35,7 +39,7 @@ Every accepted enquiry sends:
 
 In `/admin`, choose **Shared → Contact emails** to edit the sender name and address, enquiry inbox, confirmation reply address, and both email subjects and messages. The **From email** may be changed to any valid address on a domain verified in the selected Resend account. Resend enforces domain verification when sending. **Reply-to email (optional)** controls confirmation replies: leave it blank to omit the override and use the From address. Enquiry notifications always reply to the lead. The templates accept `{name}` and `{firstName}` and render as escaped plain text in HTML and text emails. Both emails have a responsive dark header, lilac accent, readable white body and branded footer, with plain-text alternatives. The editor has Contact Form and Autoresponder tabs, each showing its own settings and actual styled preview, with Desktop/Mobile widths and no email delivery. Sender fields are shared, and switching tabs preserves unsaved edits. The public contact-details fields remain separate. Legacy `SEND_EMAIL_FROM` / `SEND_EMAIL_TO` variables no longer override the CMS.
 
-Email settings follow the normal versioned save, restore and staging-publication workflow. Old snapshots receive the new default fields on read without rewriting history. The build writes the selected immutable revision’s email settings to `.generated/contact-email-settings.json`, explicitly packaged with the Vercel contact function. Requests never read a moving draft. Missing or invalid packaged settings fail closed.
+Email settings follow the normal versioned save, restore and staging-publication workflow. Old snapshots receive the new default fields on read without rewriting history. The build writes the selected immutable revision’s form and email settings to `.generated/contact-email-settings.json`, explicitly packaged with the Vercel contact function. Requests never read a moving draft. Missing or invalid packaged settings fail closed.
 
 The current CMS publishes only to staging. Preview/local contact forms remain disabled. A future production release must rebuild with production settings and carry over the approved content snapshot (including these email settings); production content publishing is not implemented by this change. Set `RESEND_API_KEY_NEW` in that production environment and leave `CONTACT_FORM_DISABLED` unset or `false` when releasing. Never promote a preview artifact to production.
 

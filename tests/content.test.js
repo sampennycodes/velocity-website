@@ -25,7 +25,7 @@ test('refreshed social cards support saved drafts and retain custom uploaded ima
   assert.match(imageSource('/img_8071.png'), /^\/optimized\/img_8071-800-.*\.webp$/);
 });
 test("content schema preserves fixed slots and rejects unsafe links and injected image sources", () => {
-  assert.equal(fields.length, 88);
+  assert.equal(fields.length, 90);
   assert.equal(contentSchema.parse(initialContent).schemaVersion, 1);
   // Old revisions omit rounding; new saves preserve only bounded percentages.
   assert.equal(contentSchema.parse(initialContent).values["shared.profile.image"].rounding, undefined);
@@ -203,4 +203,24 @@ test('blank optional reply-to survives draft validation, while From email remain
   assert.equal(parsed.values['shared.emails.senderEmail'], 'team@another-verified-domain.example');
   content.values['shared.emails.senderEmail'] = '';
   assert.equal(contentSchema.safeParse(content).success, false);
+});
+
+test('old drafts default to an optional referral question and preserve explicit toggle settings', () => {
+  const old = structuredClone(initialContent);
+  delete old.values['shared.form.referralEnabled'];
+  delete old.values['shared.form.referralRequired'];
+  const upgraded = draftResult({ snapshot: old, version: 8 }).content;
+  assert.equal(upgraded.values['shared.form.referralEnabled'], true);
+  assert.equal(upgraded.values['shared.form.referralRequired'], false);
+  assert.equal(Object.hasOwn(old.values, 'shared.form.referralEnabled'), false);
+  for (const enabled of [false, true]) for (const required of [false, true]) {
+    const draft = structuredClone(upgraded);
+    draft.values['shared.form.referralEnabled'] = enabled;
+    draft.values['shared.form.referralRequired'] = required;
+    const saved = draftResult({ snapshot: draft, version: 9 }).content;
+    assert.equal(saved.values['shared.form.referralEnabled'], enabled);
+    assert.equal(saved.values['shared.form.referralRequired'], required);
+  }
+  upgraded.values['shared.form.referralRequired'] = 'false';
+  assert.equal(contentSchema.safeParse(upgraded).success, false);
 });

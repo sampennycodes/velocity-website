@@ -86,5 +86,6 @@ export type TextFieldKey =
   "shared.footer.topLabel" |
   "shared.footer.topLink";
 export type ImageFieldKey = "home.seo.image" | "ads.seo.image" | "shared.profile.image";
+export type BooleanFieldKey = "shared.form.referralEnabled" | "shared.form.referralRequired";
 export interface ImageValue { src: string; assetId: string | null; description: string; width: number; height: number; x: number; y: number; rounding?: number; }
-export interface SiteContent { schemaVersion: 1; values: Record<TextFieldKey, string> & Record<ImageFieldKey, ImageValue>; }
+export interface SiteContent { schemaVersion: 1; values: Record<TextFieldKey, string> & Record<ImageFieldKey, ImageValue> & Record<BooleanFieldKey, boolean>; }

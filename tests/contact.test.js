@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { submitContact } from '../lib/contact.js';
 import { contactEmails } from '../lib/contact-email.js';
 import { loadContactSettings } from '../lib/contact-settings.js';
+import { contactSettings } from '../lib/content/model.js';
+import { referralOptions } from '../lib/contact-referral.js';
 import handler from '../api/contact.js';
 
 const body = { name: 'Alex Smith', email: 'alex@example.com', phone: '', message: 'Hello Mike', website: '' };
@@ -140,7 +142,49 @@ test('packaged contact settings follow the build snapshot', async t => {
   const { existsSync, readFileSync } = await import('node:fs');
   if (!existsSync('.generated/contact-email-settings.json')) return t.skip('Run npm run build to verify the packaged snapshot.');
   const built = JSON.parse(readFileSync('.generated/editor-content.json', 'utf8'));
-  assert.deepEqual(loadContactSettings(), Object.fromEntries(Object.entries(built.values).filter(([key]) => key.startsWith('shared.emails.'))));
+  assert.deepEqual(loadContactSettings(), contactSettings(built));
+});
+
+test('each referral choice reaches only the enquiry, with escaped Other details', async () => {
+  for (const option of referralOptions) {
+    const sent = [];
+    const detail = '<script>alert(1)</script> & a friend';
+    const response = await submitContact({ ...body, referralSource: option.value, referralOther: detail }, env, dependencies(async payload => { sent.push(payload); return accepted(); }));
+    assert.equal(response.status, 200);
+    const answer = option.value === 'other' ? `Other: ${detail}` : option.label;
+    assert.ok(sent[0].text.includes(`How did you hear about us? ${answer}`));
+    assert.ok(sent[0].html.includes('How did you hear about us?'));
+    assert.ok(!sent[0].html.includes('<script>'));
+    if (option.value === 'other') assert.ok(sent[0].html.includes('&lt;script&gt;alert(1)&lt;/script&gt; &amp; a friend'));
+    else assert.ok(!sent[0].text.includes(detail), 'Ignore leftover Other text for a different selection');
+    assert.ok(!sent[1].text.includes(answer));
+    assert.ok(!sent[1].html.includes('How did you hear about us?'));
+  }
+});
+
+test('published referral requirements reject missing and invalid answers before either email', async () => {
+  const required = { 'shared.form.referralRequired': true };
+  for (const fields of [{}, { referralSource: ' ' }, { referralSource: 'other', referralOther: ' ' }, { referralSource: 'invented' }]) {
+    assert.equal((await submitContact({ ...body, ...fields, referralRequired: false, settings: { 'shared.form.referralRequired': false } }, env, dependencies(neverSend, required))).status, 400);
+  }
+  for (const fields of [{ referralSource: 'other' }, { referralSource: 'invented' }, { referralSource: ['google-search'] }, { referralOther: 42 }, { referralOther: 'x'.repeat(501) }]) {
+    assert.equal((await submitContact({ ...body, ...fields }, env, dependencies(neverSend))).status, 400);
+  }
+  assert.equal((await submitContact({ ...body, referralSource: 'google-search' }, env, dependencies(accepted, required))).status, 200);
+  assert.equal((await submitContact(body, env, dependencies())).status, 200, 'Default question is optional');
+});
+
+test('hidden referral questions cannot be required or inject an answer into the enquiry', async () => {
+  for (const fields of [{}, { referralSource: 'other', referralOther: 'Forged referral' }]) {
+    const sent = [];
+    const response = await submitContact({ ...body, ...fields }, env, dependencies(async payload => { sent.push(payload); return accepted(); }, {
+      'shared.form.referralEnabled': false,
+      'shared.form.referralRequired': true,
+    }));
+    assert.equal(response.status, 200);
+    assert.ok(!sent[0].text.includes('How did you hear about us?'));
+    assert.ok(!sent[0].html.includes('Forged referral'));
+  }
 });
 
 test('optional confirmation reply-to is omitted by the SDK and never changes lead reply routing', async t => {

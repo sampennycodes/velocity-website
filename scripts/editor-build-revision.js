@@ -62,5 +62,5 @@ if (requestedRevision || (staging && process.env.EDITOR_ENABLED === 'true' && pr
 }
 await writeFile('.generated/editor-content.json', JSON.stringify(content));
 await writeFile('.generated/editor-content-revision.json', JSON.stringify(contentRevisionId));
-const { contactEmailSettings } = await import('../lib/content/model.js');
-await writeFile('.generated/contact-email-settings.json', JSON.stringify(contactEmailSettings(content)));
+const { contactSettings } = await import('../lib/content/model.js');
+await writeFile('.generated/contact-email-settings.json', JSON.stringify(contactSettings(content)));

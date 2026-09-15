@@ -96,7 +96,7 @@ const v = key => value(content, key);
           <a data-content-href="shared.contact.phoneLink" data-href-format="tel" data-content-text="shared.contact.phone" href={"tel:" + v("shared.contact.phoneLink").replace(/[ ()-]/g, "")}>{v("shared.contact.phone")}</a>
         </div>
       </div>
-      <ContactForm preview={editing} />
+      <ContactForm content={content} preview={editing} />
     </div>
   </section>
   <slot name="editor-script" slot="editor-script" />

@@ -1,4 +1,4 @@
-import { fields, groups, contentSchema, contactEmailSettings } from "../../lib/content/model.js";
+import { fields, groups, contentSchema, contactEmailSettings, referralSettings } from "../../lib/content/model.js";
 import { contactEmails, contactEmailVariables } from "../../lib/contact-email.js";
 import { imageSource } from "../../lib/site.js";
 import { publicationEstimate, publicationProgress } from "../../lib/editor/progress.js";
@@ -257,7 +257,19 @@ function renderFields() {
     const error = document.createElement("small");
     error.id = id + "-error";
     error.setAttribute("role", "status");
-    if (f.type === "image") {
+    if (f.type === "boolean") {
+      const input = document.createElement("input");
+      input.id = id;
+      input.type = "checkbox";
+      input.setAttribute("role", "switch");
+      input.setAttribute("aria-describedby", help.id);
+      input.checked = content.values[f.key];
+      input.addEventListener("change", () => {
+        content.values[f.key] = input.checked;
+        changed();
+      });
+      wrap.append(input);
+    } else if (f.type === "image") {
       const img = document.createElement("img");
       img.className = "image-thumb";
       img.src = previewImages.get(f.key) || imageSource(content.values[f.key].src);
@@ -549,7 +561,7 @@ function renderEmailPreview() {
   sizePreview();
   if (preview.hidden || !content) return;
   try {
-    const emails = contactEmails({ name: "Alex Smith", email: "alex@example.com", phone: "0400 000 000", message: "I’d like to find out more about your services." }, contactEmailSettings(content));
+    const emails = contactEmails({ name: "Alex Smith", email: "alex@example.com", phone: "0400 000 000", message: "I’d like to find out more about your services.", referralSource: referralSettings(content.values).enabled ? "google-search" : "" }, contactEmailSettings(content));
     const email = emails[emailType];
     const card = document.createElement("section");
     card.className = "email-sample";

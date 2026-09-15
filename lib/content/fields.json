@@ -22,7 +22,7 @@
       "id": "home.contact",
       "label": "Contact",
       "page": "home",
-      "description": "Edit the heading and introduction here. Sender, delivery and confirmation messages are under Contact emails."
+      "description": "Edit the heading and introduction here. Choose Contact form for the referral question, or Contact emails for delivery and confirmation messages."
     },
     {
       "id": "home.seo",
@@ -52,7 +52,7 @@
       "id": "ads.contact",
       "label": "Contact",
       "page": "ads",
-      "description": "Edit the heading and introduction here. Sender, delivery and confirmation messages are under Contact emails."
+      "description": "Edit the heading and introduction here. Choose Contact form for the referral question, or Contact emails for delivery and confirmation messages."
     },
     {
       "id": "ads.seo",
@@ -77,6 +77,12 @@
       "label": "Public contact details",
       "page": "shared",
       "description": "Displayed on the website. Choose Contact emails to change enquiry delivery and confirmation messages."
+    },
+    {
+      "id": "shared.form",
+      "label": "Contact form",
+      "page": "shared",
+      "description": "Control the referral question on every contact form. Visitors who choose Other are asked to specify."
     },
     {
       "id": "shared.emails",
@@ -828,6 +834,22 @@
       "max": 5000,
       "initial": "Hi {firstName},\n\nThanks for your email. We’ll get back to you as soon as possible.\n\nThanks,\nVelocity Marketing",
       "help": "Use {name} or {firstName} to personalise the message. Blank lines separate paragraphs."
+    },
+    {
+      "key": "shared.form.referralEnabled",
+      "group": "shared.form",
+      "label": "Show “How did you hear about us?”",
+      "type": "boolean",
+      "initial": true,
+      "help": "Show the question on the contact form. Turn off to hide it."
+    },
+    {
+      "key": "shared.form.referralRequired",
+      "group": "shared.form",
+      "label": "Require an answer",
+      "type": "boolean",
+      "initial": false,
+      "help": "Off means the question is optional. Turn on to require an answer when the question is shown."
     }
   ]
 }
