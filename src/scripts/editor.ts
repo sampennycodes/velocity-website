@@ -42,6 +42,21 @@ function hideProgress() {
 }
 const previewImages = new Map<string, string>();
 let emailPreviewObservers: ResizeObserver[] = [];
+const emailTypes = [
+  {
+    id: "contact-form",
+    label: "Contact Form",
+    fields: ["recipientEmail", "notificationSubject", "notificationMessage"],
+    description: "The enquiry sent to your team. Replies go directly to the lead. Sender name and From email apply to both emails.",
+  },
+  {
+    id: "autoresponder",
+    label: "Autoresponder",
+    fields: ["replyToEmail", "confirmationSubject", "confirmationMessage"],
+    description: "The thank-you email sent to the lead. Sender name and From email apply to both emails.",
+  },
+];
+let emailType = 0;
 function clearPreviewImages() {
   for (const url of previewImages.values()) URL.revokeObjectURL(url);
   previewImages.clear();
@@ -211,20 +226,22 @@ function fieldError(key: string) {
 function renderFields() {
   if (!content) return;
   const selected = groups.find((g) => g.id === group)!;
-  $("panel-title").textContent = selected.label;
+  const editingEmails = group === "shared.emails";
+  const visibleEmailFields = new Set(["senderName", "senderEmail", ...emailTypes[emailType].fields].map((key) => `shared.emails.${key}`));
+  $("panel-title").textContent = editingEmails ? emailTypes[emailType].label : selected.label;
   $("panel-scope").textContent =
-    selected.page === "shared"
+    editingEmails ? "CONTACT EMAILS" : selected.page === "shared"
       ? "SHARED CONTENT"
       : page === "home"
         ? "HOME PAGE"
         : "GOOGLE ADS PAGE";
-  $("panel-description").textContent = selected.description || "";
+  $("panel-description").textContent = editingEmails ? emailTypes[emailType].description : selected.description || "";
   $("panel-note").textContent = group === "shared.emails"
     ? "The samples use Alex Smith as an example lead. Save & update staging keeps these settings with the website version. Email delivery starts when the approved V2 version goes live."
     : "Changes appear in the preview immediately. Save your draft when you’re ready.";
   const form = $("fields-form");
   form.replaceChildren();
-  for (const f of fields.filter((f) => f.group === group)) {
+  for (const f of fields.filter((f) => f.group === group && (!editingEmails || visibleEmailFields.has(f.key)))) {
     const wrap = document.createElement("div");
     wrap.className = "field";
     const label = document.createElement("label");
@@ -471,45 +488,72 @@ function renderEmailPreview() {
   emailPreviewObservers = [];
   const preview = $("email-preview");
   preview.hidden = group !== "shared.emails";
+  $("email-tabs").hidden = preview.hidden;
+  preview.setAttribute("aria-labelledby", `email-tab-${emailTypes[emailType].id}`);
+  emailTypes.forEach((type, index) => {
+    const tab = $("email-tab-" + type.id);
+    tab.setAttribute("aria-selected", String(index === emailType));
+    tab.tabIndex = index === emailType ? 0 : -1;
+  });
   $("preview-stage").hidden = !preview.hidden;
   $("preview-title").textContent = !preview.hidden ? "Contact emails" : page === "home" ? "Home" : "Google Ads in Traralgon";
   $("canvas-hint").textContent = !preview.hidden
-    ? "Your emails, using an example enquiry. Switch to Mobile to check the narrower layout."
+    ? "An example enquiry. Switch to Mobile to check the narrower layout."
     : "Select a section in the preview or choose it from the list.";
   preview.replaceChildren();
   sizePreview();
   if (preview.hidden || !content) return;
   try {
     const emails = contactEmails({ name: "Alex Smith", email: "alex@example.com", phone: "0400 000 000", message: "I’d like to find out more about your services." }, contactEmailSettings(content));
-    emails.forEach((email, index) => {
-      const card = document.createElement("section");
-      card.className = "email-sample";
-      const heading = document.createElement("h2");
-      heading.textContent = index === 0 ? "Enquiry email preview" : "Lead confirmation preview";
-      const sample = document.createElement("pre");
-      sample.textContent = `From: ${email.from}\nTo: ${email.to.join(", ")}\nReply to: ${email.replyTo || "From email (no override)"}\nSubject: ${email.subject}`;
-      const frame = document.createElement("iframe");
-      frame.title = index === 0 ? "Styled enquiry email" : "Styled lead confirmation";
-      // Content is escaped by contactEmails; the preview also blocks scripts,
-      // top navigation, forms and network resources. Same-origin permits sizing only.
-      frame.sandbox.add("allow-same-origin");
-      frame.srcdoc = email.html.replace("<head>", `<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">`);
-      frame.addEventListener("load", () => {
-        const body = frame.contentDocument?.body;
-        if (!body || !frame.isConnected) return;
-        const fit = () => { frame.style.height = `${Math.ceil(body.getBoundingClientRect().height) + 2}px`; };
-        const observer = new ResizeObserver(fit);
-        observer.observe(body);
-        emailPreviewObservers.push(observer);
-        fit();
-      }, { once: true });
-      card.append(heading, sample, frame);
-      preview.append(card);
-    });
+    const email = emails[emailType];
+    const card = document.createElement("section");
+    card.className = "email-sample";
+    const heading = document.createElement("h2");
+    heading.textContent = `${emailTypes[emailType].label} preview`;
+    const sample = document.createElement("pre");
+    sample.textContent = `From: ${email.from}\nTo: ${email.to.join(", ")}\nReply to: ${email.replyTo || "From email (no override)"}\nSubject: ${email.subject}`;
+    const frame = document.createElement("iframe");
+    frame.title = emailType === 0 ? "Styled enquiry email" : "Styled lead confirmation";
+    // Content is escaped by contactEmails; the preview also blocks scripts,
+    // top navigation, forms and network resources. Same-origin permits sizing only.
+    frame.sandbox.add("allow-same-origin");
+    frame.srcdoc = email.html.replace("<head>", `<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">`);
+    frame.addEventListener("load", () => {
+      const body = frame.contentDocument?.body;
+      if (!body || !frame.isConnected) return;
+      const fit = () => { frame.style.height = `${Math.ceil(body.getBoundingClientRect().height) + 2}px`; };
+      const observer = new ResizeObserver(fit);
+      observer.observe(body);
+      emailPreviewObservers.push(observer);
+      fit();
+    }, { once: true });
+    card.append(heading, sample, frame);
+    preview.append(card);
   } catch {
-    preview.textContent = "Check the email fields above to see the preview.";
+    preview.textContent = "Check the email settings to see the preview.";
   }
 }
+function selectEmailType(index: number) {
+  emailType = index;
+  renderFields();
+  $("email-preview").scrollTop = 0;
+  $("properties").scrollTop = 0;
+}
+emailTypes.forEach((type, index) => {
+  const tab = $("email-tab-" + type.id);
+  tab.addEventListener("click", () => selectEmailType(index));
+  tab.addEventListener("keydown", (event) => {
+    let next: number;
+    if (event.key === "ArrowRight") next = (index + 1) % emailTypes.length;
+    else if (event.key === "ArrowLeft") next = (index + emailTypes.length - 1) % emailTypes.length;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = emailTypes.length - 1;
+    else return;
+    event.preventDefault();
+    selectEmailType(next);
+    $("email-tab-" + emailTypes[next].id).focus();
+  });
+});
 function acceptDraft(data: any, replace = true) {
   version = data.version;
   saved = JSON.stringify(data.content);
@@ -704,7 +748,12 @@ $("save-button").addEventListener("click", async () => {
           $("page-picker").dispatchEvent(new Event("change"));
         }
       }
+      if (field.group === "shared.emails") {
+        const target = emailTypes.findIndex((type) => type.fields.some((key) => field.key === `shared.emails.${key}`));
+        if (target !== -1) emailType = target;
+      }
       selectGroup(field.group, true);
+      $("field-" + field.key)?.focus();
     }
     notice("Check the highlighted field before saving.");
     return;
