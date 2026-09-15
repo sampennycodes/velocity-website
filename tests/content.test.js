@@ -7,7 +7,7 @@ import {
   safeLink,
   format,
 } from "../lib/content/model.js";
-import { checkVersion, validateAssets } from "../lib/editor/content.js";
+import { checkVersion, validateAssets, draftResult } from "../lib/editor/content.js";
 import {
   contentDeploymentPayload,
   checkContentDeployment,
@@ -25,7 +25,7 @@ test('refreshed social cards support saved drafts and retain custom uploaded ima
   assert.match(imageSource('/img_8071.png'), /^\/optimized\/img_8071-800-.*\.webp$/);
 });
 test("content schema preserves fixed slots and rejects unsafe links and injected image sources", () => {
-  assert.equal(fields.length, 80);
+  assert.equal(fields.length, 88);
   assert.equal(contentSchema.parse(initialContent).schemaVersion, 1);
   // Old revisions omit rounding; new saves preserve only bounded percentages.
   assert.equal(contentSchema.parse(initialContent).values["shared.profile.image"].rounding, undefined);
@@ -162,4 +162,34 @@ test("content publishing pins an immutable revision and source; mismatched and p
       () => checkContentDeployment({ ...valid, ...patch }, job, config),
       { status: 502 },
     );
+});
+
+test('older drafts and history gain email defaults without changing existing content or stored snapshots', () => {
+  const old = structuredClone(initialContent);
+  for (const field of fields.filter(f => f.group === 'shared.emails')) delete old.values[field.key];
+  old.values['home.hero.heading'] = 'Saved custom heading';
+  const upgraded = contentSchema.parse(old);
+  assert.equal(upgraded.values['home.hero.heading'], 'Saved custom heading');
+  assert.equal(upgraded.values['shared.emails.senderEmail'], 'website@velocitymarketing.com.au');
+  assert.equal(upgraded.values['shared.emails.confirmationMessage'], initialContent.values['shared.emails.confirmationMessage']);
+  assert.equal(old.values['shared.emails.senderEmail'], undefined);
+  assert.deepEqual(draftResult({ snapshot: old, version: 7 }).content, upgraded);
+});
+
+test('email configuration rejects bad addresses, unverified sender domains and injected headers', () => {
+  for (const [key, value] of [
+    ['recipientEmail', 'not-an-email'],
+    ['replyToEmail', 'a@example.com,b@example.com'],
+    ['senderEmail', 'sender@unverified.example'],
+    ['senderEmail', 'sender@evilvelocitymarketing.com.au'],
+    ['senderName', 'Velocity <sender@evil.example>'],
+    ['senderName', 'Velocity\\Name'],
+    ['notificationSubject', 'Hi\nBcc: attacker@example.com'],
+    ['confirmationSubject', 'Hi\rBcc: attacker@example.com'],
+    ['confirmationMessage', ''],
+  ]) {
+    const content = structuredClone(initialContent);
+    content.values['shared.emails.' + key] = value;
+    assert.equal(contentSchema.safeParse(content).success, false, key + ': ' + value);
+  }
 });

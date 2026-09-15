@@ -64,6 +64,14 @@ export type TextFieldKey =
   "shared.reviews.2.name" |
   "shared.reviews.2.business" |
   "shared.reviews.2.quote" |
+  "shared.emails.senderName" |
+  "shared.emails.senderEmail" |
+  "shared.emails.recipientEmail" |
+  "shared.emails.replyToEmail" |
+  "shared.emails.notificationSubject" |
+  "shared.emails.notificationMessage" |
+  "shared.emails.confirmationSubject" |
+  "shared.emails.confirmationMessage" |
   "shared.contact.email" |
   "shared.contact.phone" |
   "shared.contact.phoneLink" |

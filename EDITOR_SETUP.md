@@ -1,6 +1,6 @@
 # Client editor — implementation and staging setup
 
-The full draft editor is implemented at `/admin`: Home and Google Ads page selection, section selection in the preview, 80 fixed content fields, shared profile/reviews/navigation/contact details, image uploads and portrait cropping, saved drafts, version conflicts, history and restore-to-draft. The editor uses the existing Astro components for its preview. The public site remains static.
+The full draft editor is implemented at `/admin`: Home and Google Ads page selection, section selection in the preview, 88 fixed content fields, shared profile/reviews/navigation/contact details, image uploads and portrait cropping, saved drafts, version conflicts, history and restore-to-draft. The editor uses the existing Astro components for its preview. The public site remains static.
 
 Staging publishing is enabled and verified. Mike is enabled with the `editor` role; Sam remains `owner`. Both can save drafts, upload images, restore history and update staging. The optional `preview` role still denies all writes. The OTP gate allows Sam and Mike; no invitations are sent and codes are sent only on request. Production release is not authorized.
 
@@ -74,7 +74,7 @@ The default portrait has 480/800/1200px WebP variants; the logo and small raster
 
 ## Verification
 
-- 34 automated tests pass, covering contact behavior, auth/session handling, email gating, image validation, field/schema/link restrictions, media metadata, conflict checks, anonymous draft/history/save/restore denial, pinned staging deployment matching, combined workspace access, publication estimates and responsive image compatibility.
+- Automated tests cover the original editor and email flows, covering contact behavior, auth/session handling, email gating, image validation, field/schema/link restrictions, media metadata, conflict checks, anonymous draft/history/save/restore denial, pinned staging deployment matching, combined workspace access, publication estimates and responsive image compatibility.
 - Live database transaction checks passed for draft saving, stale-version conflicts, restoration, immutable history, one active publisher and production-target rejection. All test draft/history/publication writes were rolled back.
 - Live storage checks passed for private upload and read, anonymous denial, public copying and byte-for-byte equality. The retained test asset is a public Velocity logo, not client draft content.
 - Public-route baseline comparison passed. Production dependency audit was clear after upgrading Astro to 7.3.2; `compressHTML: true` and relocation of the duplicate legacy simulator preserve previous rendering.
@@ -85,3 +85,9 @@ The default portrait has 480/800/1200px WebP variants; the logo and small raster
 - Production remains at deployment `dpl_Dq2SuHn9CFTntUwLbGXwj8C1vKZM`, source `70ef263529c4402e87f2019e8d7c397baf3cd46a`; the shared build command remains unchanged (`null`).
 
 See `CLIENT_EDITOR_GUIDE.md` for the client workflow. Keep all testing on staging. A future approved production release must rebuild with production settings, not promote a preview artifact.
+
+## V2 contact email settings
+
+The shared Contact emails group adds eight validated fields and in-editor samples for the enquiry and lead confirmation. Missing fields in older snapshots default on read, while existing fixed slots remain required. There is no database migration or history rewrite. The contact function packages `.generated/contact-email-settings.json` from the same selected build snapshot as the pages, and prefers `RESEND_API_KEY_NEW`. The CMS owns addresses and templates; obsolete sender/recipient environment variables are ignored. Staging delivery remains disabled.
+
+Advance the branch-scoped `EDITOR_APPROVED_SOURCE_SHA` to the tested code revision before deploying this editor, so later Save & update staging builds include the email fields. Production publishing remains a separate future release task; carry the approved snapshot into that release instead of relying on default production content.

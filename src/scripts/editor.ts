@@ -1,4 +1,5 @@
-import { fields, groups, contentSchema } from "../../lib/content/model.js";
+import { fields, groups, contentSchema, contactEmailSettings } from "../../lib/content/model.js";
+import { contactEmails } from "../../lib/contact-email.js";
 import { imageSource } from "../../lib/site.js";
 import { publicationEstimate, publicationProgress } from "../../lib/editor/progress.js";
 const $ = <T extends HTMLElement>(id: string) =>
@@ -150,6 +151,7 @@ new ResizeObserver(sizePreview).observe($("preview-stage"));
 function changed() {
   updateState();
   tellPreview();
+  renderEmailPreview();
 }
 function selectGroup(id: string, open = false) {
   if (
@@ -215,6 +217,9 @@ function renderFields() {
         ? "HOME PAGE"
         : "GOOGLE ADS PAGE";
   $("panel-description").textContent = selected.description || "";
+  $("panel-note").textContent = group === "shared.emails"
+    ? "The samples below use Alex Smith as an example lead. Save & update staging keeps these settings with the website version. Email delivery starts when the approved V2 version goes live."
+    : "Changes appear in the preview immediately. Save your draft when you’re ready.";
   const form = $("fields-form");
   form.replaceChildren();
   for (const f of fields.filter((f) => f.group === group)) {
@@ -225,6 +230,11 @@ function renderFields() {
     label.htmlFor = id;
     label.textContent = f.label;
     wrap.append(label);
+    const help = document.createElement("p");
+    help.id = id + "-help";
+    help.className = "fine";
+    help.textContent = "help" in f ? String(f.help) : "";
+    if (help.textContent) wrap.append(help);
     const error = document.createElement("small");
     error.id = id + "-error";
     error.setAttribute("role", "status");
@@ -436,7 +446,7 @@ function renderFields() {
       input.value = content.values[f.key];
       input.maxLength = f.max;
       input.required = true;
-      input.setAttribute("aria-describedby", error.id);
+      input.setAttribute("aria-describedby", `${error.id}${help.textContent ? ` ${help.id}` : ""}`);
       if (input instanceof HTMLInputElement)
         input.type = f.type === "email" ? "email" : "text";
       else input.rows = 4;
@@ -451,6 +461,25 @@ function renderFields() {
     error.textContent = fieldError(f.key);
     wrap.append(error);
     form.append(wrap);
+  }
+  renderEmailPreview();
+}
+function renderEmailPreview() {
+  const preview = $("email-preview");
+  preview.hidden = group !== "shared.emails";
+  preview.replaceChildren();
+  if (preview.hidden || !content) return;
+  try {
+    const emails = contactEmails({ name: "Alex Smith", email: "alex@example.com", phone: "0400 000 000", message: "I’d like to find out more about your services." }, contactEmailSettings(content));
+    emails.forEach((email, index) => {
+      const heading = document.createElement("h2");
+      heading.textContent = index === 0 ? "Enquiry email preview" : "Lead confirmation preview";
+      const sample = document.createElement("pre");
+      sample.textContent = `From: ${email.from}\nTo: ${email.to.join(", ")}\nReply to: ${email.replyTo}\nSubject: ${email.subject}\n\n${email.text}`;
+      preview.append(heading, sample);
+    });
+  } catch {
+    preview.textContent = "Check the email fields above to see the preview.";
   }
 }
 function acceptDraft(data: any, replace = true) {

@@ -22,7 +22,7 @@
       "id": "home.contact",
       "label": "Contact",
       "page": "home",
-      "description": "Displayed contact details are shared. Enquiry delivery settings are managed separately."
+      "description": "Edit the heading and introduction here. Sender, delivery and confirmation messages are under Contact emails."
     },
     {
       "id": "home.seo",
@@ -52,7 +52,7 @@
       "id": "ads.contact",
       "label": "Contact",
       "page": "ads",
-      "description": "Displayed contact details are shared. Enquiry delivery settings are managed separately."
+      "description": "Edit the heading and introduction here. Sender, delivery and confirmation messages are under Contact emails."
     },
     {
       "id": "ads.seo",
@@ -76,7 +76,13 @@
       "id": "shared.contact",
       "label": "Public contact details",
       "page": "shared",
-      "description": "Used in both pages and the navigation. Changing these does not change where enquiries are delivered."
+      "description": "Displayed on the website. Choose Contact emails to change enquiry delivery and confirmation messages."
+    },
+    {
+      "id": "shared.emails",
+      "label": "Contact emails",
+      "page": "shared",
+      "description": "Emails sent for enquiries from any page. Save these settings with your draft. Preview and staging forms do not send email."
     },
     {
       "id": "shared.navigation",
@@ -749,6 +755,78 @@
       "type": "link",
       "max": 1000,
       "initial": "#main-content"
+    },
+    {
+      "key": "shared.emails.senderName",
+      "group": "shared.emails",
+      "label": "Sender name",
+      "type": "text",
+      "max": 120,
+      "initial": "Velocity Marketing",
+      "help": "The name shown in the lead’s inbox."
+    },
+    {
+      "key": "shared.emails.senderEmail",
+      "group": "shared.emails",
+      "label": "Sender email",
+      "type": "email",
+      "max": 254,
+      "initial": "website@velocitymarketing.com.au",
+      "help": "Use an address at the verified velocitymarketing.com.au domain."
+    },
+    {
+      "key": "shared.emails.recipientEmail",
+      "group": "shared.emails",
+      "label": "Send enquiries to",
+      "type": "email",
+      "max": 254,
+      "initial": "mike@velocitymarketing.com.au",
+      "help": "The inbox that receives new enquiries. Replying to an enquiry addresses the lead."
+    },
+    {
+      "key": "shared.emails.replyToEmail",
+      "group": "shared.emails",
+      "label": "Lead replies go to",
+      "type": "email",
+      "max": 254,
+      "initial": "mike@velocitymarketing.com.au",
+      "help": "Where replies to the confirmation email are delivered."
+    },
+    {
+      "key": "shared.emails.notificationSubject",
+      "group": "shared.emails",
+      "label": "Enquiry email subject",
+      "type": "text",
+      "max": 200,
+      "initial": "New enquiry from {name}",
+      "help": "Use {name} for the lead’s full name or {firstName} for their first name."
+    },
+    {
+      "key": "shared.emails.notificationMessage",
+      "group": "shared.emails",
+      "label": "Enquiry email introduction",
+      "type": "textarea",
+      "max": 5000,
+      "initial": "New Velocity Marketing enquiry",
+      "help": "The lead’s name, email, phone and message are added below this text."
+    },
+    {
+      "key": "shared.emails.confirmationSubject",
+      "group": "shared.emails",
+      "label": "Confirmation email subject",
+      "type": "text",
+      "max": 200,
+      "initial": "Thanks for contacting Velocity Marketing",
+      "help": "Sent to the lead after their enquiry is accepted."
+    },
+    {
+      "key": "shared.emails.confirmationMessage",
+      "group": "shared.emails",
+      "label": "Confirmation email message",
+      "type": "textarea",
+      "max": 5000,
+      "initial": "Hi {firstName},\n\nThanks for your email. We’ll get back to you as soon as possible.\n\nThanks,\nVelocity Marketing",
+      "help": "Use {name} or {firstName} to personalise the message. Blank lines separate paragraphs."
     }
   ]
 }

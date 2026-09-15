@@ -24,27 +24,24 @@ Push the review branch to the existing GitHub repository. Its Vercel Git integra
 
 `VERCEL_ENV=preview` disables mail on the server and disables indexing, analytics and form delivery in the built pages. If building a static review outside Vercel, set `PUBLIC_SITE_PREVIEW=true`; that build still needs a separately hosted API to support real mail, and is intended for visual review only. Never use the preview build as production output.
 
-## Move email sending to Mike's Resend account
+## Contact emails
 
-The switch is prepared, not activated. Existing production settings have not been changed.
+The V2 handler uses `RESEND_API_KEY_NEW`, falling back to `RESEND_API_KEY` only when the new variable is empty. Keep both server-only. The user has verified `velocitymarketing.com.au` in Resend.
 
-1. In Mike's Resend account, verify `velocitymarketing.com.au` using the DNS records Resend provides. If it is already attached to a different Resend account, complete Resend's domain transfer/claim process first. Keep existing mailbox/MX settings unless Resend's instructions for the selected sending subdomain explicitly require a record change.
-2. Create a sending API key in Mike's account, scoped to that verified domain where available.
-3. Set these **production** variables in the existing Velocity Marketing Vercel project:
+Every accepted enquiry sends:
 
-   | Variable | Value |
-   | --- | --- |
-   | `RESEND_API_KEY` | Key from Mike's account |
-   | `SEND_EMAIL_FROM` | `Velocity Marketing <mike@velocitymarketing.com.au>` |
-   | `SEND_EMAIL_TO` | `mike@velocitymarketing.com.au` (also the default) |
-   | `CONTACT_FORM_DISABLED` | `false` or unset |
+1. An enquiry from **Velocity Marketing <website@velocitymarketing.com.au>** to **mike@velocitymarketing.com.au**. Reply addresses the lead. Their name, email, optional phone and message are always included.
+2. A confirmation to the lead, from the same sender, with replies directed to Mike by default: “Hi {firstName}, Thanks for your email. We’ll get back to you as soon as possible. Thanks, Velocity Marketing.”
 
-4. Redeploy the approved production source for the new settings to take effect. The environment-variable switch can also be deployed separately from the visual refresh.
-5. With permission to send a real test enquiry, verify delivery in Mike's inbox and Resend logs, and verify that Reply addresses the visitor. Only then retire the old key if nothing else uses it.
+In `/admin`, choose **Shared → Contact emails** to edit the sender name and address, enquiry inbox, confirmation reply address, and both email subjects and messages. Sender addresses must use the verified `velocitymarketing.com.au` domain. The templates accept `{name}` and `{firstName}` and render as escaped plain text in HTML and text emails. The editor shows sample previews without sending mail. The public contact-details fields remain separate. Legacy `SEND_EMAIL_FROM` / `SEND_EMAIL_TO` variables no longer override the CMS.
 
-The sender must belong to a domain verified in the account owning the API key. The visitor's email is `replyTo`, not `from`. Missing keys or sender settings return an explicit error. The code does not use a fabricated fallback sender.
+Email settings follow the normal versioned save, restore and staging-publication workflow. Old snapshots receive the new default fields on read without rewriting history. The build writes the selected immutable revision’s email settings to `.generated/contact-email-settings.json`, explicitly packaged with the Vercel contact function. Requests never read a moving draft. Missing or invalid packaged settings fail closed.
 
-See [Resend domain verification](https://resend.com/docs/dashboard/domains/introduction) and the [sending API](https://resend.com/docs/api-reference/emails/send-email).
+The current CMS publishes only to staging. Preview/local contact forms remain disabled. A future production release must rebuild with production settings and carry over the approved content snapshot (including these email settings); production content publishing is not implemented by this change. Set `RESEND_API_KEY_NEW` in that production environment and leave `CONTACT_FORM_DISABLED` unset or `false` when releasing. Never promote a preview artifact to production.
+
+The confirmation is sent only after Resend accepts the enquiry. If the enquiry fails, the form reports an error and no confirmation is sent. If only the confirmation fails, the form still acknowledges the accepted enquiry and the server logs the receipt failure without lead details; there is no automatic receipt retry. This avoids prompting duplicate submissions. Resend acceptance does not itself prove inbox delivery.
+
+See the [Resend sending API](https://resend.com/docs/api-reference/emails/send-email). Automated tests mock delivery; a real inbox delivery check is a separate release check.
 
 ## Files
 

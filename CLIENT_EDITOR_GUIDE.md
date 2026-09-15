@@ -16,4 +16,6 @@ If another browser saves first, your edits remain on screen. Use **Download my e
 
 If a session expires, sign in again without closing the page. Unsaved edits stay in memory while you sign in. If an email code expires, use **Send a new code**.
 
-Changing the displayed contact email does not change where enquiry-form messages are delivered. Contact Sam for delivery settings, editor access or help with a failed publication.
+Choose **Shared → Contact emails** to change the sender name/email, the inbox receiving enquiries, where lead replies go, and the subjects and messages for both emails. The sender email must use `velocitymarketing.com.au`. Use `{firstName}` or `{name}` to personalise a message; the enquiry always includes the lead’s contact details and original message below your introduction. Sample emails appear below the fields as you edit, without sending anything.
+
+Select **Save & update staging** to save the email settings with the website version. History and restore include these settings. The staging contact form does not send email; delivery starts with the approved production release. Changing **Public contact details** still only changes the address displayed on the website. Contact Sam for editor access or help with a failed publication.

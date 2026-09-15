@@ -64,6 +64,9 @@
     }
   ],
   "functions": {
+    "api/contact.js": {
+      "includeFiles": ".generated/contact-email-settings.json"
+    },
     "api/editor-api.js": {
       "regions": ["syd1"],
       "maxDuration": 300
