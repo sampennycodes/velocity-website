@@ -497,7 +497,7 @@ function renderEmailPreview() {
       frame.addEventListener("load", () => {
         const body = frame.contentDocument?.body;
         if (!body || !frame.isConnected) return;
-        const fit = () => { frame.style.height = `${Math.ceil(body.getBoundingClientRect().height)}px`; };
+        const fit = () => { frame.style.height = `${Math.ceil(body.getBoundingClientRect().height) + 2}px`; };
         const observer = new ResizeObserver(fit);
         observer.observe(body);
         emailPreviewObservers.push(observer);
