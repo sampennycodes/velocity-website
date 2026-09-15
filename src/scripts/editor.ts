@@ -1,5 +1,5 @@
 import { fields, groups, contentSchema, contactEmailSettings } from "../../lib/content/model.js";
-import { contactEmails } from "../../lib/contact-email.js";
+import { contactEmails, contactEmailVariables } from "../../lib/contact-email.js";
 import { imageSource } from "../../lib/site.js";
 import { publicationEstimate, publicationProgress } from "../../lib/editor/progress.js";
 const $ = <T extends HTMLElement>(id: string) =>
@@ -476,6 +476,51 @@ function renderFields() {
         changed();
       });
       wrap.append(input);
+      if (editingEmails && /\.(notification|confirmation)(Subject|Message)$/.test(f.key)) {
+        const variables = document.createElement("div");
+        variables.className = "email-variables";
+        variables.setAttribute("role", "group");
+        variables.setAttribute("aria-label", `Insert a variable into ${f.label.toLowerCase()}`);
+        const hint = document.createElement("p");
+        hint.id = `${id}-variables`;
+        hint.textContent = "Insert a variable at your cursor. It will use the lead’s details.";
+        input.setAttribute("aria-describedby", `${input.getAttribute("aria-describedby")} ${hint.id}`);
+        variables.append(hint);
+        const buttons = document.createElement("div");
+        buttons.className = "email-variable-buttons";
+        // Keep the selection when a mouse or touch user chooses a variable.
+        let selection: [number, number] = [input.value.length, input.value.length];
+        const rememberSelection = () => {
+          selection = [input.selectionStart ?? input.value.length, input.selectionEnd ?? input.value.length];
+        };
+        for (const event of ["select", "input", "keyup", "click", "blur"])
+          input.addEventListener(event, rememberSelection);
+        for (const variable of contactEmailVariables) {
+          const token = `{${variable.key}}`;
+          const button = document.createElement("button");
+          button.type = "button";
+          button.setAttribute("aria-label", `Insert ${variable.label.toLowerCase()} ${token} into ${f.label.toLowerCase()}`);
+          const code = document.createElement("code");
+          code.textContent = token;
+          const example = document.createElement("span");
+          example.textContent = `${variable.label} → ${variable.example}`;
+          button.append(code, example);
+          button.addEventListener("click", () => {
+            const [start, end] = selection;
+            if (input.value.length - (end - start) + token.length > input.maxLength) {
+              error.textContent = `Make room for ${token}; this field allows ${input.maxLength} characters.`;
+              input.focus();
+              return;
+            }
+            input.focus();
+            input.setRangeText(token, start, end, "end");
+            input.dispatchEvent(new Event("input", { bubbles: true }));
+          });
+          buttons.append(button);
+        }
+        variables.append(buttons);
+        wrap.append(variables);
+      }
     }
     error.textContent = fieldError(f.key);
     wrap.append(error);
