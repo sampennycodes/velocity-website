@@ -34,7 +34,8 @@ test('live publishing uses the server destination, exact saved revision and appr
   const payload = contentDeploymentPayload(config, revision, jobId);
   assert.equal(payload.target, 'production');
   assert.equal(payload.gitSource.sha, sha);
-  assert.deepEqual(payload.env, { VELOCITY_CONTENT_REVISION: revision, VELOCITY_CONTENT_JOB: jobId });
+  assert.equal(payload.env, undefined, 'Revision selection must reach the build, not only runtime functions');
+  assert.deepEqual(payload.build.env, { VELOCITY_CONTENT_REVISION: revision, VELOCITY_CONTENT_JOB: jobId });
   assert.equal(payload.meta.velocityEnvironment, 'production');
   assert.equal(payload.projectSettings, undefined);
   const deployment = { projectId: config.project, ownerId: config.team, target: 'production', meta: payload.meta, gitSource: { sha } };
