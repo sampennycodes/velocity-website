@@ -1,10 +1,10 @@
 {
-  "revisionId": "35b9ff2e-6e83-4d5b-a47e-eb6c91b2cd9c",
-  "sourceSha": "88aaebefe61cc6dd6408582c417756afcda95c8f",
+  "revisionId": "3b876a1a-e4a9-4639-bb51-fa053b735522",
+  "sourceSha": "11f8ccdc8680149408d15b794dff498828edf9f1",
   "content": {
     "schemaVersion": 1,
     "values": {
-      "home.hero.heading": "Paid Advertising That Drives",
+      "home.hero.heading": "Paid Media That Drives",
       "home.hero.highlight": "Real Growth",
       "home.hero.intro": "I help businesses like yours achieve their goals with strategic, results-oriented paid media campaigns.",
       "home.hero.primaryLabel": "Get a Free Consultation",
@@ -20,7 +20,7 @@
       "home.services.2.title": "LinkedIn Ads",
       "home.services.2.description": "Reach decision-makers, generate qualified B2B leads, and strengthen your brand presence on the world's leading professional network.",
       "home.about.heading": "Why Work With Me?",
-      "home.about.intro": "I specialise only in paid advertising with a passion for helping businesses succeed. I believe in a data-driven approach and I'm committed to delivering measurable results.",
+      "home.about.intro": "I specialise only in paid media with a passion for helping businesses succeed. I believe in a data-driven approach and I'm committed to delivering measurable results.",
       "home.about.bullet0": "10 years of experience in the industry",
       "home.about.bullet1": "Proven track record with a diverse range of clients",
       "home.about.bullet2": "Certified across Google, Meta, and LinkedIn ad platforms",
@@ -32,7 +32,7 @@
       "home.seo.image": {
         "src": "/ogimage.png",
         "assetId": null,
-        "description": "Velocity Marketing — Paid Advertising That Drives Real Growth, with Mike Nicholas.",
+        "description": "Velocity Marketing — Paid Media That Drives Real Growth, with Mike Nicholas.",
         "width": 1200,
         "height": 630,
         "x": 50,
@@ -65,7 +65,7 @@
       "ads.seo.image": {
         "src": "/ogimage.png",
         "assetId": null,
-        "description": "Velocity Marketing — Paid Advertising That Drives Real Growth, with Mike Nicholas.",
+        "description": "Velocity Marketing — Paid Media That Drives Real Growth, with Mike Nicholas.",
         "width": 1200,
         "height": 630,
         "x": 50,

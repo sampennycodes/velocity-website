@@ -104,7 +104,7 @@
       "label": "Heading",
       "type": "text",
       "max": 300,
-      "initial": "Paid Advertising That Drives"
+      "initial": "Paid Media That Drives"
     },
     {
       "group": "home.hero",
@@ -305,7 +305,7 @@
       "type": "image",
       "max": 300,
       "initial": {
-        "src": "/ogimage-v2.png",
+        "src": "/ogimage-paid-media.png",
         "assetId": null,
         "description": "Velocity Marketing",
         "width": 1200,
@@ -513,7 +513,7 @@
       "type": "image",
       "max": 300,
       "initial": {
-        "src": "/ogimage-v2.png",
+        "src": "/ogimage-paid-media.png",
         "assetId": null,
         "description": "Velocity Marketing",
         "width": 1200,
