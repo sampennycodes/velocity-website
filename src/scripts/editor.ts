@@ -41,6 +41,7 @@ function hideProgress() {
   $("publication-progress").hidden = true;
 }
 const previewImages = new Map<string, string>();
+let emailPreviewObservers: ResizeObserver[] = [];
 function clearPreviewImages() {
   for (const url of previewImages.values()) URL.revokeObjectURL(url);
   previewImages.clear();
@@ -136,6 +137,7 @@ function focusPreview() {
   );
 }
 function sizePreview() {
+  $("email-preview").style.setProperty("--email-width", `${Math.min(600, viewport)}px`);
   const stage = $("preview-stage");
   if (!stage.clientWidth) return;
   const scale = Math.min(1, stage.clientWidth / viewport),
@@ -218,7 +220,7 @@ function renderFields() {
         : "GOOGLE ADS PAGE";
   $("panel-description").textContent = selected.description || "";
   $("panel-note").textContent = group === "shared.emails"
-    ? "The samples below use Alex Smith as an example lead. Save & update staging keeps these settings with the website version. Email delivery starts when the approved V2 version goes live."
+    ? "The samples use Alex Smith as an example lead. Save & update staging keeps these settings with the website version. Email delivery starts when the approved V2 version goes live."
     : "Changes appear in the preview immediately. Save your draft when you’re ready.";
   const form = $("fields-form");
   form.replaceChildren();
@@ -445,7 +447,7 @@ function renderFields() {
       input.id = id;
       input.value = content.values[f.key];
       input.maxLength = f.max;
-      input.required = true;
+      input.required = !("optional" in f && f.optional);
       input.setAttribute("aria-describedby", `${error.id}${help.textContent ? ` ${help.id}` : ""}`);
       if (input instanceof HTMLInputElement)
         input.type = f.type === "email" ? "email" : "text";
@@ -465,18 +467,44 @@ function renderFields() {
   renderEmailPreview();
 }
 function renderEmailPreview() {
+  for (const observer of emailPreviewObservers) observer.disconnect();
+  emailPreviewObservers = [];
   const preview = $("email-preview");
   preview.hidden = group !== "shared.emails";
+  $("preview-stage").hidden = !preview.hidden;
+  $("preview-title").textContent = !preview.hidden ? "Contact emails" : page === "home" ? "Home" : "Google Ads in Traralgon";
+  $("canvas-hint").textContent = !preview.hidden
+    ? "Your emails, using an example enquiry. Switch to Mobile to check the narrower layout."
+    : "Select a section in the preview or choose it from the list.";
   preview.replaceChildren();
+  sizePreview();
   if (preview.hidden || !content) return;
   try {
     const emails = contactEmails({ name: "Alex Smith", email: "alex@example.com", phone: "0400 000 000", message: "I’d like to find out more about your services." }, contactEmailSettings(content));
     emails.forEach((email, index) => {
+      const card = document.createElement("section");
+      card.className = "email-sample";
       const heading = document.createElement("h2");
       heading.textContent = index === 0 ? "Enquiry email preview" : "Lead confirmation preview";
       const sample = document.createElement("pre");
-      sample.textContent = `From: ${email.from}\nTo: ${email.to.join(", ")}\nReply to: ${email.replyTo}\nSubject: ${email.subject}\n\n${email.text}`;
-      preview.append(heading, sample);
+      sample.textContent = `From: ${email.from}\nTo: ${email.to.join(", ")}\nReply to: ${email.replyTo || "From email (no override)"}\nSubject: ${email.subject}`;
+      const frame = document.createElement("iframe");
+      frame.title = index === 0 ? "Styled enquiry email" : "Styled lead confirmation";
+      // Content is escaped by contactEmails; the preview also blocks scripts,
+      // top navigation, forms and network resources. Same-origin permits sizing only.
+      frame.sandbox.add("allow-same-origin");
+      frame.srcdoc = email.html.replace("<head>", `<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">`);
+      frame.addEventListener("load", () => {
+        const body = frame.contentDocument?.body;
+        if (!body || !frame.isConnected) return;
+        const fit = () => { frame.style.height = `${Math.ceil(body.getBoundingClientRect().height)}px`; };
+        const observer = new ResizeObserver(fit);
+        observer.observe(body);
+        emailPreviewObservers.push(observer);
+        fit();
+      }, { once: true });
+      card.append(heading, sample, frame);
+      preview.append(card);
     });
   } catch {
     preview.textContent = "Check the email fields above to see the preview.";

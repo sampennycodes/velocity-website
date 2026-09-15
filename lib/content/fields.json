@@ -768,11 +768,11 @@
     {
       "key": "shared.emails.senderEmail",
       "group": "shared.emails",
-      "label": "Sender email",
+      "label": "From email",
       "type": "email",
       "max": 254,
       "initial": "website@velocitymarketing.com.au",
-      "help": "Use an address at the verified velocitymarketing.com.au domain."
+      "help": "Use an address on a domain verified in your Resend account, such as velocitymarketing.com.au."
     },
     {
       "key": "shared.emails.recipientEmail",
@@ -786,11 +786,12 @@
     {
       "key": "shared.emails.replyToEmail",
       "group": "shared.emails",
-      "label": "Lead replies go to",
+      "label": "Reply-to email (optional)",
       "type": "email",
       "max": 254,
       "initial": "mike@velocitymarketing.com.au",
-      "help": "Where replies to the confirmation email are delivered."
+      "help": "For lead confirmations. Leave blank for replies to go to the From email. Enquiry notifications reply directly to the lead.",
+      "optional": true
     },
     {
       "key": "shared.emails.notificationSubject",

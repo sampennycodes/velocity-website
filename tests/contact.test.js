@@ -101,7 +101,7 @@ test('confirmation substitutes names literally and escapes HTML', () => {
 });
 
 test('invalid or unavailable published settings fail without sending', async () => {
-  for (const loadSettings of [() => { throw new Error('Missing snapshot'); }, () => ({ 'shared.emails.recipientEmail': 'invalid' }), () => ({ 'shared.emails.senderEmail': 'sender@unverified.example' })]) {
+  for (const loadSettings of [() => { throw new Error('Missing snapshot'); }, () => ({ 'shared.emails.recipientEmail': 'invalid' }), () => ({ 'shared.emails.senderEmail': 'not-an-email' })]) {
     const result = await submitContact(body, env, { sendEmail: neverSend, loadSettings, logger: { error() {} } });
     assert.equal(result.status, 503);
   }
@@ -141,4 +141,24 @@ test('packaged contact settings follow the build snapshot', async t => {
   if (!existsSync('.generated/contact-email-settings.json')) return t.skip('Run npm run build to verify the packaged snapshot.');
   const built = JSON.parse(readFileSync('.generated/editor-content.json', 'utf8'));
   assert.deepEqual(loadContactSettings(), Object.fromEntries(Object.entries(built.values).filter(([key]) => key.startsWith('shared.emails.'))));
+});
+
+test('optional confirmation reply-to is omitted by the SDK and never changes lead reply routing', async t => {
+  const requests = [];
+  t.mock.method(globalThis, 'fetch', async (_url, options) => {
+    requests.push(JSON.parse(options.body));
+    return Response.json({ id: 'mock-sdk-id' });
+  });
+  for (const replyTo of ['', '   ']) {
+    const result = await submitContact(body, env, {loadSettings: () => ({
+      'shared.emails.senderEmail': 'hello@another-verified-domain.example',
+      'shared.emails.replyToEmail': replyTo,
+    })});
+    assert.equal(result.status, 200);
+    assert.equal(requests.at(-2).reply_to, body.email);
+    assert.equal(Object.hasOwn(requests.at(-1), 'reply_to'), false);
+    assert.equal(requests.at(-1).from, 'Velocity Marketing <hello@another-verified-domain.example>');
+    assert.match(requests.at(-1).html, /Thanks for your email/);
+    assert.match(requests.at(-1).text, /Thanks for your email/);
+  }
 });

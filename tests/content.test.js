@@ -176,12 +176,11 @@ test('older drafts and history gain email defaults without changing existing con
   assert.deepEqual(draftResult({ snapshot: old, version: 7 }).content, upgraded);
 });
 
-test('email configuration rejects bad addresses, unverified sender domains and injected headers', () => {
+test('email configuration rejects bad addresses and injected headers', () => {
   for (const [key, value] of [
     ['recipientEmail', 'not-an-email'],
     ['replyToEmail', 'a@example.com,b@example.com'],
-    ['senderEmail', 'sender@unverified.example'],
-    ['senderEmail', 'sender@evilvelocitymarketing.com.au'],
+    ['senderEmail', 'not-an-email'],
     ['senderName', 'Velocity <sender@evil.example>'],
     ['senderName', 'Velocity\\Name'],
     ['notificationSubject', 'Hi\nBcc: attacker@example.com'],
@@ -192,4 +191,16 @@ test('email configuration rejects bad addresses, unverified sender domains and i
     content.values['shared.emails.' + key] = value;
     assert.equal(contentSchema.safeParse(content).success, false, key + ': ' + value);
   }
+});
+
+test('blank optional reply-to survives draft validation, while From email remains required', () => {
+  const content = structuredClone(initialContent);
+  content.values['shared.emails.replyToEmail'] = '   ';
+  content.values['shared.emails.senderEmail'] = 'team@another-verified-domain.example';
+  const parsed = contentSchema.parse(content);
+  assert.equal(parsed.values['shared.emails.replyToEmail'], '');
+  assert.equal(draftResult({snapshot: parsed}).content.values['shared.emails.replyToEmail'], '');
+  assert.equal(parsed.values['shared.emails.senderEmail'], 'team@another-verified-domain.example');
+  content.values['shared.emails.senderEmail'] = '';
+  assert.equal(contentSchema.safeParse(content).success, false);
 });
