@@ -5,6 +5,7 @@ import { contactEmails } from '../lib/contact-email.js';
 import { loadContactSettings } from '../lib/contact-settings.js';
 import { contactSettings } from '../lib/content/model.js';
 import { referralOptions } from '../lib/contact-referral.js';
+import { contactFormFields } from '../lib/contact-form.js';
 import handler from '../api/contact.js';
 
 const body = { name: 'Alex Smith', email: 'alex@example.com', phone: '', message: 'Hello Mike', website: '' };
@@ -32,8 +33,8 @@ test('sends the enquiry then a personalised confirmation with separate recipient
   assert.ok(!confirmation.text.includes('<img'), 'Do not reflect a submitted message into the receipt');
 });
 
-test('malformed, blank, oversized, bot and invalid-email submissions cannot send or load settings', async () => {
-  for (const invalid of [null, [], {}, { ...body, name: ' ' }, { ...body, email: 'bad-email' }, { ...body, email: 'x@example.com\nBcc:evil@example.com' }, { ...body, message: 42 }, { ...body, message: 'x'.repeat(10001) }, { ...body, website: 'spam' }, { ...body, name: 'Alex\nInjected' }, { ...body, name: 'Al\x00ex' }]) {
+test('malformed, empty, oversized, bot and invalid-email submissions cannot send or load settings', async () => {
+  for (const invalid of [null, [], {}, { ...body, email: 'bad-email' }, { ...body, email: 'x@example.com\nBcc:evil@example.com' }, { ...body, message: 42 }, { ...body, message: 'x'.repeat(10001) }, { ...body, website: 'spam' }, { ...body, name: 'Alex\nInjected' }, { ...body, name: 'Al\x00ex' }]) {
     assert.equal((await submitContact(invalid, env, { sendEmail: neverSend, loadSettings: neverSend })).status, 400);
   }
 });
@@ -205,4 +206,54 @@ test('optional confirmation reply-to is omitted by the SDK and never changes lea
     assert.match(requests.at(-1).html, /Thanks for your email/);
     assert.match(requests.at(-1).text, /Thanks for your email/);
   }
+});
+
+test('each main field can be optional or required independently of its displayed label', async () => {
+  for (const key of ['name', 'email', 'phone', 'message']) {
+    const withoutField = { ...body, [key]: '   ' };
+    const optional = { [`shared.form.${key}Required`]: false };
+    assert.equal((await submitContact(withoutField, env, dependencies(accepted, optional))).status, 200, `${key} may be left blank when optional`);
+    for (const showMarker of [true, false]) {
+      const required = { [`shared.form.${key}Required`]: true, [`shared.form.${key}ShowMarker`]: showMarker };
+      const result = await submitContact({ ...withoutField, settings: optional, [`${key}Required`]: false }, env, dependencies(neverSend, required));
+      assert.equal(result.status, 400, `${key} remains required with label ${showMarker}`);
+      assert.equal((await submitContact({ ...body, phone: '0400 000 000' }, env, dependencies(accepted, required))).status, 200);
+    }
+  }
+});
+
+test('optional email sends one enquiry without an empty Reply-To or autoresponder', async t => {
+  const requests = [];
+  t.mock.method(globalThis, 'fetch', async (_url, options) => {
+    requests.push(JSON.parse(options.body));
+    return Response.json({ id: 'mock-sdk-id' });
+  });
+  const result = await submitContact({ ...body, email: '', phone: '0400 000 000' }, env, { loadSettings: () => ({ 'shared.form.emailRequired': false }) });
+  assert.equal(result.status, 200);
+  assert.equal(requests.length, 1);
+  assert.deepEqual(requests[0].to, ['mike@velocitymarketing.com.au']);
+  assert.equal(Object.hasOwn(requests[0], 'reply_to'), false);
+  assert.match(requests[0].text, /Email: Not provided/);
+  assert.match(requests[0].text, /Phone: 0400 000 000/);
+});
+
+test('an optional missing name has readable template fallbacks, while invalid provided email is rejected', async () => {
+  const sent = [];
+  const result = await submitContact({ ...body, name: '' }, env, dependencies(async payload => { sent.push(payload); return accepted(); }, { 'shared.form.nameRequired': false }));
+  assert.equal(result.status, 200);
+  assert.equal(sent[0].subject, 'New enquiry from a website visitor');
+  assert.match(sent[0].text, /Name: Not provided/);
+  assert.match(sent[1].text, /^Hi there,/);
+  assert.equal((await submitContact({ ...body, email: 'invalid' }, env, dependencies(neverSend, { 'shared.form.emailRequired': false }))).status, 400);
+});
+
+test('Other details follow their own requirement and fully empty forms remain blocked', async () => {
+  const settings = { 'shared.form.referralOtherRequired': false, 'shared.form.referralOtherShowMarker': false };
+  const sent = [];
+  assert.equal((await submitContact({ ...body, referralSource: 'other' }, env, dependencies(async payload => { sent.push(payload); return accepted(); }, settings))).status, 200);
+  assert.match(sent[0].text, /How did you hear about us\? Other\n/);
+  assert.equal((await submitContact({ ...body, referralSource: 'other' }, env, dependencies(neverSend, { ...settings, 'shared.form.referralOtherRequired': true }))).status, 400);
+  const allOptional = Object.fromEntries(contactFormFields.map(field => [`shared.form.${field.key}Required`, false]));
+  assert.equal((await submitContact({}, env, dependencies(neverSend, allOptional))).status, 400);
+  assert.equal((await submitContact({ referralSource: 'other', referralOther: 'Hidden detail' }, env, dependencies(neverSend, { ...allOptional, 'shared.form.referralEnabled': false }))).status, 400);
 });

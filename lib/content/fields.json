@@ -82,7 +82,7 @@
       "id": "shared.form",
       "label": "Contact form",
       "page": "shared",
-      "description": "Control the referral question on every contact form. Visitors who choose Other are asked to specify."
+      "description": "Choose which fields require an answer and whether to show their * or (optional) label. Applies to every contact form."
     },
     {
       "id": "shared.emails",
@@ -836,20 +836,121 @@
       "help": "Use {name} or {firstName} to personalise the message. Blank lines separate paragraphs."
     },
     {
-      "key": "shared.form.referralEnabled",
       "group": "shared.form",
-      "label": "Show “How did you hear about us?”",
+      "section": "Name",
       "type": "boolean",
+      "key": "shared.form.nameRequired",
+      "label": "Required",
       "initial": true,
-      "help": "Show the question on the contact form. Turn off to hide it."
+      "help": ""
     },
     {
-      "key": "shared.form.referralRequired",
       "group": "shared.form",
-      "label": "Require an answer",
+      "section": "Name",
       "type": "boolean",
+      "key": "shared.form.nameShowMarker",
+      "label": "Show status label",
+      "initial": true,
+      "help": ""
+    },
+    {
+      "group": "shared.form",
+      "section": "Email",
+      "type": "boolean",
+      "key": "shared.form.emailRequired",
+      "label": "Required",
+      "initial": true,
+      "help": "Without an email address, the enquiry reaches your team but no autoresponder is sent."
+    },
+    {
+      "group": "shared.form",
+      "section": "Email",
+      "type": "boolean",
+      "key": "shared.form.emailShowMarker",
+      "label": "Show status label",
+      "initial": true,
+      "help": ""
+    },
+    {
+      "group": "shared.form",
+      "section": "Phone Number",
+      "type": "boolean",
+      "key": "shared.form.phoneRequired",
+      "label": "Required",
       "initial": false,
-      "help": "Off means the question is optional. Turn on to require an answer when the question is shown."
+      "help": ""
+    },
+    {
+      "group": "shared.form",
+      "section": "Phone Number",
+      "type": "boolean",
+      "key": "shared.form.phoneShowMarker",
+      "label": "Show status label",
+      "initial": true,
+      "help": ""
+    },
+    {
+      "group": "shared.form",
+      "section": "How did you hear about us?",
+      "type": "boolean",
+      "key": "shared.form.referralEnabled",
+      "label": "Show question",
+      "initial": true,
+      "help": "Turn off to hide this question and its Other details field."
+    },
+    {
+      "group": "shared.form",
+      "section": "How did you hear about us?",
+      "type": "boolean",
+      "key": "shared.form.referralRequired",
+      "label": "Required",
+      "initial": false,
+      "help": ""
+    },
+    {
+      "group": "shared.form",
+      "section": "How did you hear about us?",
+      "type": "boolean",
+      "key": "shared.form.referralShowMarker",
+      "label": "Show status label",
+      "initial": true,
+      "help": ""
+    },
+    {
+      "group": "shared.form",
+      "section": "Other — please specify",
+      "type": "boolean",
+      "key": "shared.form.referralOtherRequired",
+      "label": "Required",
+      "initial": true,
+      "help": "Applies only when the visitor selects Other."
+    },
+    {
+      "group": "shared.form",
+      "section": "Other — please specify",
+      "type": "boolean",
+      "key": "shared.form.referralOtherShowMarker",
+      "label": "Show status label",
+      "initial": true,
+      "help": ""
+    },
+    {
+      "group": "shared.form",
+      "section": "Message",
+      "type": "boolean",
+      "key": "shared.form.messageRequired",
+      "label": "Required",
+      "initial": true,
+      "help": ""
+    },
+    {
+      "group": "shared.form",
+      "section": "Message",
+      "type": "boolean",
+      "key": "shared.form.messageShowMarker",
+      "label": "Show status label",
+      "initial": true,
+      "help": ""
     }
   ]
 }

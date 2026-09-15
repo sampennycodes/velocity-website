@@ -241,7 +241,22 @@ function renderFields() {
     : "Changes appear in the preview immediately. Save your draft when you’re ready.";
   const form = $("fields-form");
   form.replaceChildren();
+  const fieldSections = new Map<string, HTMLFieldSetElement>();
   for (const f of fields.filter((f) => f.group === group && (!editingEmails || visibleEmailFields.has(f.key)))) {
+    let container: HTMLElement = form;
+    if ("section" in f && f.section) {
+      let section = fieldSections.get(f.section);
+      if (!section) {
+        section = document.createElement("fieldset");
+        section.className = "form-field-settings";
+        const legend = document.createElement("legend");
+        legend.textContent = f.section;
+        section.append(legend);
+        fieldSections.set(f.section, section);
+        form.append(section);
+      }
+      container = section;
+    }
     const wrap = document.createElement("div");
     wrap.className = "field";
     const label = document.createElement("label");
@@ -262,7 +277,8 @@ function renderFields() {
       input.id = id;
       input.type = "checkbox";
       input.setAttribute("role", "switch");
-      input.setAttribute("aria-describedby", help.id);
+      if (help.textContent) input.setAttribute("aria-describedby", help.id);
+      if ("section" in f && f.section) input.setAttribute("aria-label", `${f.section}: ${f.label}`);
       input.checked = content.values[f.key];
       input.addEventListener("change", () => {
         content.values[f.key] = input.checked;
@@ -536,7 +552,7 @@ function renderFields() {
     }
     error.textContent = fieldError(f.key);
     wrap.append(error);
-    form.append(wrap);
+    container.append(wrap);
   }
   renderEmailPreview();
 }

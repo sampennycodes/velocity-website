@@ -1,11 +1,12 @@
 import { contentSchema, format, referralSettings } from "../../lib/content/model.js";
-import { syncReferralQuestion } from "./contact-referral";
+import { syncContactForm } from "./contact-form";
+import { formFieldSettings } from "../../lib/contact-form.js";
 import { previewImageSource } from "../../lib/content/preview.js";
 import { imageSource, responsiveImage } from "../../lib/site.js";
 const parentOrigin = location.origin;
 function apply(content: any, previewImages: unknown) {
   const form = document.querySelector<HTMLFormElement>("#contact-form");
-  if (form) syncReferralQuestion(form, referralSettings(content.values));
+  if (form) syncContactForm(form, { fields: formFieldSettings(content.values), referral: referralSettings(content.values) });
   const page = location.pathname.split("/").filter(Boolean).at(-1);
   document.title = content.values[`${page}.seo.title`];
   for (const selector of [

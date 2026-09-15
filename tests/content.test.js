@@ -14,6 +14,7 @@ import {
 } from "../lib/editor/content-publish.js";
 import { handleEditor } from "../lib/editor/handler.js";
 import { DEFAULT_SOCIAL_IMAGE, imageSource } from '../lib/site.js';
+import { contactFormFields, formFieldSettings } from '../lib/contact-form.js';
 test('refreshed social cards support saved drafts and retain custom uploaded images', () => {
   const oldDraft = structuredClone(initialContent);
   for (const key of ['home.seo.image', 'ads.seo.image']) {
@@ -25,7 +26,7 @@ test('refreshed social cards support saved drafts and retain custom uploaded ima
   assert.match(imageSource('/img_8071.png'), /^\/optimized\/img_8071-800-.*\.webp$/);
 });
 test("content schema preserves fixed slots and rejects unsafe links and injected image sources", () => {
-  assert.equal(fields.length, 90);
+  assert.equal(fields.length, 101);
   assert.equal(contentSchema.parse(initialContent).schemaVersion, 1);
   // Old revisions omit rounding; new saves preserve only bounded percentages.
   assert.equal(contentSchema.parse(initialContent).values["shared.profile.image"].rounding, undefined);
@@ -223,4 +224,28 @@ test('old drafts default to an optional referral question and preserve explicit 
   }
   upgraded.values['shared.form.referralRequired'] = 'false';
   assert.equal(contentSchema.safeParse(upgraded).success, false);
+});
+
+test('older form settings retain field requirements and new marker controls persist in saved drafts', () => {
+  const old = structuredClone(initialContent);
+  for (const field of fields.filter(field => field.group === 'shared.form')) delete old.values[field.key];
+  const upgraded = draftResult({ snapshot: old, version: 8 }).content;
+  const policies = formFieldSettings(upgraded.values);
+  assert.deepEqual(Object.fromEntries(Object.entries(policies).map(([id, policy]) => [id, policy.required])), {
+    name: true, email: true, phone: false, referralSource: false, referralOther: true, message: true,
+  });
+  for (const definition of contactFormFields) {
+    assert.equal(policies[definition.id].showMarker, true);
+    assert.equal(Object.hasOwn(old.values, `shared.form.${definition.key}ShowMarker`), false);
+    upgraded.values[`shared.form.${definition.key}Required`] = !definition.required;
+    upgraded.values[`shared.form.${definition.key}ShowMarker`] = false;
+  }
+  const saved = draftResult({ snapshot: upgraded, version: 9 }).content;
+  const savedPolicies = formFieldSettings(saved.values);
+  for (const definition of contactFormFields) {
+    assert.equal(savedPolicies[definition.id].required, !definition.required);
+    assert.equal(savedPolicies[definition.id].showMarker, false);
+  }
+  saved.values['shared.form.nameShowMarker'] = 'false';
+  assert.equal(contentSchema.safeParse(saved).success, false);
 });
