@@ -29,6 +29,13 @@
       "when": 1789398029336,
       "tag": "0003_preview_access",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789456632809,
+      "tag": "0004_wooden_la_nuit",
+      "breakpoints": true
     }
   ]
 }

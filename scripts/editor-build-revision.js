@@ -22,7 +22,7 @@ await writeFile('.generated/editor-revision.json', JSON.stringify(proof));
 console.log(proof ? `Building pinned integration revision ${proof.revisionId}` : 'Building the existing static content.');
 
 // Resolve one immutable content revision once, then share its snapshot across all pages.
-// Ordinary code deploys retain the last successful staging content, never the draft.
+// Ordinary code deploys retain the last successful content for their environment, never the draft.
 const { contentSchema, initialContent, fields } = await import('../lib/content/model.js');
 let content = initialContent;
 let contentRevisionId = null;
@@ -49,24 +49,25 @@ if (staging && process.env.VERCEL_ENV === 'preview' && process.env.EDITOR_PUBLIS
   if (!response.ok) throw new Error('Could not verify this content deployment.');
   requestedRevision = deploymentContentRevision(await response.json(), process.env) || requestedRevision;
 }
-if (requestedRevision || (staging && process.env.EDITOR_ENABLED === 'true' && process.env.DATABASE_URL)) {
-  if (!staging || (requestedRevision && process.env.VERCEL_ENV !== 'preview')) throw new Error('Content publishing is staging-only.');
-  if (requestedRevision && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(requestedRevision)) throw new Error('Invalid content revision.');
-  const pool = createPool(process.env.DATABASE_URL);
+const production = process.env.VERCEL_ENV === 'production';
+const liveContent = production && process.env.EDITOR_CONTENT_ENABLED === 'true';
+if (production && requestedRevision && !liveContent) throw new Error('Live content publishing is not configured.');
+if (requestedRevision || liveContent || (staging && process.env.EDITOR_ENABLED === 'true' && process.env.DATABASE_URL)) {
+  if (!staging && !liveContent) throw new Error('Content publishing is not configured.');
+  if (requestedRevision && !['preview', 'production'].includes(process.env.VERCEL_ENV)) throw new Error('Pinned content requires a Vercel deployment.');
+  const connection = production ? process.env.EDITOR_CONTENT_DATABASE_URL : process.env.DATABASE_URL;
+  if (!connection) throw new Error('The content build database is not configured.');
+  const pool = createPool(connection);
   try {
-    let selectedId = requestedRevision;
-    if (!selectedId) {
-      const state = await pool.query("SELECT revision_id FROM velocity_editor.site_state WHERE environment = 'staging'");
-      selectedId = state.rows[0]?.revision_id;
-    }
-    if (selectedId) {
-      const { rows } = await pool.query('SELECT snapshot, source_sha, kind FROM velocity_editor.content_revisions WHERE id = $1', [selectedId]);
-      const revision = rows[0];
-      if (!revision || revision.kind !== 'publish' || (requestedRevision && revision.source_sha !== process.env.VERCEL_GIT_COMMIT_SHA)) throw new Error('Missing published revision or source commit mismatch.');
-      content = contentSchema.parse(revision.snapshot);
-      for (const field of fields.filter(f => f.type === 'image')) if (content.values[field.key].src.startsWith('/api/')) throw new Error('Unpublished media cannot appear in a public build.');
-      contentRevisionId = selectedId;
-      console.log(`Rendering saved content revision ${selectedId}`);
+    const { resolvePublishedContent } = await import('../lib/editor/build-content.js');
+    const selected = await resolvePublishedContent(pool, {
+      environment: production ? 'production' : 'staging', revisionId: requestedRevision,
+      jobId: process.env.VELOCITY_CONTENT_JOB, sourceSha: process.env.VERCEL_GIT_COMMIT_SHA,
+    });
+    if (selected) {
+      content = selected.content;
+      contentRevisionId = selected.revisionId;
+      console.log(`Rendering saved content revision ${contentRevisionId}`);
     }
   } finally { await pool.end(); }
 }

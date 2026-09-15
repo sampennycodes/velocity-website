@@ -1,3 +1,17 @@
+# Website editor — live publishing
+
+Mike (`editor`) and Sam (`owner`) can publish the saved draft directly to `https://velocitymarketing.com.au` through **Save & publish live**. `/admin` on the live domain redirects to the existing authenticated CMS host. The editor’s host remains isolated from production; its server setting `EDITOR_PUBLISH_TARGET=production` selects the live publishing destination. An older staging tab is rejected before saving or publishing until it refreshes.
+
+Content publishing retains immutable revisions, approved source commits, optimistic draft versions, role checks and one active job per destination. A READY build is confirmed only when the selected public domain serves its revision marker. Failed builds retain the saved draft and last successful live revision. The server monitor continues if the browser closes; retry and history restoration remain available.
+
+Production content builds use `EDITOR_CONTENT_ENABLED=true` and `EDITOR_CONTENT_DATABASE_URL`, a read-only database role with access only to publication records, saved revisions and site state. CMS deployments pass the revision and job identifiers as deployment-specific environment values and metadata. Builds verify the job’s production destination, revision and source, then reject private media. Regular production code deployments retain the last confirmed live revision. `content/production.json` is the validated fallback before the first CMS publication. Production contact delivery and tracking retain production settings; preview builds remain non-indexable with contact delivery disabled.
+
+Migration `0004_wooden_la_nuit.sql` admits both staging and production records without rewriting historical publications. The shared draft and history are retained. The existing project-scoped publishing token stays on the CMS host. Renew that token before its 14 December 2026 expiry and redeploy the editor. Advance the branch-scoped `EDITOR_APPROVED_SOURCE_SHA` after testing new source so later content publications include it.
+
+The following notes describe the earlier staging implementation and resource inventory. Their staging-only release restrictions are historical; the live workflow above supersedes them.
+
+---
+
 # Client editor — implementation and staging setup
 
 The full draft editor is implemented at `/admin`: Home and 17 towns under Location Pages, section selection in the preview, 537 fixed content fields, shared profile/reviews/navigation/contact details, image uploads and portrait cropping, saved drafts, version conflicts, history and restore-to-draft. The editor uses the existing Astro components for its preview. The public site remains static.

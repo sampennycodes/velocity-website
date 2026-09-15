@@ -16,13 +16,17 @@ let signedIn = false,
   publishing = false,
   publishReady = false;
 let canSave = false;
-let stagingNeedsUpdate = false, checkingPublish = false;
+let environment = 'staging';
+const destination = () => environment === 'production' ? 'live' : 'staging';
+const siteName = () => environment === 'production' ? 'Live site' : 'Staging';
+const publishLabel = () => environment === 'production' ? 'Save & publish live' : 'Save & update staging';
+let siteNeedsUpdate = false, checkingPublish = false;
 let publishTimer: ReturnType<typeof setTimeout> | undefined;
 let progressTimer: ReturnType<typeof setInterval> | undefined;
 let progressJob: any = null;
 let estimate = publicationEstimate();
 function renderProgress() {
-  const state = publicationProgress(progressJob, estimate);
+  const state = publicationProgress(progressJob, estimate, Date.now(), environment);
   const title = $("publication-title");
   if (title.textContent !== state.title) title.textContent = state.title;
   $("publication-detail").textContent = state.detail;
@@ -79,15 +83,15 @@ function updateState() {
     : busy
       ? "Saving…"
       : publishing
-        ? "Saved · updating staging…"
+        ? `Saved · updating ${destination()}…`
       : dirty()
         ? "Unsaved changes"
-        : stagingNeedsUpdate ? "Saved · staging needs updating" : publishReady ? "Saved · staging is up to date" : "All changes saved";
+        : siteNeedsUpdate ? `Saved · ${destination()} site needs updating` : publishReady ? `Saved · ${destination()} site is up to date` : "All changes saved";
   $<HTMLButtonElement>("save-button").disabled =
-    !signedIn || !canSave || busy || uploading || publishing || (!dirty() && !stagingNeedsUpdate);
+    !signedIn || !canSave || busy || uploading || publishing || (!dirty() && !siteNeedsUpdate);
   $<HTMLButtonElement>("publish-button").disabled =
     !signedIn || !canSave || busy || uploading || publishing || dirty() || !publishReady;
-  $("publish-button").hidden = !canSave || !publishReady || !stagingNeedsUpdate || publishing || Boolean(dirty());
+  $("publish-button").hidden = !canSave || !publishReady || !siteNeedsUpdate || publishing || Boolean(dirty());
 }
 function showLogin(message: string) {
   $<HTMLDialogElement>("history-dialog").close();
@@ -647,6 +651,9 @@ async function load() {
   const { session, draft, status } = await api("workspace");
   estimate = status.estimate || publicationEstimate(status.publications);
   canSave = session.canSave === true;
+  environment = status.environment || session.environment || 'staging';
+  $('publishing-destination').textContent = environment === 'production' ? 'Live' : 'Staging';
+  $('deployment-link').textContent = environment === 'production' ? 'Open live website ↗' : 'Open staging website ↗';
   signedIn = true;
   email = session.email;
   $("identity").textContent = session.email;
@@ -663,10 +670,10 @@ async function load() {
     navigation();
   }
   publishReady = status.publishingConfigured;
-  stagingNeedsUpdate = publishReady && !status.stagingCurrent;
-  $("save-button").textContent = publishReady ? "Save & update staging" : "Save draft";
-  $("publish-button").textContent = "Retry staging update";
-  if (canSave && publishReady) $("panel-note").textContent = "Changes appear here immediately. Save & update staging makes them visible on the staging website.";
+  siteNeedsUpdate = publishReady && !(status.publishedCurrent ?? status.stagingCurrent);
+  $("save-button").textContent = publishReady ? publishLabel() : "Save draft";
+  $("publish-button").textContent = `Retry ${destination()} update`;
+  if (canSave && publishReady) $("panel-note").textContent = `Changes appear here immediately. ${publishLabel()} makes them visible on the ${destination()} website.`;
   const active = status.publications.find((p: any) =>
     ["preparing", "building", "unknown"].includes(p.status),
   );
@@ -681,14 +688,14 @@ async function load() {
   $("publish-status").textContent = !canSave
     ? "Preview only · saving and publishing are disabled."
     : publishReady
-    ? `Staging updates usually take ${estimate.minSeconds}–${estimate.maxSeconds} seconds.`
-    : "Staging publishing is not connected yet. Draft editing is available.";
+    ? `${siteName()} updates usually take ${estimate.minSeconds}–${estimate.maxSeconds} seconds.`
+    : "Publishing is not connected yet. Draft editing is available.";
   notice(
     !canSave
       ? "Preview mode: try text, links and images. Changes stay in this tab and are discarded on refresh."
       : dirty()
       ? "You’re signed back in. Your unsaved edits are still here."
-      : publishReady ? "Choose a section to edit, then Save & update staging." : "Choose a section to edit. Your saved draft is private until you publish.",
+      : publishReady ? `Choose a section to edit, then ${publishLabel()}.` : "Choose a section to edit. Your saved draft is private until you publish.",
   );
   sizePreview();
   tellPreview();
@@ -807,7 +814,7 @@ window.addEventListener("message", (event) => {
 $("save-button").addEventListener("click", async () => {
   if (!canSave || busy || uploading || publishing) return;
   if (!dirty()) {
-    if (publishReady && stagingNeedsUpdate) void action($("save-button"), beginPublish);
+    if (publishReady && siteNeedsUpdate) void action($("save-button"), beginPublish);
     return;
   }
   const parsed = contentSchema.safeParse(content);
@@ -837,20 +844,20 @@ $("save-button").addEventListener("click", async () => {
   updateState();
   const requested = JSON.stringify(content);
   try {
-    const result = await api(publishReady ? "save-publish" : "save", { content: parsed.data, version, ...(publishReady ? { key: publishKey } : {}) });
+    const result = await api(publishReady ? "save-publish" : "save", { content: parsed.data, version, ...(publishReady ? { key: publishKey, environment } : {}) });
     acceptDraft(publishReady ? result.draft : result, JSON.stringify(content) === requested);
     busy = false;
     if (publishReady) {
-      stagingNeedsUpdate = true;
+      siteNeedsUpdate = true;
       if (result.publication) {
         jobId = result.publication.id;
         publishing = !["ready", "failed"].includes(result.publication.status);
         showProgress(result.publication);
-        notice(dirty() ? "Saved changes are updating staging. Your newer edits are still unsaved." : "Saved. Updating the staging website…");
+        notice(dirty() ? `Saved changes are updating the ${destination()} site. Your newer edits are still unsaved.` : `Saved. Updating the ${destination()} website…`);
         void checkPublish();
       } else {
         hideProgress();
-        notice(result.publishError || "Saved, but staging could not be updated. Retry the staging update.");
+        notice(result.publishError || `Saved, but the ${destination()} site could not be updated. Retry the update.`);
         publishKey = crypto.randomUUID();
       }
       return;
@@ -921,10 +928,10 @@ async function loadHistory(append = false) {
       void action(button, async () => {
         const result = await api("restore", { revisionId: row.id, version });
         acceptDraft(result);
-        stagingNeedsUpdate = publishReady;
+        siteNeedsUpdate = publishReady;
         $<HTMLDialogElement>("history-dialog").close();
         notice(
-          "Version restored into your draft. Review it, then Save & update staging.",
+          `Version restored into your draft. Review it, then ${publishLabel()}.`,
         );
       });
     });
@@ -961,20 +968,20 @@ async function checkPublish() {
     if (job.status === "ready") {
       // Another editor may have saved a newer draft while this build ran.
       const latest = await api("status");
-      stagingNeedsUpdate = !latest.stagingCurrent;
-      notice(dirty() ? "Staging updated. Your newer edits are still unsaved." : stagingNeedsUpdate ? "Staging updated. A newer saved draft is waiting to be applied." : "Saved successfully. The staging website is up to date.");
+      siteNeedsUpdate = !(latest.publishedCurrent ?? latest.stagingCurrent);
+      notice(dirty() ? `${siteName()} updated. Your newer edits are still unsaved.` : siteNeedsUpdate ? `${siteName()} updated. A newer saved draft is waiting to be applied.` : `Saved successfully. The ${destination()} website is up to date.`);
     }
     if (job.status === "failed") {
-      stagingNeedsUpdate = true;
-      notice(job.error || "Your changes are saved, but staging could not be updated. Retry the update.");
+      siteNeedsUpdate = true;
+      notice(job.error || `Your changes are saved, but the ${destination()} site could not be updated. Retry the update.`);
     }
     $("publish-status").textContent =
       job.error ||
       (job.status === "ready"
-        ? "Staging update confirmed."
+        ? `${siteName()} update confirmed.`
         : publishing
-          ? "Updating staging…"
-          : "Staging update failed. Your saved changes are safe.");
+          ? `Updating the ${destination()} site…`
+          : `${siteName()} update failed. Your saved changes are safe.`);
     $("check-publish").hidden = !publishing;
     const link = $<HTMLAnchorElement>("deployment-link");
     link.hidden = job.status !== "ready" || !job.url;
@@ -996,7 +1003,7 @@ async function beginPublish() {
   showProgress();
   updateState();
   try {
-    const job = await api("publish", { key: publishKey, version });
+    const job = await api("publish", { key: publishKey, version, environment });
     jobId = job.id;
     showProgress(job);
     await checkPublish();

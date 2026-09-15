@@ -47,8 +47,8 @@ export const contentPublications = editor.table('content_publications', {
   environment: text('environment').notNull().default('staging'), status: text('status').notNull().default('preparing'),
   deploymentId: text('deployment_id'), deploymentUrl: text('deployment_url'), error: text('error'),
   createdAt: time('created_at'), updatedAt: time('updated_at'),
-}, table => [check('content_staging_only', sql`${table.environment} = 'staging'`), check('content_publish_status', sql`${table.status} in ('preparing', 'building', 'ready', 'failed', 'unknown')`), uniqueIndex('one_active_content_publication').on(table.environment).where(sql`${table.status} in ('preparing', 'building', 'unknown')`)]);
+}, table => [check('content_environment', sql`${table.environment} in ('staging', 'production')`), check('content_publish_status', sql`${table.status} in ('preparing', 'building', 'ready', 'failed', 'unknown')`), uniqueIndex('one_active_content_publication').on(table.environment).where(sql`${table.status} in ('preparing', 'building', 'unknown')`)]);
 export const siteState = editor.table('site_state', {
   environment: text('environment').primaryKey(), revisionId: uuid('revision_id').notNull().references(() => contentRevisions.id),
   publicationId: uuid('publication_id').notNull().references(() => contentPublications.id), updatedAt: time('updated_at'),
-}, table => [check('state_staging_only', sql`${table.environment} = 'staging'`)]);
+}, table => [check('state_environment', sql`${table.environment} in ('staging', 'production')`)]);
