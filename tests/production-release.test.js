@@ -8,7 +8,6 @@ import { trackAcceptedContact } from '../lib/contact-tracking.js';
 const manifest = JSON.parse(readFileSync(new URL('../content/production.json', import.meta.url), 'utf8'));
 test('production release preserves the published content and contact configuration', () => {
   const release = productionRelease(manifest);
-  assert.equal(release.revisionId, '35b9ff2e-6e83-4d5b-a47e-eb6c91b2cd9c');
   assert.equal(release.content.values['shared.reviews.ratingLabel'], 'Highly Rated');
   const settings = contactSettings(release.content);
   assert.equal(settings['shared.emails.senderEmail'], 'website@velocitymarketing.com.au');

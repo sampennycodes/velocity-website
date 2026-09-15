@@ -6,7 +6,7 @@ import manropeFont from "../assets/fonts/manrope-latin-variable.woff2?url";
 import spaceGroteskFont from "../assets/fonts/space-grotesk-latin-variable.woff2?url";
 
 import { buildContent, buildRevision } from "../../lib/content/build.js";
-import { STAGING_ORIGIN, DEFAULT_SOCIAL_IMAGE, imageSource } from "../../lib/site.js";
+import { STAGING_ORIGIN, DEFAULT_SOCIAL_IMAGE, DEFAULT_SOCIAL_IMAGE_WIDTH, DEFAULT_SOCIAL_IMAGE_HEIGHT, imageSource } from "../../lib/site.js";
 export interface Props {
   content?: any;
   editing?: boolean;
@@ -75,8 +75,8 @@ const sharingUrl = new URL(Astro.url.pathname, publicOrigin).href;
     <meta property="og:type" content="website" />
     <meta property="og:url" content={sharingUrl} />
     <meta property="og:image" content={socialImageUrl} />
-    <meta property="og:image:width" content={socialImageWidth} />
-    <meta property="og:image:height" content={socialImageHeight} />
+    <meta property="og:image:width" content={imageSource(socialImage) === DEFAULT_SOCIAL_IMAGE ? DEFAULT_SOCIAL_IMAGE_WIDTH : socialImageWidth} />
+    <meta property="og:image:height" content={imageSource(socialImage) === DEFAULT_SOCIAL_IMAGE ? DEFAULT_SOCIAL_IMAGE_HEIGHT : socialImageHeight} />
     <meta property="og:site_name" content="Velocity Marketing" />
     
     <!-- Twitter -->
