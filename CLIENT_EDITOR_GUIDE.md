@@ -1,6 +1,6 @@
 # Velocity website editor
 
-Open the [staging editor](https://velocity-website-git-codex-visual-refresh-sam-pennys-projects.vercel.app/admin) and sign in with your email code. Mike can sign in with `mike@velocitymarketing.com.au`; Sam uses `sam@sampenny.io`. Both can edit, upload images, save, restore history and update the staging website. Login codes are sent only when requested.
+Open the [staging editor](https://velocitymarketing-v2.vercel.app/admin) and sign in with your email code. Mike can sign in with `mike@velocitymarketing.com.au`; Sam uses `sam@sampenny.io`. Both can edit, upload images, save, restore history and update the staging website. Login codes are sent only when requested.
 
 1. Choose **Home** or **Google Ads in Traralgon**.
 2. Choose a section from the list, or select it in the page preview. On a phone, use the section selector and **Back to preview**.

@@ -1,4 +1,5 @@
 import { fields, groups, contentSchema } from "../../lib/content/model.js";
+import { imageSource } from "../../lib/site.js";
 const $ = <T extends HTMLElement>(id: string) =>
   document.getElementById(id) as T;
 let content: any = null,
@@ -206,7 +207,7 @@ function renderFields() {
     if (f.type === "image") {
       const img = document.createElement("img");
       img.className = "image-thumb";
-      img.src = previewImages.get(f.key) || content.values[f.key].src;
+      img.src = previewImages.get(f.key) || imageSource(content.values[f.key].src);
       img.alt = content.values[f.key].description;
       wrap.append(img);
       const file = document.createElement("input");

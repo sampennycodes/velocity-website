@@ -13,6 +13,17 @@ import {
   checkContentDeployment,
 } from "../lib/editor/content-publish.js";
 import { handleEditor } from "../lib/editor/handler.js";
+import { DEFAULT_SOCIAL_IMAGE, imageSource } from '../lib/site.js';
+test('refreshed social cards support saved drafts and retain custom uploaded images', () => {
+  const oldDraft = structuredClone(initialContent);
+  for (const key of ['home.seo.image', 'ads.seo.image']) {
+    oldDraft.values[key].src = '/ogimage.png';
+    assert.equal(imageSource(contentSchema.parse(oldDraft).values[key].src), DEFAULT_SOCIAL_IMAGE);
+  }
+  const custom = 'https://example.public.blob.vercel-storage.com/staging-published/card.webp';
+  assert.equal(imageSource(custom), custom);
+  assert.equal(imageSource('/img_8071.png'), '/img_8071.png');
+});
 test("content schema preserves fixed slots and rejects unsafe links and injected image sources", () => {
   assert.equal(fields.length, 80);
   assert.equal(contentSchema.parse(initialContent).schemaVersion, 1);

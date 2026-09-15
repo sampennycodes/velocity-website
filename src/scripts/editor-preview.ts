@@ -1,5 +1,6 @@
 import { contentSchema, format } from "../../lib/content/model.js";
 import { previewImageSource } from "../../lib/content/preview.js";
+import { imageSource } from "../../lib/site.js";
 const parentOrigin = location.origin;
 function apply(content: any, previewImages: unknown) {
   const page = location.pathname.split("/").filter(Boolean).at(-1);
@@ -18,7 +19,7 @@ function apply(content: any, previewImages: unknown) {
   ])
     document
       .querySelector(selector)
-      ?.setAttribute("content", content.values[`${page}.seo.image`].src);
+      ?.setAttribute("content", new URL(imageSource(content.values[`${page}.seo.image`].src), parentOrigin).href);
   for (const [selector, key, attribute, formatter] of [
     ["[data-content-text]", "contentText", "", "textFormat"],
     ["[data-content-href]", "contentHref", "href", "hrefFormat"],

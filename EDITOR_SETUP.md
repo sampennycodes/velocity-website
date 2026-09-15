@@ -14,6 +14,8 @@ The setup-only screen has been replaced by the complete editor.
 - Each build resolves one immutable published snapshot into `.generated/editor-content.json`. Explicit publication builds require the saved source SHA to match Vercel’s commit. Ordinary staging code deployments retain the last confirmed published content; they never read the draft.
 - Existing visible text and links on all five public routes were compared against their pre-editor baseline. Initial content is unchanged.
 
+The V2 default social card is `public/ogimage-v2.png` (1200 × 630), created with the built-in image generator using the original logo and `img_8071.png` portrait. The design brief was: black background, white geometric headline, lilac “Real Growth”, a rounded portrait panel, and restrained paid-media service labels. Existing saved references to `/ogimage.png` display the refreshed asset without rewriting drafts or custom uploads. Open Graph and Twitter metadata use absolute image URLs on the staging hostname for previews, and the production hostname for future production builds.
+
 ## Data and access
 
 Neon stores editor access, a versioned site draft, immutable saved/restored/publishing revisions, media metadata, publication jobs and the last confirmed published revision. Drizzle migration `0002_content_editor.sql` adds the full editor tables alongside the original integration-proof tables.
@@ -30,6 +32,8 @@ Draft saves use a row lock and optimistic version comparison. Restore creates a 
 | Team | `sam-pennys-projects` / `team_zjInBCSNrQqJZMwfPEZkynST` |
 | Project | `velocity-website` / `prj_GystREmzRaAaEennoJHO20yTudVp` |
 | Branch | `codex/visual-refresh` |
+| Staging site | https://velocitymarketing-v2.vercel.app/ |
+| Editor | https://velocitymarketing-v2.vercel.app/admin |
 | Neon project | `velocity-website-editor-staging` / `wandering-leaf-36893216` |
 | Neon staging branch | `br-wild-violet-a7x4k47v` |
 | Database | `velocity_editor`, Sydney |
@@ -52,11 +56,11 @@ npm run dev
 
 Astro 7 runs its dev server in the background. Use `npm run astro -- dev stop` to stop it. Generated snapshots, environment files and `.vercel` state are excluded from git and deployment uploads.
 
-`DATABASE_URL` is pooled; `DATABASE_URL_UNPOOLED` is used by migrations. Both use Neon’s WebSocket transport. `EDITOR_ORIGINS` contains exact origins, without wildcards or trailing slashes. Neon Auth has matching trusted origins. Production domains and production execution are rejected by the editor configuration.
+`DATABASE_URL` is pooled; `DATABASE_URL_UNPOOLED` is used by migrations. Both use Neon’s WebSocket transport. `EDITOR_ORIGINS` contains exact origins, without wildcards or trailing slashes. Neon Auth has matching trusted origins. The short `velocitymarketing-v2.vercel.app` domain tracks `codex/visual-refresh`; the original long branch URL remains usable. Sign in again when moving to the new hostname because session cookies belong to their original host. Production domains and production execution are rejected by the editor configuration.
 
 ## Staging publishing configuration
 
-`EDITOR_VERCEL_TOKEN` is a Vercel Secret restricted to Preview / `codex/visual-refresh`. The approved token is named **Velocity Editor Staging**, scoped to this project, and expires **14 December 2026**. Renew it before then and redeploy staging. The fixed team/project IDs and `EDITOR_PUBLISH_ENABLED=true` use the same branch restriction. `EDITOR_APPROVED_SOURCE_SHA` pins the tested implementation at `8b526b9d88522ec0b4db069d792d3ac31a7c8bb3`; advance it only after testing code changes that content builds should use. The two Blob credentials are separate: `EDITOR_BLOB_PRIVATE_TOKEN` and `EDITOR_BLOB_PUBLIC_TOKEN`.
+`EDITOR_VERCEL_TOKEN` is a Vercel Secret restricted to Preview / `codex/visual-refresh`. The approved token is named **Velocity Editor Staging**, scoped to this project, and expires **14 December 2026**. Renew it before then and redeploy staging. The fixed team/project IDs and `EDITOR_PUBLISH_ENABLED=true` use the same branch restriction. `EDITOR_APPROVED_SOURCE_SHA` pins the tested implementation; advance it only after testing code changes that content builds should use. The two Blob credentials are separate: `EDITOR_BLOB_PRIVATE_TOKEN` and `EDITOR_BLOB_PUBLIC_TOKEN`.
 
 Publication validates the current saved version, locks out concurrent publications, prepares public copies of referenced images, creates an immutable publishing snapshot, then asks Vercel to build that exact revision and source. The prebuild resolves the revision from that deployment’s immutable metadata; publishing never changes the shared project build command. The API never accepts a production target. READY is recorded only after Vercel’s project, team, source SHA, revision and job metadata match and the stable staging link serves that revision. Ambiguous requests retain the publication lock and reconcile by metadata instead of blindly retrying. Failed builds leave the draft and last successful content record intact.
 
@@ -64,7 +68,7 @@ Saving with publishing enabled performs one Save & update staging action. The UI
 
 ## Verification
 
-- 29 automated tests pass, covering contact behavior, auth/session handling, email gating, image validation, field/schema/link restrictions, media metadata, conflict checks, anonymous draft/history/save/restore denial, and pinned staging deployment matching.
+- 30 automated tests pass, covering contact behavior, auth/session handling, email gating, image validation, field/schema/link restrictions, media metadata, conflict checks, anonymous draft/history/save/restore denial, and pinned staging deployment matching.
 - Live database transaction checks passed for draft saving, stale-version conflicts, restoration, immutable history, one active publisher and production-target rejection. All test draft/history/publication writes were rolled back.
 - Live storage checks passed for private upload and read, anonymous denial, public copying and byte-for-byte equality. The retained test asset is a public Velocity logo, not client draft content.
 - Public-route baseline comparison passed. Production dependency audit was clear after upgrading Astro to 7.3.2; `compressHTML: true` and relocation of the duplicate legacy simulator preserve previous rendering.
