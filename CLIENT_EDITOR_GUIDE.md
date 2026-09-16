@@ -34,7 +34,7 @@ Each email subject and message field has variable buttons: **First name** insert
 
 The location pages lead with Google Ads and also cover Meta and LinkedIn. Their standard headline is **Paid Ads Specialist {Location} – Google, Meta, & LinkedIn**. Public addresses use `/paid-ads-{town}`, for example `/paid-ads-neerim-south`. Both older Traralgon addresses forward to `/paid-ads-traralgon`.
 
-Choose **Home → Areas we service** to edit the homepage heading and introduction. The introduction explains the Australia and US reach and Mike’s connection to Gippsland from his Traralgon base. Town names link directly to their pages beneath five region headings; regions do not have separate landing pages. Moe, Morwell and Traralgon appear in both Central Gippsland and Latrobe Valley and always link to the same town page.
+Choose **Home → Areas we service** to edit the homepage heading and introduction. The introduction explains the Australia and US reach and Mike’s connection to Gippsland from his Traralgon base. On the public homepage, the small heading expands the town list; the editor keeps it expanded for editing. Town names link directly to their pages beneath five region headings; regions do not have separate landing pages. Moe, Morwell and Traralgon appear in both Central Gippsland and Latrobe Valley and always link to the same town page.
 
 Choose a town’s **Nearby areas** section to edit its heading. The links automatically show the other listed towns in that town’s region, without duplicates or a link back to itself. Contact Sam to change the town catalogue or regional membership.
 

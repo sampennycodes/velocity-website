@@ -67,6 +67,10 @@ const style = document.createElement("style");
 style.textContent =
   "[data-editor-group]{position:relative;cursor:pointer;outline-offset:-3px} [data-editor-group]:hover,[data-editor-group]:focus-visible,[data-editor-group][data-selected]{outline:2px solid #c79bff!important} .reveal{opacity:1!important;transform:none!important} [data-editor-group]:focus-visible{outline-width:4px!important}";
 document.head.append(style);
+// Keep the quieter public location list visible while editing its section.
+document.querySelectorAll<HTMLDetailsElement>(".areas-disclosure").forEach((details) => {
+  details.open = true;
+});
 document
   .querySelectorAll<HTMLElement>("[data-editor-group]")
   .forEach((node) => {
