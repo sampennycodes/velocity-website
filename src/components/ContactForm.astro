@@ -9,6 +9,7 @@ const isPreview = Astro.props.preview || import.meta.env.DEV || import.meta.env.
 const values = (Astro.props.content ?? buildContent).values;
 const referral = referralSettings(values);
 const fieldSettings = formFieldSettings(values);
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim();
 ---
 <form action="/api/contact" method="post" id="contact-form" class="form form-hero" novalidate data-preview={String(isPreview)} data-editor-group="shared.form" data-form-settings={JSON.stringify({ fields: fieldSettings, referral })}>
   <div class="honeypot-field" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off" /></div>
@@ -31,15 +32,21 @@ const fieldSettings = formFieldSettings(values);
     <span id="error-referralOther" class="form__error" hidden>Please specify how you heard about us.</span>
   </div>
   <div class="form__row"><label class="label" for="message">Message <span data-field-marker="message" class={fieldSettings.message.required ? 'required' : 'optional'} hidden={!fieldSettings.message.showMarker}>{fieldSettings.message.required ? '*' : '(optional)'}</span></label><textarea id="message" name="message" class="textarea" rows="5" required={fieldSettings.message.required} maxlength="10000" aria-describedby="error-message"></textarea><span id="error-message" class="form__error" hidden>Please tell me a little about what you need.</span></div>
+  {!isPreview && <div class="form__verification">
+    <div data-turnstile data-sitekey={turnstileSiteKey} aria-describedby="verification-status"></div>
+    <span id="verification-status" role="status" aria-live="polite" class="form__status"></span>
+  </div>}
   <div class="form__actions"><button class="btn btn--primary" type="submit">Send Message <span aria-hidden="true">↗</span></button><span id="contact-status" role="status" aria-live="polite" class="form__status"></span></div>
 </form>
 <script>
   import { syncContactForm } from '../scripts/contact-form';
+  import { setupContactTurnstile } from '../scripts/contact-turnstile';
   import { contactFormFields } from '../../lib/contact-form.js';
   import { trackAcceptedContact } from '../../lib/contact-tracking.js';
   const form = document.querySelector<HTMLFormElement>('#contact-form');
   const status = document.querySelector<HTMLElement>('#contact-status');
   const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const verification = form ? setupContactTurnstile(form) : null;
   type FormField = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
   const fields = contactFormFields.map(({ id }) => document.getElementById(id) as FormField);
   function validate(field: FormField) {
@@ -63,6 +70,9 @@ const fieldSettings = formFieldSettings(values);
     const data = Object.fromEntries(new FormData(form));
     if (String(data.website).trim()) { status.textContent = 'Submission blocked.'; return; }
     if (form.dataset.preview === 'true') { status.textContent = 'Preview only — your form is complete, but no email has been sent.'; return; }
+    const token = verification?.getToken();
+    if (!token) { status.textContent = 'Please complete the verification above before sending.'; return; }
+    data['cf-turnstile-response'] = token;
     button.disabled = true;
     form.setAttribute('aria-busy', 'true');
     status.textContent = 'Sending your message…';
@@ -76,7 +86,7 @@ const fieldSettings = formFieldSettings(values);
       }
       else { status.textContent = result.message || 'Your message could not be sent. Please try again or email Mike directly.'; }
     } catch { status.textContent = 'Your message could not be sent. Please try again or email Mike directly.'; }
-    finally { button.disabled = false; form.removeAttribute('aria-busy'); }
+    finally { button.disabled = false; form.removeAttribute('aria-busy'); verification?.reset(); }
   });
 </script>
 <style>

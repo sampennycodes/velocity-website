@@ -31,6 +31,11 @@ if (process.env.VERCEL_ENV === 'production') {
   if (process.env.PUBLIC_SITE_PREVIEW === 'true' || process.env.CONTACT_FORM_DISABLED === 'true') {
     throw new Error('Production release requires preview mode and contact-form disabling to be off.');
   }
+  for (const key of ['PUBLIC_TURNSTILE_SITE_KEY', 'TURNSTILE_SECRET_KEY']) {
+    if (!process.env[key]?.trim() || /^[123]x0{10}/.test(process.env[key].trim())) {
+      throw new Error(`Production contact protection requires a real ${key}.`);
+    }
+  }
   const { productionRelease } = await import('../lib/content/production.js');
   const release = productionRelease(JSON.parse(await readFile('content/production.json', 'utf8')));
   content = release.content;

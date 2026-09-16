@@ -8,11 +8,12 @@ import { referralOptions } from '../lib/contact-referral.js';
 import { contactFormFields } from '../lib/contact-form.js';
 import handler from '../api/contact.js';
 
-const body = { name: 'Alex Smith', email: 'alex@example.com', phone: '', message: 'Hello Mike', website: '' };
-const env = { RESEND_API_KEY_NEW: 'test-new-key-never-used' };
+const body = { name: 'Alex Smith', email: 'alex@example.com', phone: '', message: 'Hello Mike', website: '', 'cf-turnstile-response': 'mock-token' };
+const env = { RESEND_API_KEY_NEW: 'test-new-key-never-used', TURNSTILE_SECRET_KEY: 'test-secret-never-used' };
+const verified = async () => Response.json({ success: true, action: 'contact', hostname: 'velocitymarketing.com.au' });
 const neverSend = () => { throw new Error('Delivery must not be attempted'); };
 const accepted = async () => ({ data: { id: 'mock-id' }, error: null });
-const dependencies = (sendEmail = accepted, settings = {}) => ({ sendEmail, loadSettings: () => settings });
+const dependencies = (sendEmail = accepted, settings = {}) => ({ sendEmail, loadSettings: () => settings, fetchImpl: verified });
 
 test('sends the enquiry then a personalised confirmation with separate recipients and reply addresses', async () => {
   const payloads = [];
@@ -122,7 +123,7 @@ test('real SDK selects the new key first with legacy key fallback (network mocke
     [{ RESEND_API_KEY: 'old-key' }, 'old-key'],
     [{ RESEND_API_KEY_NEW: ' ', RESEND_API_KEY: 'old-key' }, 'old-key'],
   ]) {
-    assert.equal((await submitContact(body, config, { loadSettings: () => ({}) })).status, 200);
+    assert.equal((await submitContact(body, { ...config, TURNSTILE_SECRET_KEY: env.TURNSTILE_SECRET_KEY }, { loadSettings: () => ({}), fetchImpl: verified })).status, 200);
     assert.equal(requests.at(-1).key, `Bearer ${key}`);
     assert.equal(requests.at(-2).key, `Bearer ${key}`);
     assert.equal(requests.at(-1).payload.reply_to, 'mike@velocitymarketing.com.au');
@@ -195,7 +196,7 @@ test('optional confirmation reply-to is omitted by the SDK and never changes lea
     return Response.json({ id: 'mock-sdk-id' });
   });
   for (const replyTo of ['', '   ']) {
-    const result = await submitContact(body, env, {loadSettings: () => ({
+    const result = await submitContact(body, env, {fetchImpl: verified, loadSettings: () => ({
       'shared.emails.senderEmail': 'hello@another-verified-domain.example',
       'shared.emails.replyToEmail': replyTo,
     })});
@@ -228,7 +229,7 @@ test('optional email sends one enquiry without an empty Reply-To or autoresponde
     requests.push(JSON.parse(options.body));
     return Response.json({ id: 'mock-sdk-id' });
   });
-  const result = await submitContact({ ...body, email: '', phone: '0400 000 000' }, env, { loadSettings: () => ({ 'shared.form.emailRequired': false }) });
+  const result = await submitContact({ ...body, email: '', phone: '0400 000 000' }, env, { fetchImpl: verified, loadSettings: () => ({ 'shared.form.emailRequired': false }) });
   assert.equal(result.status, 200);
   assert.equal(requests.length, 1);
   assert.deepEqual(requests[0].to, ['mike@velocitymarketing.com.au']);
