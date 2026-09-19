@@ -45,7 +45,7 @@ The editor must work without hover. On a narrow screen, show the editing fields 
 | Area | Editable fields | Design constraints |
 | --- | --- | --- |
 | Hero | Heading, highlighted phrase, supporting text, button labels and destinations | Preserve the heading treatment, button styles and layout |
-| Services | Existing service titles, descriptions and links | Keep the three existing service slots and platform logos |
+| Services | Existing service titles, descriptions and links | Keep the four service slots and platform marks, including editable ChatGPT Ads copy |
 | About | Heading, introduction and existing bullet points | Preserve spacing and typography |
 | Mike’s profile | Portrait, image description, crop position, name, role and LinkedIn URL | One shared profile for desktop and mobile placements |
 | Reviews | Existing quote, name and business fields | Keep the current card layout and review slots |

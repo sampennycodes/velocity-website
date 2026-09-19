@@ -180,6 +180,18 @@ test('older drafts and history gain email defaults without changing existing con
   assert.deepEqual(draftResult({ snapshot: old, version: 7 }).content, upgraded);
 });
 
+test('older drafts gain editable ChatGPT Ads copy without changing their existing services', () => {
+  const old = structuredClone(initialContent);
+  delete old.values['home.services.3.title'];
+  delete old.values['home.services.3.description'];
+  old.values['home.services.1.description'] = 'Saved Meta Ads copy';
+  const upgraded = contentSchema.parse(old);
+  assert.equal(upgraded.values['home.services.3.title'], 'ChatGPT Ads');
+  assert.match(upgraded.values['home.services.3.description'], /researching and comparing options in ChatGPT/);
+  assert.equal(upgraded.values['home.services.1.description'], 'Saved Meta Ads copy');
+  assert.equal(old.values['home.services.3.title'], undefined);
+});
+
 test('email configuration rejects bad addresses and injected headers', () => {
   for (const [key, value] of [
     ['recipientEmail', 'not-an-email'],

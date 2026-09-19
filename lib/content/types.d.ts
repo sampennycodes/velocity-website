@@ -15,6 +15,8 @@ type LegacyTextFieldKey =
   "home.services.1.description" |
   "home.services.2.title" |
   "home.services.2.description" |
+  "home.services.3.title" |
+  "home.services.3.description" |
   "home.about.heading" |
   "home.about.intro" |
   "home.about.bullet0" |
