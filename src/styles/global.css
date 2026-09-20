@@ -608,13 +608,16 @@ a.hover-lift:hover {
   background:#ffffff;
 }
 .service-logo--chatgpt {
-  display:grid;
-  place-items:center;
-  border:1px solid #5b5b5b;
-  border-radius:9px;
-  color:var(--accent);
-  font:500 1.15rem/1 var(--font-heading);
-  background:var(--surface);
+  position:relative;
+}
+.service-logo--chatgpt img {
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:60px;
+  height:60px;
+  max-width:none;
+  transform:translate(-50%,-50%);
 }
 .service-tags {
   color:var(--muted);
