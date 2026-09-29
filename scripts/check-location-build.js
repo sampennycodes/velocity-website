@@ -13,8 +13,8 @@ const areaLinks = source => {
 };
 const home = html('/');
 const homepageLinks = areaLinks(home);
-assert.equal(homepageLinks.length, 20);
-assert.equal(new Set(homepageLinks).size, 17);
+assert.equal(homepageLinks.length, regions.reduce((count, region) => count + region.slugs.length, 0));
+assert.equal(new Set(homepageLinks).size, locations.length);
 assert.ok(home.indexOf('id="about"') < home.indexOf('id="areas-we-service"'));
 assert.ok(home.indexOf('id="areas-we-service"') < home.indexOf('id="contact"'));
 for (const region of regions) assert.ok(home.includes(region.name));
@@ -32,14 +32,15 @@ for (const location of locations) {
   assert.ok(source.includes('id="contact-form"') && source.includes('id="services"'));
   assert.ok(!source.includes('velocity-preview-ready'), 'Editor messaging is absent from public pages');
   assert.deepEqual(areaLinks(source), nearbyLocations(location.slug).map(town => town.path));
+  assert.ok(source.includes(escape(content.values[`${location.page}.areas.heading`])), `${location.name}: related locations heading rendered`);
   assert.ok(sitemap.includes(`https://velocitymarketing.com.au${location.path}`));
 }
-assert.equal(titles.size, 17);
-assert.equal((sitemap.match(/<loc>https:\/\/velocitymarketing.com.au\/paid-ads-/g) || []).length, 17);
+assert.equal(titles.size, locations.length);
+assert.equal((sitemap.match(/<loc>https:\/\/velocitymarketing.com.au\/paid-ads-/g) || []).length, locations.length);
 assert.ok(!sitemap.includes('/admin') && !sitemap.includes('/google-ads-traralgon') && !sitemap.includes('.au/traralgon'));
 for (const page of pages) assert.ok(existsSync(`dist/admin/preview/${page.id}/index.html`));
 for (const old of ['/traralgon', '/google-ads-traralgon']) assert.ok(html(old).includes('/paid-ads-traralgon'));
 const editor = html('/admin');
 assert.match(editor, /<optgroup\b[^>]*label="Location Pages"/);
 for (const location of locations) assert.ok(editor.includes(`value="${location.page}"`));
-console.log('Build verified: 20 homepage links, 17 location pages, 56 nearby links, 18 CMS previews, canonicals, sitemap and Traralgon redirects.');
+console.log(`Build verified: ${homepageLinks.length} homepage links, ${locations.length} location pages, ${locations.reduce((count, location) => count + nearbyLocations(location.slug).length, 0)} related location links, ${pages.length} CMS previews, canonicals, sitemap and Traralgon redirects.`);

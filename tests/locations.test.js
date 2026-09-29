@@ -1,27 +1,37 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import baseline from '../lib/content/fields.json' with { type: 'json' };
-import { locations, locationMap, locationPages, regions, pages, nearbyLocations } from '../lib/content/locations.js';
+import { locations, locationMap, locationPages, regions, pages, nearbyLocations, citySlugs } from '../lib/content/locations.js';
 import { initialContent, contentSchema, fields, groups, contentRequestByteLimit } from '../lib/content/model.js';
 import { applyLocationRollout } from '../lib/content/location-rollout.js';
 import { saveDraft, restoreDraft } from '../lib/editor/content.js';
 import { readBytes } from '../lib/editor/media.js';
 
 const oldSnapshot = () => ({ schemaVersion: 1, values: Object.fromEntries(baseline.fields.map(field => [field.key, structuredClone(field.initial)])) });
-test('homepage groups contain the approved 20 links to 17 town routes', () => {
-  assert.equal(locations.length, 17);
-  assert.equal(regions.length, 5);
+test('homepage groups link to 17 Gippsland towns and the five requested cities', () => {
+  assert.equal(locations.length, 22);
+  assert.equal(regions.length, 6);
   const slugs = regions.flatMap(region => region.slugs);
-  assert.equal(slugs.length, 20);
-  assert.equal(new Set(slugs).size, 17);
+  assert.equal(slugs.length, 25);
+  assert.equal(new Set(slugs).size, 22);
   assert.deepEqual(regions[0].slugs, ['warragul', 'drouin', 'trafalgar', 'yarragon', 'neerim-south']);
   assert.deepEqual(regions[4].slugs, ['moe', 'morwell', 'traralgon']);
+  assert.deepEqual(regions[5], { name: 'Australian Cities', slugs: ['melbourne', 'perth', 'adelaide', 'sydney', 'brisbane'] });
   for (const slug of slugs) assert.equal(locationMap[slug].path, `/paid-ads-${slug}`);
-  assert.equal(new Set(locations.map(location => location.path)).size, 17);
+  assert.equal(new Set(locations.map(location => location.path)).size, 22);
   assert.equal(pages[0].id, 'home');
-  assert.equal(locationPages[0].name, 'Bairnsdale');
+  assert.equal(locationPages[0].name, 'Adelaide');
   assert.equal(locationPages.at(-1).name, 'Yarragon');
   assert.equal(locationMap.traralgon.page, 'ads');
+});
+test('city pages link to other cities with an accurate heading and independent editor sections', () => {
+  for (const slug of citySlugs) {
+    const location = locationMap[slug];
+    assert.deepEqual(nearbyLocations(slug).map(other => other.slug), citySlugs.filter(other => other !== slug));
+    assert.equal(initialContent.values[`${location.page}.areas.heading`], 'Other Cities We Service');
+    assert.equal(groups.find(group => group.id === `${location.page}.areas`).label, 'Other cities');
+    assert.match(initialContent.values[`${location.page}.about.intro`], /Traralgon/);
+  }
 });
 test('nearby areas stay in-region and deduplicate Central Gippsland and Latrobe Valley', () => {
   assert.deepEqual(nearbyLocations('traralgon').map(location => location.slug), ['moe', 'morwell', 'sale']);
@@ -37,7 +47,7 @@ test('nearby areas stay in-region and deduplicate Central Gippsland and Latrobe 
 });
 test('each location has distinct editable content and the complete template field set', () => {
   for (const suffix of ['hero.heading', 'hero.intro', 'services.0.description', 'services.1.description', 'services.2.description', 'about.intro', 'contact.intro', 'seo.title', 'seo.description']) {
-    assert.equal(new Set(locations.map(location => initialContent.values[`${location.page}.${suffix}`])).size, 17, suffix);
+    assert.equal(new Set(locations.map(location => initialContent.values[`${location.page}.${suffix}`])).size, locations.length, suffix);
   }
   for (const location of locations) {
     assert.equal(initialContent.values[`${location.page}.hero.heading`], `Paid Ads Specialist ${location.name} – Google, Meta, & LinkedIn`);
@@ -45,6 +55,20 @@ test('each location has distinct editable content and the complete template fiel
     assert.equal(fields.filter(field => field.group.startsWith(`${location.page}.`)).length, 27);
     if (location.slug !== 'traralgon') assert.doesNotMatch(initialContent.values[`${location.page}.hero.intro`], /Traralgon-based|based in/i);
   }
+});
+test('pre-city revisions gain city defaults without overwriting existing content or later city edits', () => {
+  const snapshot = structuredClone(initialContent);
+  for (const slug of citySlugs) {
+    for (const key of Object.keys(snapshot.values).filter(key => key.startsWith(`${locationMap[slug].page}.`))) delete snapshot.values[key];
+  }
+  snapshot.values['location-warragul.hero.heading'] = 'Existing client heading';
+  const original = JSON.stringify(snapshot);
+  const parsed = contentSchema.parse(snapshot);
+  for (const [key, value] of Object.entries(snapshot.values)) assert.deepEqual(parsed.values[key], value, key);
+  for (const slug of citySlugs) assert.equal(parsed.values[`${locationMap[slug].page}.hero.heading`], initialContent.values[`${locationMap[slug].page}.hero.heading`]);
+  assert.equal(JSON.stringify(snapshot), original);
+  parsed.values['location-melbourne.hero.heading'] = 'Client-edited Melbourne heading';
+  assert.equal(contentSchema.parse(parsed).values['location-melbourne.hero.heading'], 'Client-edited Melbourne heading');
 });
 test('old snapshots receive new fields without changing legacy copy or rewriting their history', () => {
   const old = oldSnapshot();
