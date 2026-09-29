@@ -30,7 +30,7 @@ Each email subject and message field has variable buttons: **First name** insert
 
 ## Location pages and service areas
 
-**Location Pages** contains 17 towns in alphabetical order. Each town has its own Hero, Specialties, About, Nearby areas, Contact, and Search & sharing fields. Editing Warragul’s copy or social image does not change Drouin or another town. The shared profile, reviews, contact form, email settings and navigation still apply across the website.
+**Location Pages** contains 22 locations in alphabetical order: 17 Gippsland towns and five Australian cities. Each location has its own Hero, Specialties, About, Nearby areas (or Other cities), Contact, and Search & sharing fields. Editing Warragul’s copy or social image does not change Drouin or another location. The shared profile, reviews, contact form, email settings and navigation still apply across the website.
 
 The location pages lead with Google Ads and also cover Meta and LinkedIn. Their standard headline is **Paid Ads Specialist {Location} – Google, Meta, & LinkedIn**. Public addresses use `/paid-ads-{town}`, for example `/paid-ads-neerim-south`. Both older Traralgon addresses forward to `/paid-ads-traralgon`.
 
