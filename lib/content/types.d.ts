@@ -29,6 +29,7 @@ type LegacyTextFieldKey =
   "home.seo.description" |
   "ads.hero.badge" |
   "ads.hero.heading" |
+  "ads.hero.platforms" |
   "ads.hero.intro" |
   "ads.hero.primaryLabel" |
   "ads.hero.primaryLink" |

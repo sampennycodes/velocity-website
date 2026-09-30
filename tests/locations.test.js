@@ -50,11 +50,30 @@ test('each location has distinct editable content and the complete template fiel
     assert.equal(new Set(locations.map(location => initialContent.values[`${location.page}.${suffix}`])).size, locations.length, suffix);
   }
   for (const location of locations) {
-    assert.equal(initialContent.values[`${location.page}.hero.heading`], `Paid Ads Specialist ${location.name} – Google, Meta, & LinkedIn`);
+    assert.equal(initialContent.values[`${location.page}.hero.heading`], `Paid Ads Specialist in ${location.name}`);
     assert.deepEqual(groups.filter(group => group.page === location.page).map(group => group.id.slice(location.page.length + 1)), ['hero', 'services', 'about', 'areas', 'contact', 'seo']);
-    assert.equal(fields.filter(field => field.group.startsWith(`${location.page}.`)).length, 29);
+    assert.equal(fields.filter(field => field.group.startsWith(`${location.page}.`)).length, 30);
     if (location.slug !== 'traralgon') assert.doesNotMatch(initialContent.values[`${location.page}.hero.intro`], /Traralgon-based|based in/i);
   }
+});
+test('saved template headings gain the compact hero layout while custom copy and stored snapshots stay intact', () => {
+  const snapshot = structuredClone(initialContent);
+  for (const location of locations) {
+    snapshot.values[`${location.page}.hero.heading`] = `Paid Ads Specialist ${location.name} – Google, Meta, & LinkedIn`;
+    delete snapshot.values[`${location.page}.hero.platforms`];
+  }
+  snapshot.values['location-perth.hero.heading'] = 'Your Perth advertising partner';
+  snapshot.values['location-perth.hero.platforms'] = 'Campaigns for your next stage of growth';
+  const original = structuredClone(snapshot);
+  const parsed = contentSchema.parse(snapshot);
+  for (const location of locations.filter(location => location.slug !== 'perth')) {
+    assert.equal(parsed.values[`${location.page}.hero.heading`], `Paid Ads Specialist in ${location.name}`);
+    assert.equal(parsed.values[`${location.page}.hero.platforms`], 'Google Ads · Meta Ads · LinkedIn Ads · ChatGPT Ads');
+  }
+  assert.equal(parsed.values['location-perth.hero.heading'], snapshot.values['location-perth.hero.heading']);
+  assert.equal(parsed.values['location-perth.hero.platforms'], snapshot.values['location-perth.hero.platforms']);
+  assert.deepEqual(snapshot, original);
+  assert.deepEqual(contentSchema.parse(parsed), parsed);
 });
 test('pre-city revisions gain city defaults without overwriting existing content or later city edits', () => {
   const snapshot = structuredClone(initialContent);

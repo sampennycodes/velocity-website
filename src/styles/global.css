@@ -281,6 +281,14 @@ figure,blockquote {
   padding-top:76px;
   padding-bottom:80px;
 }
+.hero-platforms {
+  margin:0 0 20px;
+  color:var(--heading);
+  font-size:clamp(1.25rem,2vw,1.5rem);
+  font-weight:500;
+  line-height:1.5;
+  text-wrap:balance;
+}
 .hero.home-hero {
   padding-bottom:40px;
 }

@@ -24,6 +24,10 @@ for (const location of locations) {
   const source = html(location.path);
   assert.equal((source.match(/<h1\b/g) || []).length, 1, location.name);
   assert.ok(source.includes(escape(content.values[`${location.page}.hero.heading`])), `${location.name}: selected heading rendered`);
+  const platformsKey = `${location.page}.hero.platforms`;
+  for (const markup of [source, html(`/admin/preview/${location.page}`)]) {
+    assert.ok(markup.includes(`<p class="hero-platforms" data-content-text="${platformsKey}">${escape(content.values[platformsKey])}</p>`), `${location.name}: editable platform paragraph follows the H1`);
+  }
   const title = source.match(/<title>(.*?)<\/title>/)?.[1];
   assert.equal(title, escape(content.values[`${location.page}.seo.title`]));
   titles.add(title);
