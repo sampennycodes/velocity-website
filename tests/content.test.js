@@ -15,6 +15,7 @@ import {
 import { handleEditor } from "../lib/editor/handler.js";
 import { DEFAULT_SOCIAL_IMAGE, imageSource } from '../lib/site.js';
 import { contactFormFields, formFieldSettings } from '../lib/contact-form.js';
+import { pages } from '../lib/content/locations.js';
 test('refreshed social cards support saved drafts and retain custom uploaded images', () => {
   const oldDraft = structuredClone(initialContent);
   for (const key of ['home.seo.image', 'ads.seo.image']) {
@@ -180,16 +181,25 @@ test('older drafts and history gain email defaults without changing existing con
   assert.deepEqual(draftResult({ snapshot: old, version: 7 }).content, upgraded);
 });
 
-test('older drafts gain editable ChatGPT Ads copy without changing their existing services', () => {
+test('older drafts gain editable ChatGPT Ads on every page while preserving existing and later edits', () => {
   const old = structuredClone(initialContent);
-  delete old.values['home.services.3.title'];
-  delete old.values['home.services.3.description'];
+  for (const page of pages) {
+    delete old.values[`${page.id}.services.3.title`];
+    delete old.values[`${page.id}.services.3.description`];
+  }
   old.values['home.services.1.description'] = 'Saved Meta Ads copy';
+  old.values['ads.services.0.description'] = 'Saved Traralgon Google Ads copy';
+  const original = JSON.stringify(old);
   const upgraded = contentSchema.parse(old);
-  assert.equal(upgraded.values['home.services.3.title'], 'ChatGPT Ads');
-  assert.match(upgraded.values['home.services.3.description'], /researching and comparing options in ChatGPT/);
-  assert.equal(upgraded.values['home.services.1.description'], 'Saved Meta Ads copy');
-  assert.equal(old.values['home.services.3.title'], undefined);
+  for (const page of pages) {
+    assert.equal(upgraded.values[`${page.id}.services.3.title`], 'ChatGPT Ads');
+    assert.match(upgraded.values[`${page.id}.services.3.description`], /researching and comparing options in ChatGPT/);
+  }
+  for (const [key, value] of Object.entries(old.values)) assert.deepEqual(upgraded.values[key], value, key);
+  assert.equal(JSON.stringify(old), original);
+  upgraded.values['location-melbourne.services.3.description'] = 'Edited Melbourne ChatGPT Ads copy';
+  assert.equal(contentSchema.parse(upgraded).values['location-melbourne.services.3.description'], 'Edited Melbourne ChatGPT Ads copy');
+  assert.notEqual(upgraded.values['location-sydney.services.3.description'], upgraded.values['location-melbourne.services.3.description']);
 });
 
 test('email configuration rejects bad addresses and injected headers', () => {

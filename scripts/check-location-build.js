@@ -30,6 +30,14 @@ for (const location of locations) {
   assert.ok(source.includes(`rel="canonical" href="https://velocitymarketing.com.au${location.path}"`));
   assert.ok(source.includes(escape(content.values[`${location.page}.seo.description`])));
   assert.ok(source.includes('id="contact-form"') && source.includes('id="services"'));
+  const services = source.match(/<section\b[^>]*id="services"[^>]*>([\s\S]*?)<\/section>/)?.[1];
+  assert.equal((services?.match(/<article\b/g) || []).length, 4, `${location.name}: four service cards`);
+  for (const suffix of ['title', 'description']) {
+    const key = `${location.page}.services.3.${suffix}`;
+    assert.ok(services.includes(`data-content-text="${key}"`), `${location.name}: editable ChatGPT Ads ${suffix}`);
+    assert.ok(services.includes(escape(content.values[key])), `${location.name}: selected ChatGPT Ads ${suffix}`);
+    assert.ok(html(`/admin/preview/${location.page}`).includes(`data-content-text="${key}"`), `${location.name}: ChatGPT Ads in editor preview`);
+  }
   assert.ok(!source.includes('velocity-preview-ready'), 'Editor messaging is absent from public pages');
   assert.deepEqual(areaLinks(source), nearbyLocations(location.slug).map(town => town.path));
   assert.ok(source.includes(escape(content.values[`${location.page}.areas.heading`])), `${location.name}: related locations heading rendered`);

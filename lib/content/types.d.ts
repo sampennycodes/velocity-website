@@ -41,6 +41,8 @@ type LegacyTextFieldKey =
   "ads.services.1.description" |
   "ads.services.2.title" |
   "ads.services.2.description" |
+  "ads.services.3.title" |
+  "ads.services.3.description" |
   "ads.about.heading" |
   "ads.about.intro" |
   "ads.about.bullet0" |
@@ -88,7 +90,7 @@ type LegacyTextFieldKey =
   "shared.footer.copyright" |
   "shared.footer.topLabel" |
   "shared.footer.topLink";
-export type LocationSlug = 'warragul' | 'drouin' | 'trafalgar' | 'yarragon' | 'neerim-south' | 'moe' | 'morwell' | 'traralgon' | 'sale' | 'bairnsdale' | 'lakes-entrance' | 'orbost' | 'mallacoota' | 'leongatha' | 'korumburra' | 'foster' | 'wonthaggi';
+export type LocationSlug = 'warragul' | 'drouin' | 'trafalgar' | 'yarragon' | 'neerim-south' | 'moe' | 'morwell' | 'traralgon' | 'sale' | 'bairnsdale' | 'lakes-entrance' | 'orbost' | 'mallacoota' | 'leongatha' | 'korumburra' | 'foster' | 'wonthaggi' | 'melbourne' | 'perth' | 'adelaide' | 'sydney' | 'brisbane';
 export type LocationPageId = 'ads' | `location-${Exclude<LocationSlug, 'traralgon'>}`;
 type AdsTextSuffix = Extract<LegacyTextFieldKey, `ads.${string}`> extends `ads.${infer Suffix}` ? Suffix : never;
 export type TextFieldKey = LegacyTextFieldKey | 'home.areas.heading' | `${LocationPageId}.${AdsTextSuffix | 'areas.heading' | 'hero.localLabel'}`;

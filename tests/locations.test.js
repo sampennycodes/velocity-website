@@ -52,7 +52,7 @@ test('each location has distinct editable content and the complete template fiel
   for (const location of locations) {
     assert.equal(initialContent.values[`${location.page}.hero.heading`], `Paid Ads Specialist ${location.name} – Google, Meta, & LinkedIn`);
     assert.deepEqual(groups.filter(group => group.page === location.page).map(group => group.id.slice(location.page.length + 1)), ['hero', 'services', 'about', 'areas', 'contact', 'seo']);
-    assert.equal(fields.filter(field => field.group.startsWith(`${location.page}.`)).length, 27);
+    assert.equal(fields.filter(field => field.group.startsWith(`${location.page}.`)).length, 29);
     if (location.slug !== 'traralgon') assert.doesNotMatch(initialContent.values[`${location.page}.hero.intro`], /Traralgon-based|based in/i);
   }
 });
